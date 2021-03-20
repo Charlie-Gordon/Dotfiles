@@ -1,0 +1,19 @@
+;;; init-10-face.el --- The look of emacs
+;;;; Remove lame startup screen
+(setq inhibit-startup-message t)
+;;;; Time in modeline
+(display-time-mode 1)
+;;;; Maximize frame
+;;;; Set UTF-8 encoding
+(setq locale-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+;;;; Modus themes
+(use-package modus-operandi-theme)
+(use-package modus-vivendi-theme)
+;;;; Iosevka font
+(set-face-attribute 'default nil :font "Iosevka SS09-14")
+
+(provide 'init-10-face)
