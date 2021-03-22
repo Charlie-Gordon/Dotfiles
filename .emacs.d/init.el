@@ -1,14 +1,15 @@
+
 ;;; * Essential External Programs
 (load "~/.emacs.d/external/stuffs.el" t)
 ;;; * Emacs initialization
 ;;;; ** Use-package
+;;;;; Initialize
+(package-initialize)
 ;;;;; Add package sources
 (unless (assoc-default "melpa" package-archives) 
  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
 (unless (assoc-default "org" package-archives)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
-;;;;; Initialize
-(package-initialize)
 ;;;;; Bootstrapping Use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -185,7 +186,8 @@
   (add-hook 'pdf-view-mode-hook 'pdf-view-restore-mode)
   (setq pdf-view-restore-filename "~/.emacs.d/.pdf-view-restore"))
 ;;;; Magit
-(use-package magit)
+(use-package magit
+  :ensure)
 ;;;; Which-key
 (use-package which-key
   :init (which-key-mode)
