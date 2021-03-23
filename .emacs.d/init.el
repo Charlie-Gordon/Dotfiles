@@ -76,54 +76,53 @@
   :config
   (use-package exwm-config
     :ensure nil
+    :custom
+;;;;; Prefix keys to ignore
+    (exwm-input-prefix-keys . `(?\C-x
+				?\C-u
+				?\C-h
+			        ?\C-g
+			        ?\M-x
+				?\M-`
+				?\M-&
+				?\M-:))
+;;;;; Global keys for EXWM
+    (exwm-input-global-keys . `(([?\s-.] . reload-emacs-configuration)
+				([?\s-w] . exwm-workspace-switch)
+				([?\s-&] . (lambda (command)
+					     (interactive (list (read-shell-command "$ ")))
+					     (start-process-shell-command command nil command)))
+				([?\s-d] . modus-themes-toggle)
+				(,(kbd "s-<return>") . eshell)
+				,@(mapcar (lambda (i)
+					    `(,(kbd (format "s-%d" i)) .
+					      (lambda ()
+						(interactive)
+						(exwm-workspace-switch-create ,i))))
+					  (number-sequence 0 9))))
+;;;;; Line-editing keybindings for X windows
+    (exwm-input-simulation-keys .
+				'(([?\C-b] . [left])
+				  ([?\C-f] . [right])
+				  ([?\C-p] . [up])
+				  ([?\C-n] . [down])
+				  ([?\C-a] . [home])
+				  ([?\C-e] . [end])
+				  ([?\M-v] . [prior])
+				  ([?\C-v] . [next])
+				  ([?\C-d] . [delete])
+				  ([?\C-k] . [S-end C-x])
+				  ([?\C-y] . [C-v])))
     :config
     (exwm-config-example)
 ;;;;; Set the initial workspace number
     (unless (get 'exwm-workspace-number 'saved-value)
       (setq exwm-workspace-number 4))
 ;;;;; Make class name the buffer name
-      (add-hook 'exwm-update-class-hook
-		(lambda ()
-		  (exwm-workspace-rename-buffer exwm-class-name)))
-;;;;; Prefix keys to ignore
-    (setq exwm-input-prefix-keys
-	  `(?\C-x
-	    ?\C-u
-	    ?\C-h
-	    ?\C-g
-	    ?\M-x
-	    ?\M-`
-	    ?\M-&
-	    ?\M-:))
-;;;;; Global keys for EXWM
-    (setq exwm-input-global-keys
-          `(([?\s-.] . reload-emacs-configuration)
-            ([?\s-w] . exwm-workspace-switch)
-            ([?\s-&] . (lambda (command)
-                         (interactive (list (read-shell-command "$ ")))
-                         (start-process-shell-command command nil command)))
-	    ([?\s-d] . modus-themes-toggle)
-	    (,(kbd "s-<return>") . eshell)
-            ,@(mapcar (lambda (i)
-                        `(,(kbd (format "s-%d" i)) .
-                          (lambda ()
-			    (interactive)
-                           (exwm-workspace-switch-create ,i))))
-                      (number-sequence 0 9))))
-;;;;; Simulate Emacs keybindings for X windows    
-    (setq exwm-input-simulation-keys
-          '(([?\C-b] . [left])
-           ([?\C-f] . [right])
-            ([?\C-p] . [up])
-            ([?\C-n] . [down])
-            ([?\C-a] . [home])
-            ([?\C-e] . [end])
-            ([?\M-v] . [prior])
-            ([?\C-v] . [next])
-            ([?\C-d] . [delete])
-	    ([?\C-k] . [S-end C-x])
-	    ([?\C-y] . [C-v])))
-;;;;;;; Special keybindings for Firefox
+    (add-hook 'exwm-update-class-hook
+	      (lambda ()
+      	(exwm-workspace-rename-buffer exwm-class-name)))
+;;;;; Firefox keybindings
     (add-hook 'exwm-manage-finish-hook  (lambda ()
 					  (when (and exwm-class-name
 						     (string= exwm-class-name "Firefox"))
@@ -144,7 +143,7 @@
 						([?\M-e] . [C-end])
 						([?\M-f] . ,(kbd "C-<left>"))
        						([?\M-b] . ,(kbd "C-<right>"))
-						(,(kbd "C-/") . [?\C-z]))))))
+						(,(kbd "C-/") . [?\C-z]))))))    
 ;;;;; Prefered minibuffer    
     (selectrum-mode +1)
 ;;;;; Enable EXWM    
@@ -220,8 +219,6 @@
   ("C-h f" . helpful-function))
 (put 'dired-find-alternate-file 'disabled nil)
 
-;;;; Bugs
-(use-package bug-hunter)
 ;;;; Highlighting
 (use-package highlight
   :disabled
