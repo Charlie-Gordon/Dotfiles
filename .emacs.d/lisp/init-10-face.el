@@ -21,8 +21,7 @@
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;;;; Modus themes
-(use-package modus-operandi-theme)
-(use-package modus-vivendi-theme)
+(use-package modus-themes)
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
 ;;;; Font for Thai character
