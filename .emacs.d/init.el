@@ -78,7 +78,7 @@
     :ensure nil
     :custom
 ;;;;; Prefix keys to ignore
-    (exwm-input-prefix-keys . `(?\C-x
+    (exwm-input-prefix-keys `(?\C-x
 				?\C-u
 				?\C-h
 			        ?\C-g
@@ -87,7 +87,7 @@
 				?\M-&
 				?\M-:))
 ;;;;; Global keys for EXWM
-    (exwm-input-global-keys . `(([?\s-.] . reload-emacs-configuration)
+    (exwm-input-global-keys `(([?\s-.] . reload-emacs-configuration)
 				([?\s-w] . exwm-workspace-switch)
 				([?\s-&] . (lambda (command)
 					     (interactive (list (read-shell-command "$ ")))
@@ -101,8 +101,7 @@
 						(exwm-workspace-switch-create ,i))))
 					  (number-sequence 0 9))))
 ;;;;; Line-editing keybindings for X windows
-    (exwm-input-simulation-keys .
-				'(([?\C-b] . [left])
+    (exwm-input-simulation-keys '(([?\C-b] . [left])
 				  ([?\C-f] . [right])
 				  ([?\C-p] . [up])
 				  ([?\C-n] . [down])
