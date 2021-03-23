@@ -1,4 +1,3 @@
-
 ;;; * Essential External Programs
 (load "~/.emacs.d/external/stuffs.el" t)
 ;;; * Emacs initialization
@@ -52,10 +51,28 @@
 ;;;;; Keyboard layout
 (add-hook 'after-init-hook 'modremap)
 ;;; * Packages
+;;;; Completions
+;;;;; Selectrum
+(use-package selectrum
+  :ensure t
+  :config
+  (selectrum-mode +1)
+  :bind (:map ctl-x-map
+	      ("C-f" . find-file)))
+;;;;; Consult
+(use-package consult
+  :bind (:map ctl-x-map
+	 ("b" . consult-buffer)))
+;;;;; Orderless
+(use-package orderless
+  :ensure t
+  :custom (completion-styles '(orderless partial-completion)))
+;;;;; Marginalia
+(use-package marginalia
+  :ensure t
+  :config (marginalia-mode 1))
 ;;;; EXWM
 (use-package exwm
-  :init
-  (load-theme 'modus-operandi t)
   :config
   (use-package exwm-config
     :ensure nil
@@ -117,26 +134,8 @@
 						([?\M-f] . ,(kbd "C-<left>"))
        						([?\M-b] . ,(kbd "C-<right>"))
 						(,(kbd "C-/") . [?\C-z]))))))
+    (selectrum-mode +1)
     (exwm-enable)))
-;;;; Completions
-;;;;; Selectrum
-(use-package selectrum
-  :ensure t
-  :config
-  (selectrum-mode +1)
-  :bind (:map ctl-x-map
-	      ("C-f" . counsel-find-file)))
-;;;;; Consult
-(use-package consult
-  :bind (
-	 ("C-x b" . consult-buffer)))
-;;;;; Orderless
-(use-package orderless
-  :ensure t
-  :custom (completion-styles '(orderless partial-completion)))
-;;;;; Marginalia
-(use-package marginalia
-  :ensure t)
 ;;;; Yasnippet
 (use-package yasnippet
   :config
@@ -185,9 +184,12 @@
   :config
   (add-hook 'pdf-view-mode-hook 'pdf-view-restore-mode)
   (setq pdf-view-restore-filename "~/.emacs.d/.pdf-view-restore"))
+;;;; with-editor
+(use-package with-editor)
 ;;;; Magit
 (use-package magit
-  :ensure)
+  :requires with-editor
+  :ensure t)
 ;;;; Which-key
 (use-package which-key
   :init (which-key-mode)
@@ -205,15 +207,15 @@
   ("C-h f" . helpful-function))
 (put 'dired-find-alternate-file 'disabled nil)
 
+;;;; Bugs
+(use-package bug-hunter)
 ;;;; Highlighting
 (use-package highlight
   :disabled
-  :bind (
-	 :map ctl-x-map
+  :bind (:map ctl-x-map
 	      ("y" . hlt-highlight)
 	      ("<mouse-2>" . hlt-highlighter)
 	      ("S-<mouse-2>" . hlt-eraser)
 	      ("S-C-p" . hlt-previous-highlight)
-	      ("S-C-n" . hlt-next-highlight)
-	      ))
+	      ("S-C-n" . hlt-next-highlight)))
 
