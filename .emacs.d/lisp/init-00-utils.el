@@ -14,10 +14,9 @@
     (interactive) 
   (if (eq (car custom-enabled-themes) 'modus-operandi)
       (progn
-        (disable-theme 'modus-operandi)
-        (load-theme 'modus-vivendi t))
-    (disable-theme 'modus-vivendi)
-    (load-theme 'modus-operandi t)))
+        (modus-themes-load-vivendi))
+    (modus-themes-load-operandi)))
+      
 ;;;; Find-file with root permissions
 (defadvice ido-find-file (after find-file-sudo activate)
   "Find file as root if necessary."
