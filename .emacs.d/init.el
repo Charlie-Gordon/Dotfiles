@@ -78,6 +78,14 @@
     :ensure nil
     :config
     (exwm-config-example)
+;;;;; Set the initial workspace number
+    (unless (get 'exwm-workspace-number 'saved-value)
+      (setq exwm-workspace-number 4))
+;;;;; Make class name the buffer name
+      (add-hook 'exwm-update-class-hook
+		(lambda ()
+		  (exwm-workspace-rename-buffer exwm-class-name)))
+;;;;; Prefix keys to ignore
     (setq exwm-input-prefix-keys
 	  `(?\C-x
 	    ?\C-u
@@ -87,6 +95,7 @@
 	    ?\M-`
 	    ?\M-&
 	    ?\M-:))
+;;;;; Global keys for EXWM
     (setq exwm-input-global-keys
           `(([?\s-.] . reload-emacs-configuration)
             ([?\s-w] . exwm-workspace-switch)
@@ -100,7 +109,8 @@
                           (lambda ()
 			    (interactive)
                            (exwm-workspace-switch-create ,i))))
-                     (number-sequence 0 9))))
+                      (number-sequence 0 9))))
+;;;;; Simulate Emacs keybindings for X windows    
     (setq exwm-input-simulation-keys
           '(([?\C-b] . [left])
            ([?\C-f] . [right])
@@ -113,6 +123,7 @@
             ([?\C-d] . [delete])
 	    ([?\C-k] . [S-end C-x])
 	    ([?\C-y] . [C-v])))
+;;;;;;; Special keybindings for Firefox
     (add-hook 'exwm-manage-finish-hook  (lambda ()
 					  (when (and exwm-class-name
 						     (string= exwm-class-name "Firefox"))
@@ -134,7 +145,9 @@
 						([?\M-f] . ,(kbd "C-<left>"))
        						([?\M-b] . ,(kbd "C-<right>"))
 						(,(kbd "C-/") . [?\C-z]))))))
+;;;;; Prefered minibuffer    
     (selectrum-mode +1)
+;;;;; Enable EXWM    
     (exwm-enable)))
 ;;;; Yasnippet
 (use-package yasnippet
