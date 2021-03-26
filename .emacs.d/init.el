@@ -94,7 +94,6 @@
 
 ;;;; Highlighting
 (use-package highlight
-  :disabled
   :bind (:map ctl-x-map
 	      ("y" . hlt-highlight)
 	      ("<mouse-2>" . hlt-highlighter)
