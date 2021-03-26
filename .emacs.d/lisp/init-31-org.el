@@ -4,7 +4,7 @@
   :ensure t
   :init
   (defvar outline-minor-mode-prefix "\M-t")
-  )
+  :hook (visual-line-mode . org-mode)) ;; text-wrap
 
 (use-package outshine
   :ensure t
