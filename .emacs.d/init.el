@@ -24,13 +24,17 @@
       (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
     (make-directory path :parents)))
 ;;;; ** Utilities functions
-(require 'init-00-utils.el)
+(use-package init-00-utils.el
+  :ensure nil)
 ;;;; ** Interface tweaks
-(require 'init-10-face.el)
+(use-package init-10-face.el
+  :ensure nil)
 ;;;; ** LaTeX
-(require 'init-30-tex.el)
-;;;; ** Org-mode
-(require 'init-31-org.el)
+(use-package init-30-tex.el
+  :ensure nil)
+;;;; ** Org-mode configuration
+(use-package init-31-org.el
+  :ensure nil)
 ;;;; ** General Improvement
 ;;;;; Sentences end with a single space
 (setq sentence-end-double-space nil)
