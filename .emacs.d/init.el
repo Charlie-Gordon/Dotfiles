@@ -62,7 +62,10 @@
 ;;;;; Consult
 (use-package consult
   :bind (:map ctl-x-map
-	 ("b" . consult-buffer)))
+	      ("b" . consult-buffer)))
+;;;;; Embark
+(use-package embark
+  :ensure t)
 ;;;;; Orderless
 (use-package orderless
   :ensure t
@@ -112,11 +115,13 @@
 				  ([?\C-d] . [delete])
 				  ([?\C-k] . [S-end C-x])
 				  ([?\C-y] . [C-v])))
-    :config
-    (exwm-config-example)
 ;;;;; Set the initial workspace number
+    :config    
     (unless (get 'exwm-workspace-number 'saved-value)
       (setq exwm-workspace-number 4))
+;;;;; Fix Ido
+    (exwm-config-ido)
+    (ido-mode 0)
 ;;;;; Make class name the buffer name
     (add-hook 'exwm-update-class-hook
 	      (lambda ()
