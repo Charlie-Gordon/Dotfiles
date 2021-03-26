@@ -221,8 +221,17 @@
 (use-package with-editor)
 ;;;; Magit
 (use-package magit
-  :requires with-editor
+  :requires with-editor tramp 
   :config
+;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm(my dotfiles manager)
+;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
+  (add-to-list 'tramp-methods
+	       '("yadm"
+		 (tramp-login-program "yadm")
+		 (tramp-login-args (("enter")))
+		 (tramp-login-env (("SHELL") ("/bin/sh")))
+		 (tramp-remote-shell "/bin/sh")
+		 (tramp-remote-shell-args ("-c"))))
   :ensure t)
 ;;;; Which-key
 (use-package which-key
