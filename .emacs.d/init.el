@@ -25,6 +25,7 @@
     (make-directory path :parents)))
 ;;;; ** Utilities functions
 (use-package init-00-utils.el
+  :after magit
   :ensure nil)
 ;;;; ** Interface tweaks
 (use-package init-10-face.el
@@ -145,11 +146,10 @@
   (setq pdf-view-restore-filename "~/.emacs.d/.pdf-view-restore"))
 ;;;; with-editor
 (use-package with-editor)
-;;;; Magit
-(use-package magit
-  :requires with-editor tramp 
+;;;; tramp
+(use-package tramp
   :config
-;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm(my dotfiles manager)
+  ;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm(my dotfiles manager)
 ;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
   (add-to-list 'tramp-methods
 	       '("yadm"
@@ -158,6 +158,10 @@
 		 (tramp-login-env (("SHELL") ("/bin/sh")))
 		 (tramp-remote-shell "/bin/sh")
 		 (tramp-remote-shell-args ("-c"))))
+  :ensure nil)
+;;;; Magit
+(use-package magit
+  :requires with-editor tramp 
   :ensure t)
 ;;;; Which-key
 (use-package which-key
@@ -208,6 +212,7 @@
 					     (interactive (list (read-shell-command "$ ")))
 					     (start-process-shell-command command nil command)))
 				([?\s-d] . modus-themes-toggle)
+				([?\s-s] . magit-status-dotfiles)
 				(,(kbd "s-<return>") . eshell)
 				,@(mapcar (lambda (i)
 					    `(,(kbd (format "s-%d" i)) .

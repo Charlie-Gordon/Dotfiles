@@ -21,6 +21,7 @@
   (eww-reload :local))
 ;;;; Magit shortcuts
 (defun magit-status-dotfiles ()
+  (interactive)
   "Open magit in dotfiles repository."
   (magit-status "/yadm::"))
 (provide 'init-00-utils.el)
