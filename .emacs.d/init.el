@@ -80,7 +80,7 @@
   (use-package exwm-config
     :ensure nil
     :custom
-;;;;; Prefix keys to ignore
+;; Prefix keys to ignore
     (exwm-input-prefix-keys `(?\C-x
 				?\C-u
 				?\C-h
@@ -89,7 +89,7 @@
 				?\M-`
 				?\M-&
 				?\M-:))
-;;;;; Global keys for EXWM
+;; Global keys for EXWM
     (exwm-input-global-keys `(([?\s-.] . reload-emacs-configuration)
 				([?\s-w] . exwm-workspace-switch)
 				([?\s-&] . (lambda (command)
@@ -103,7 +103,7 @@
 						(interactive)
 						(exwm-workspace-switch-create ,i))))
 					  (number-sequence 0 9))))
-;;;;; Line-editing keybindings for X windows
+;; Line-editing keybindings for X windows
     (exwm-input-simulation-keys '(([?\C-b] . [left])
 				  ([?\C-f] . [right])
 				  ([?\C-p] . [up])
@@ -115,18 +115,18 @@
 				  ([?\C-d] . [delete])
 				  ([?\C-k] . [S-end C-x])
 				  ([?\C-y] . [C-v])))
-;;;;; Set the initial workspace number
+;; Set the initial workspace number
     :config    
     (unless (get 'exwm-workspace-number 'saved-value)
       (setq exwm-workspace-number 4))
-;;;;; Fix Ido
+;; Fix Ido
     (exwm-config-ido)
     (ido-mode 0)
-;;;;; Make class name the buffer name
+;; Make class name the buffer name
     (add-hook 'exwm-update-class-hook
 	      (lambda ()
       	(exwm-workspace-rename-buffer exwm-class-name)))
-;;;;; Firefox keybindings
+;; Firefox keybindings
     (add-hook 'exwm-manage-finish-hook  (lambda ()
 					  (when (and exwm-class-name
 						     (string= exwm-class-name "Firefox"))
@@ -148,9 +148,9 @@
 						([?\M-f] . ,(kbd "C-<left>"))
        						([?\M-b] . ,(kbd "C-<right>"))
 						(,(kbd "C-/") . [?\C-z]))))))    
-;;;;; Prefered minibuffer    
+;; Prefered minibuffer    
     (selectrum-mode +1)
-;;;;; Enable EXWM    
+;; Enable EXWM    
     (exwm-enable)))
 ;;;; Yasnippet
 (use-package yasnippet
@@ -159,6 +159,23 @@
   (yas-load-directory (concat user-emacs-directory "snippets"))
   (yas-reload-all)
   (yas-global-mode 1))
+;;;; shrface
+(use-package shrface
+  :defer t
+  :config
+  (shrface-basic)
+  (shrface-trial)
+  (shrface-default-keybindings)
+  :custom (shrface-href-versatile t))
+(use-package eww
+  :defer t
+  :init (add-hook 'eww-after-render-hook #'shrface-mode)
+  (add-hook 'eww-mode-hook
+            (lambda()
+	      (add-hook 'text-scale-mode-hook
+			'text-scale-mode-hook
+			nil :local)))
+  :requires shrface)
 ;;;; Nov.el
 (use-package nov
   :config
@@ -205,6 +222,7 @@
 ;;;; Magit
 (use-package magit
   :requires with-editor
+  :config
   :ensure t)
 ;;;; Which-key
 (use-package which-key
