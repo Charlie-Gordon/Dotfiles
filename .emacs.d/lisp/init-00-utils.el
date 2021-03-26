@@ -27,12 +27,6 @@
 (defun text-scale-mode-hook ()
   (eww-reload :local))
 
-(add-hook 'eww-mode-hook
-          (lambda()
-            (add-hook 'text-scale-mode-hook
-                      'text-scale-mode-hook
-		      nil :local)))
-
 (provide 'init-00-utils.el)
 
 
