@@ -1,8 +1,7 @@
 (use-package tex
   :ensure auctex
-  :init
-  (setq
-   TeX-PDF-mode t
+  :custom
+  (TeX-PDF-mode t
    TeX-engine 'xetex
    TeX-command-default "LaTeXMK"
    latex-run-command "LaTeXMK"
@@ -17,37 +16,27 @@
      ("View" "%V" TeX-run-discard-or-function t t :help "Run Viewer")
      ("Index" "makeindex %s" TeX-run-command nil t :help "Create index file")
      ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
-     ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
-     )
-
-   LaTeX-verbatim-environments '("verbatim" "verbatim*" "Verbatim" "Verbatim*" "lstlisting" "code" "minted" "gascode" "ccode" "pythoncode" "javacode" "bashcode")
-   
+     ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")) 
+   LaTeX-verbatim-environments '("verbatim" "verbatim*" "Verbatim" "Verbatim*" "lstlisting" "code" "minted" "gascode" "ccode" "pythoncode" "javacode" "bashcode")   
    TeX-view-program-selection '((output-pdf "PDF Tools") (output-html "xdg-open"))
    TeX-view-style nil
    bibtex-maintain-sorted-entries t
-   bibtex-align-at-equal-sign t
-   ) ; end of setq
-
+   bibtex-align-at-equal-sign t)
   :config
   (add-hook 'LaTeX-mode-hook 'visual-line-mode)
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "LaTeXMK")))
-  (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "LaTeXMK"))))
-(setq-default TeX-master nil)
-(use-package latex-preview-pane)
-  (use-package reftex
-    :init
-    (setq
-     reftex-plug-into-AUCTeX t
-     reftex-bibliography-commands '("addbibresource" "bibliography" "nobibliography")
-	 reftex-default-bibliography  '("~/lecture_notes/bib/os.bib" "~/lecture_notes/bib/net.bib"
-									"~/lecture_notes/bib/wikipedia.bib")
-	 bibtex-dialect 'biblatex
-	 reftex-use-external-file-finders t
-     )
-    :config
-    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
- )
+  (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "LaTeXMK")))
+  (setq-default TeX-master nil))
+
+(use-package reftex
+  :custom
+  (reftex-plug-into-AUCTeX t
+   reftex-bibliography-commands '("addbibresource" "bibliography" "nobibliography")
+   bibtex-dialect 'biblatex
+   reftex-use-external-file-finders t)
+  :config
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex))
 
 (provide 'init-30-tex.el)

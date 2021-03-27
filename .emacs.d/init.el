@@ -88,21 +88,24 @@
   (yas-global-mode 1))
 ;;;; shrface
 (use-package shrface
+  :ensure t
   :defer t
   :config
   (shrface-basic)
   (shrface-trial)
   (shrface-default-keybindings)
   :custom (shrface-href-versatile t))
+;;;; EWW
 (use-package eww
   :defer t
-  :init (add-hook 'eww-after-render-hook #'shrface-mode)
+  :requires shrface
+  :init
+  (add-hook 'eww-after-render-hook #'shrface-mode)
   (add-hook 'eww-mode-hook
             (lambda()
 	      (add-hook 'text-scale-mode-hook
 			'text-scale-mode-hook
-			nil :local)))
-  :requires shrface)
+			nil :local))))
 ;;;; Nov.el
 (use-package nov
   :config
