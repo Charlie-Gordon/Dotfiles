@@ -70,7 +70,9 @@
 	      ("b" . consult-buffer)))
 ;;;;; Embark
 (use-package embark
-  :ensure t)
+  :ensure t
+  :bind
+  ("C-x ." . embark-act))
 ;;;;; Orderless
 (use-package orderless
   :ensure t
@@ -78,7 +80,26 @@
 ;;;;; Marginalia
 (use-package marginalia
   :ensure t
-  :config (marginalia-mode 1))
+  :config
+  (marginalia-mode 1))
+;;;;; Embark-consult
+(use-package embark-consult
+  :ensure t
+  :after (embark consult))
+;;;; LSP
+(use-package lsp-mode
+  :disabled
+  :ensure t
+  :init (setq lsp-keymap-prefix "C-c l")
+  :hook (emacs-lisp-mode-hook . lsp)
+  :commands lsp)
+;;;; EMMS
+(use-package emms
+  :ensure t
+  (emms-all)
+  (emms-default-players)
+  :custom
+  (emms-source-file-default-directory "~/Music/"))
 ;;;; Yasnippet
 (use-package yasnippet
   :config
@@ -98,9 +119,8 @@
 ;;;; EWW
 (use-package eww
   :defer t
-  :requires shrface
   :init
-  (add-hook 'eww-after-render-hook #'shrface-mode)
+;;  (add-hook 'eww-after-render-hook #'shrface-mode)
   (add-hook 'eww-mode-hook
             (lambda()
 	      (add-hook 'text-scale-mode-hook
@@ -168,10 +188,11 @@
   :ensure t)
 ;;;; Which-key
 (use-package which-key
-  :init (which-key-mode)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.3))
+  (which-key-mode)
+  :custom
+  (which-key-idle-delay 0.3))
 ;;;; Helpful
 (use-package helpful
   :bind
