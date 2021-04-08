@@ -72,7 +72,7 @@
 (use-package embark
   :ensure t
   :bind
-  ("C-x ." . embark-act))
+  ("C-." . embark-act))
 ;;;;; Orderless
 (use-package orderless
   :ensure t
@@ -86,6 +86,15 @@
 (use-package embark-consult
   :ensure t
   :after (embark consult))
+;;;; shr
+(use-package shr
+  :ensure t
+  :custom
+  (shr-discard-aria-hidded t)
+  (shr-image-animate nil)
+  (shr-use-colors nil)
+  (shr-use-fonts nil)
+  (shr-cookie-policy nil))
 ;;;; LSP
 (use-package lsp-mode
   :disabled
@@ -96,6 +105,7 @@
 ;;;; EMMS
 (use-package emms
   :ensure t
+  :config
   (emms-all)
   (emms-default-players)
   :custom
@@ -125,7 +135,18 @@
             (lambda()
 	      (add-hook 'text-scale-mode-hook
 			'text-scale-mode-hook
-			nil :local))))
+			nil :local)))
+  :custom
+  (eww-download-directory (expand-file-name "~/Downloads/eww/"))
+  (eww-header-line-format "%t <%u>")
+  (eww-restore-desktop t)
+  (eww-desktop-remove-duplicates t))
+;;;; EDL
+(use-package edl-mode.el
+  :ensure nil)
+;;;; parallel.el
+(use-package parallel.el
+  :ensure nil)
 ;;;; Nov.el
 (use-package nov
   :config
@@ -151,7 +172,7 @@
 	      ("i"  . pdf-misc-display-metadata)
        	      ("o"  . pdf-occur)
 	      ("b"  . pdf-view-set-slice-from-bounding-box)
-	      ("r"  . pdf-view-reset-slice)
+	      ("r" . image-transform-set-rotation)
 	      ("R"  . pdf-view-revert-buffer)
 	      ("C-s" . isearch-forward)
 	      ("C-c C-c" . image-toggle-display))
