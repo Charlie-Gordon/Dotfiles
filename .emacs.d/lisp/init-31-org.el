@@ -37,10 +37,4 @@
 (use-package org-pdftools
   :hook (org-mode . org-pdftools-setup-link))
 
-(use-package anki-editor
-  :after org-noter
-  :config
-  (setq anki-editor-create-decks t
-	anki-editor-org-tags-as-anki-tags t))
-
 (provide 'init-31-org.el)
