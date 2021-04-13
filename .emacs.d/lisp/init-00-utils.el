@@ -19,19 +19,6 @@
 (defun text-scale-mode-hook ()
   "Rerender content of EWW when uses text-scale mode."
   (eww-reload :local))
-;;;; EWW thingy
-(defun eww-parse-content (url) 
-  "Use `url-retrieve then `eww-render and output results in a hidden buffer called `output
-then append everything to the actual buffer called `Content"
-  (let ((url-mime-accept-string eww-accept-content-types))
-    (progn
-      (url-retrieve (eww--dwim-expand-url url) 'eww-render
-		    (list (eww--dwim-expand-url url) nil (get-buffer-create " output")))
-      (with-current-buffer " output"
-	(prepend-to-buffer "Content" (point-min) (point-max))
-      (with-current-buffer "Content"
-	(goto-char (point-max))
-	(newline))))))
 ;;;; Magit shortcuts
 (defun magit-status-dotfiles ()
   (interactive)
