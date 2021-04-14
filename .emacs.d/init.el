@@ -186,7 +186,8 @@
   (add-hook 'pdf-view-mode-hook 'pdf-view-restore-mode)
   (setq pdf-view-restore-filename "~/.emacs.d/.pdf-view-restore"))
 ;;;; with-editor
-(use-package with-editor)
+(use-package with-editor
+  :ensure t)
 ;;;; tramp
 (use-package tramp
   :config
