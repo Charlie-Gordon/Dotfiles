@@ -30,15 +30,25 @@
 (require 'eww)
 (require 'url)
 
-(defvar parallel-url-regexp-span
-  (concat "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)\\(//[-a-z0-9_.]+:[0-9]*\\)?\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+([-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]*)\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)?\\|[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)\\)"
- ",start=\\([0-9]*\\)?,length=\\([0-9]*\\)?")
-  "Regular expression that matches URLS. 
-This is `match-string' data
-`(match-string 6)' matches NUM after 'start='  
-`(match-string 8)' matches NUM after 'length='")
+(defface xanalink
+  '((t :box (:line-width 3 :color "tomato")))
+  "Face used for link in parallel-mode")
+(defvar parallel-url-regexp
+  "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)\\(//[-a-z0-9_.]+:[0-9]*\\)?\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+([-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]*)\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)?\\|[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)\\)"
+  "Regular expression that matches URLS.")
 
-;;;###autoload
+(defvar parallel-url-regexp-span
+  (concat parallel-url-regexp ",start=\\([0-9]*\\)?,length=\\([0-9]*\\)?")
+  "Regular expression that matches URLS with span.  
+This is `match-string' data
+`(match-string 5)' matches NUM after 'start='  
+`(match-string 6)' matches NUM after 'length='")
+
+(defvar edl-highlights
+      '(("^\\(span\\|xanalink\\)" . font-lock-function-name-face)
+	("start\\|length" . font-lock-constant-face)
+	("#.*$" . font-lock-comment-face)
+	(parallel-url-regexp . xanalink)))
 
 (defun eww-parse-content (url &optional to-buffer) 
   "Use `url-retrieve' then `eww-render' and parse to a hidden buffer called 'URL#output'
@@ -48,6 +58,12 @@ This is `match-string' data
 		 (concat " " url "#output"))))
     (url-retrieve (eww--dwim-expand-url url) 'eww-render
        		  (list (eww--dwim-expand-url url) nil (get-buffer-create buf)))))
+
+;;;###autoload
+(define-derived-mode edl-mode fundamental-mode "EDL"
+  "Major mode for reading EDL format"
+  (setq font-lock-defaults '(edl-highlights)))
+
 ;; Move this to somewhere else?
 (defun occur-list-urls ()
   "Produce buttonised list of all URLs in the current buffer."
@@ -55,7 +71,7 @@ This is `match-string' data
   (add-hook 'occur-hook #'goto-address-mode)
   (occur-1 browse-url-botton-regexp "\\&" (list (current-buffer)) (get-buffer-create " occur-output"))
   (remove-hook 'occur-hook #'goto-address-mode))
-  
+
 (defun parallel ()
   "Start `parallel' session."
   (interactive)
