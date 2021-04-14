@@ -141,9 +141,6 @@
   (eww-header-line-format "%t <%u>")
   (eww-restore-desktop t)
   (eww-desktop-remove-duplicates t))
-;;;; EDL
-(use-package edl-mode.el
-  :ensure nil)
 ;;;; parallel.el
 (use-package parallel.el
   :ensure nil)
