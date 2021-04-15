@@ -33,11 +33,11 @@
 (defface xanalink
   '((t :box (:line-width 3 :color "tomato")))
   "Face used for link in parallel-mode")
-(defvar parallel-url-regexp
+(defcustom parallel-url-regexp
   "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)\\(//[-a-z0-9_.]+:[0-9]*\\)?\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+([-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]*)\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)?\\|[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)\\)"
   "Regular expression that matches URLS.")
 
-(defvar parallel-url-regexp-span
+(defcustom parallel-url-regexp-span
   (concat parallel-url-regexp ",start=\\([0-9]*\\)?,length=\\([0-9]*\\)?")
   "Regular expression that matches URLS with span.  
 This is `match-string' data
@@ -45,11 +45,9 @@ This is `match-string' data
 `(match-string 6)' matches NUM after 'length='")
 
 (defvar edl-highlights
-      '(("^\\(span\\|xanalink\\)" . font-lock-function-name-face)
-	("start\\|length" . font-lock-constant-face)
-	("#.*$" . font-lock-comment-face)
-	(parallel-url-regexp . xanalink)))
-
+      '(("^\\(span\\|xanalink\\):" . font-lock-function-name-face)
+	(",start\\|,length" . font-lock-constant-face)
+	("#.*$" . font-lock-comment-face)))
 (defun eww-parse-content (url &optional to-buffer) 
   "Use `url-retrieve' then `eww-render' and parse to a hidden buffer called 'URL#output'
  then append region from POINT-START to POINT-END to existing TO-BUFFER or create a new buffer"
@@ -76,36 +74,34 @@ This is `match-string' data
   "Start `parallel' session."
   (interactive)
   (cond ((eq major-mode 'edl-mode)
-;;	 (append-to-buffer (get-buffer-create "*parallel*") (point-min) (point-max))
-;;	 (occur-list-urls)
-	 ;; (with-current-buffer " occur-output"
-	 ;;   (setq inhibit-read-only nil)
-	 ;;   (goto-char (point-min))
-	 (while (progn
-		  (forward-line 1)
-		  (re-search-forward parallel-url-regexp-span nil t)
-		  (save-match-data (eww-parse-content (format "%s" (match-string 1))))
-		  (let* ((buf (get-buffer (concat " " (match-string 1) "#output")))
-			 (desired-beg (string-to-number (match-string 5)))
-			 (desired-leng (string-to-number (match-string 6)))
-			 (desired-end (+ desired-beg desired-leng))
-			 (valid-region (buffer-size buf))
-			 ;; Check if desired-beg is in range of the size of BUFFER,
-			 ;; if not, fallbacks on the beginning of BUFFER.
-			 (region-beg (if (< desired-beg valid-region)
-					 desired-beg
-				       (point-min)))
-			 ;; Check if desired-end is in range of the size of BUFFER,
-			 ;; if not, fallbacks on the end of BUFFER.
-			 ;; NOTE: the end of BUFFER in this case is just
-			 ;; 1 plus the size of BUFFER, which is equivalent to
-			 ;; calling `(point-max) on the specified BUFFER.
-			 (region-end (if (< (- desired-end 1) valid-region)
-					 desired-end
-				       (+ 1 valid-region))))
-		    (insert-buffer-substring buf region-beg region-end))
-    		    ;; return nil when searching reached the end of buffer
-		    ;; in effect, stop the `while' function
+	   (goto-char (point-min))
+	   (while (progn
+		    (forward-line 1)
+		    (re-search-forward parallel-url-regexp-span nil t)
+		    (save-match-data
+		      (eww-parse-content (format "%s" (match-string 1))))
+		    (let* ((buf (get-buffer (concat " " (match-string 1) "#output")))
+			   (desired-beg (string-to-number (match-string 5)))
+			   (desired-leng (string-to-number (match-string 6)))
+			   (desired-end (+ desired-beg desired-leng))
+			   (valid-region (buffer-size buf))
+			   ;; Check if desired-beg is in range of the size of BUFFER,
+			   ;; if not, fallbacks on the beginning of BUFFER.
+			   (region-beg (if (< desired-beg valid-region)
+					   desired-beg
+					 (point-min)))
+			   ;; Check if desired-end is in range of the size of BUFFER,
+			   ;; if not, fallbacks on the end of BUFFER.
+			   ;; NOTE: the end of BUFFER in this case is just
+			   ;; 1 plus the size of BUFFER, which is equivalent to
+			   ;; calling `(point-max) on the specified BUFFER.
+			   (region-end (if (< (- desired-end 1) valid-region)
+					   desired-end
+					 (+ 1 valid-region))))
+		      (with-current-buffer (get-buffer-create "*paralleldoc*")
+			(insert-buffer-substring buf region-beg region-end)))
+    		    ;; return nil when point reached the end of buffer
+		    ;; in effect, stops the `while' function
 		    (not (eq (point) (point-max))))))
 	(t (user-error "This is not an EDL file."))))
 
