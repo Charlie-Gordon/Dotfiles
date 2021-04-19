@@ -32,6 +32,9 @@
 ;;;; ** LaTeX
 (use-package init-30-tex.el
   :ensure nil)
+;;;; ** Buit-in package configuration
+(use-package init-01-builtin.el
+  :ensure t)
 ;;;; ** Org-mode configuration
 (use-package init-31-org.el
   :ensure nil)
@@ -85,21 +88,6 @@
 (use-package embark-consult
   :ensure t
   :after (embark consult))
-;;;; shr
-(use-package shr
-  :ensure t
-  :custom
-  (shr-discard-aria-hidded t)
-  (shr-image-animate nil)
-  (shr-use-colors nil)
-  (shr-use-fonts nil)
-  (shr-cookie-policy nil))
-;;;; browse-url
-(use-package browse-url
-  :ensure t
-  :custom
-  (browse-url-browser-function 'eww-browse-url)
-  (browse-url-secondary-browser-function 'browse-url-default-browser))
 ;;;; LSP
 (use-package lsp-mode
   :disabled
@@ -109,6 +97,7 @@
   :commands lsp)
 ;;;; EMMS
 (use-package emms
+  :disabled
   :ensure t
   :config
   (emms-all)
@@ -131,22 +120,6 @@
   (shrface-trial)
   (shrface-default-keybindings)
   :custom (shrface-href-versatile t))
-;;;; EWW
-(use-package eww
-  :defer t
-  :init
-;;  (add-hook 'eww-after-render-hook #'shrface-mode)
-  (add-hook 'eww-mode-hook
-            (lambda()
-	      (add-hook 'text-scale-mode-hook
-			'text-scale-mode-hook
-			nil :local)))
-  :custom
-  (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
-  (eww-download-directory (expand-file-name "~/Downloads/eww/"))
-  (eww-header-line-format "%t <%u>")
-  (eww-restore-desktop t)
-  (eww-desktop-remove-duplicates t))
 ;;;; parallel.el
 (use-package parallel-mode.el
   :ensure nil
@@ -230,16 +203,6 @@
   ("C-h k" . helpful-key)
   ("C-h f" . helpful-function))
 (put 'dired-find-alternate-file 'disabled nil)
-
-;;;; Highlighting
-(use-package highlight
-  :disabled
-  :bind (:map ctl-x-map
-	      ("y" . hlt-highlight)
-	      ("<mouse-2>" . hlt-highlighter)
-	      ("S-<mouse-2>" . hlt-eraser)
-	      ("S-C-p" . hlt-previous-highlight)
-	      ("S-C-n" . hlt-next-highlight)))
 
 ;;;; EXWM
 (use-package exwm
