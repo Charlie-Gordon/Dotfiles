@@ -25,7 +25,6 @@
     (make-directory path :parents)))
 ;;;; ** Utilities functions
 (use-package init-00-utils.el
-  :after magit
   :ensure nil)
 ;;;; ** Interface tweaks
 (use-package init-10-face.el
@@ -95,6 +94,12 @@
   (shr-use-colors nil)
   (shr-use-fonts nil)
   (shr-cookie-policy nil))
+;;;; browse-url
+(use-package browse-url
+  :ensure t
+  :custom
+  (browse-url-browser-function 'eww-browse-url)
+  (browse-url-secondary-browser-function 'browse-url-default-browser))
 ;;;; LSP
 (use-package lsp-mode
   :disabled
@@ -137,13 +142,15 @@
 			'text-scale-mode-hook
 			nil :local)))
   :custom
+  (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
   (eww-download-directory (expand-file-name "~/Downloads/eww/"))
   (eww-header-line-format "%t <%u>")
   (eww-restore-desktop t)
   (eww-desktop-remove-duplicates t))
 ;;;; parallel.el
-(use-package parallel.el
-  :ensure nil)
+(use-package parallel-mode.el
+  :ensure nil
+  :load-path "lisp/parallel/")
 ;;;; Nov.el
 (use-package nov
   :config
@@ -204,7 +211,8 @@
 ;;;; Magit
 (use-package magit
   :requires with-editor tramp 
-  :ensure t)
+  :ensure t
+  :bind ("M-g ." . magit))
 ;;;; Which-key
 (use-package which-key
   :diminish which-key-mode
