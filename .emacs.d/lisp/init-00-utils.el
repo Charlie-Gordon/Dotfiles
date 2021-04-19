@@ -24,6 +24,17 @@
   (interactive)
   "Open magit in dotfiles repository."
   (magit-status "/yadm::"))
+;;;; Occur
+(defun occur-list-urls (&optional to-buffer)
+  "Produce buttonised list of all URLs in the current buffer."
+  (interactive)
+  (let ((to-buffer (or to-buffer
+		       (current-buffer))))
+    (add-hook 'occur-hook #'goto-address-mode)
+    (occur-1 "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)\\(//[-a-z0-9_.]+:[0-9]*\\)?\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+([-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]*)\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)?\\|[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)\\)"
+  "\\&" (list (current-buffer)) (get-buffer-create " occur-output"))
+    (remove-hook 'occur-hook #'goto-address-mode)))
+
 ;;;; Fixing EMMS volume control
 ;; (defadvice emms-volume-change-function (after fbsd-mixer-volume-change activate)
 ;;   "Fixes to work with fbsd's mixer."
