@@ -35,6 +35,19 @@
   "\\&" (list (current-buffer)) (get-buffer-create " occur-output"))
     (remove-hook 'occur-hook #'goto-address-mode)))
 
+;;;; mpv-play-url
+;; https://gist.github.com/bsless/19ca4a37eee828b1b62c84971181f506#file-yt-mpv-el
+(defun mpv-play-url (&optional url &rest args)
+  "Start mpv for URL."
+  (interactive)
+  (let ((url (or url
+		 (if (consp (eww-suggested-uris))
+		     (car (eww-suggested-uris))
+		   (eww-suggested-uris)))))
+    (if url
+	(start-process "mpv"  nil "mpv" url)
+      (message "No valid URL."))))
+       
 ;;;; Fixing EMMS volume control
 ;; (defadvice emms-volume-change-function (after fbsd-mixer-volume-change activate)
 ;;   "Fixes to work with fbsd's mixer."
