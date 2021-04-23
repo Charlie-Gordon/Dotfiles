@@ -37,6 +37,10 @@
 	      (add-hook 'text-scale-mode-hook
 			'text-scale-mode-hook
 			nil :local)))
+  :config
+  (add-hook 'eww-after-render-hook 'eww--rename-buffer)
+  (advice-add 'eww-back-url :after 'eww--rename-buffer)
+  (advice-add 'eww-forward-url :after 'eww--rename-buffer)
   :bind (:map eww-mode-map
 	      ("W" . mpv-play-url))
   :custom

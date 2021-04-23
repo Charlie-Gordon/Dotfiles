@@ -19,6 +19,15 @@
 (defun text-scale-mode-hook ()
   "Rerender content of EWW when uses text-scale mode."
   (eww-reload :local))
+;;;; Eww rename buffer
+(defun eww--rename-buffer ()
+  "Rename EWW buffer using page title or URL.
+To be used by `eww-after-render-hook'."
+  (let ((name (if (eq "" (plist-get eww-data :title))
+                  (plist-get eww-data :url)
+                (plist-get eww-data :title))))
+    (rename-buffer (format "*%s # eww*" name) t)))
+
 ;;;; Magit shortcuts
 (defun magit-status-dotfiles ()
   (interactive)
@@ -47,34 +56,21 @@
     (if url
 	(start-process "mpv"  nil "mpv" url)
       (message "No valid URL."))))
-       
-;;;; Fixing EMMS volume control
-;; (defadvice emms-volume-change-function (after fbsd-mixer-volume-change activate)
-;;   "Fixes to work with fbsd's mixer."
-;;   (cond
-;;    ((executable-find "mixer") 'emms-volume-mixer-change)))
 
+(defun ytel-watch ()
+    "Stream video at point in mpv."
+    (interactive)
+    (let* ((video (ytel-get-current-video))
+     	   (id    (ytel-video-id video)))
+      (start-process "ytel mpv" nil
+		     "mpv"
+		     (concat "https://www.youtube.com/watch?v=" id
+		     "--ytdl-format=bestvideo[height<=?720]+bestaudio/best")))
+      (message "Starting streaming..."))
+;;;; EXWM processes
+(defun exwm-start-process (key command)
+  (exwm-input-set-key key `(lambda ()
+			     (interactive)
+			     (start-process "exwm-processes" nil "sh" "-c" ,command))))
 
-;; (defun emms-volume-mixer-change (amount)
-;;   "Change mixer of FreeBSD master volume by AMOUNT."
-;;   (message "Volume is: %s"
-;; 	   (with-temp-buffer
-;; 	     (when (zerop
-;; 	       (call-process "mixer" nil "volume" nil
-;; 			     "vol"
-;; 			     (format "%s%d" (if (< amount 0)
-;; 		       				    "-"
-;; 						  "+")
-;; 				     (abs amount))))
-;; 	       (if (and (forward-line -1)
-;; 			(re-search-forward "[0-9]$" nil))
-;; 		   (format "%s" (match-string 0)))))))
-    
 (provide 'init-00-utils.el)
-()
-
-
-
-
-
-

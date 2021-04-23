@@ -34,7 +34,7 @@
   :ensure nil)
 ;;;; ** Buit-in package configuration
 (use-package init-01-builtin.el
-  :ensure t)
+  :ensure nil)
 ;;;; ** Org-mode configuration
 (use-package init-31-org.el
   :ensure nil)
@@ -88,6 +88,12 @@
 (use-package embark-consult
   :ensure t
   :after (embark consult))
+;;;; dired-subtree
+(use-package dired-subtree
+  :bind (:map dired-mode-map
+	      ("<tab>" . dired-subtree-toggle)
+	      ("<C-tab>" . dired-subtree-cycle))
+  :ensure t)
 ;;;; LSP
 (use-package lsp-mode
   :disabled
@@ -124,6 +130,13 @@
 (use-package parallel-mode.el
   :ensure nil
   :load-path "lisp/parallel/")
+;;;; Youtube
+(use-package ytel
+  :bind (:map ytel-mode-map
+	      ("RET" . ytel-watch))
+  :custom
+  (ytel-invidious-api-url "https://invidious.snopyta.org")
+  :ensure t)
 ;;;; Nov.el
 (use-package nov
   :config
@@ -206,9 +219,9 @@
 
 ;;;; EXWM
 (use-package exwm
+  :after init-00-utils.el
   :config
   (use-package exwm-config
-    :ensure nil
     :custom
 ;; Prefix keys to ignore
     (exwm-input-prefix-keys `(?\C-x
@@ -234,52 +247,46 @@
 						(interactive)
 						(exwm-workspace-switch-create ,i))))
 					  (number-sequence 0 9))))
+    (exwm-start-process (kbd "s--") "mixer vol -3")
+    (exwm-start-process (kbd "s-=") "mixer vol +3")
 ;; Line-editing keybindings for X windows
-    (exwm-input-simulation-keys '(([?\C-b] . [left])
+    (exwm-input-simulation-keys '(;; Backward-char
+				  ([?\C-b] . [left])
+				  ;; Forward-char
 				  ([?\C-f] . [right])
+				  ;; Previous-line
 				  ([?\C-p] . [up])
+				  ;; Next-line
 				  ([?\C-n] . [down])
+				  ;; Beginning of the line
 				  ([?\C-a] . [home])
+				  ;; End of the line
 				  ([?\C-e] . [end])
+				  ;; Forward-word
+				  ([?\M-f] . [C-right])
+				  ;; Backward-word
+				  ([?\M-b] . [C-left])
 				  ([?\M-v] . [prior])
 				  ([?\C-v] . [next])
 				  ([?\C-d] . [delete])
 				  ([?\C-k] . [S-end C-x])
 				  ([?\C-y] . [C-v])))
-;; Set the initial workspace number
-    :config    
+    ;; Set the initial workspace number
+    :config
     (unless (get 'exwm-workspace-number 'saved-value)
       (setq exwm-workspace-number 4))
-;; Fix Ido
+    ;; Fix Ido
     (exwm-config-ido)
     (ido-mode 0)
-;; Make class name the buffer name
+    ;; Proper modeline
+    (add-hook 'exwm-input-input-mode-change-hook 'force-mode-line-update)
+    ;; Make class name the buffer name
     (add-hook 'exwm-update-class-hook
 	      (lambda ()
-      	(exwm-workspace-rename-buffer exwm-class-name)))
-;; Firefox keybindings
-    (add-hook 'exwm-manage-finish-hook  (lambda ()
-					  (when (and exwm-class-name
-						     (string= exwm-class-name "Firefox"))
-					    (exwm-input-set-local-simulation-keys
-					     `( ,@exwm-input-simulation-keys
-						([?\C-\M-j] . ,(kbd "C-<tab>"))
-						([?\C-\M-k] . ,(kbd "C-S-<tab>"))
-						([?\C-\M-h] . ,(kbd "M-<left>"))
-						([?\C-\M-l] . ,(kbd "M-<right>"))
-						([?\C-l] . [f6])
-						([?\C-q] . ?\C-w)
-						([?\C-w] . ?\C-c)
-						([?\C-y] . ?\C-v)
-						([?\C-s] . ?\C-f)
-      						([?\C-\S-s] . ?\C-g)
-						([?\C-m] . ?\')
-						([?\M-a] . [C-home])
-						([?\M-e] . [C-end])
-						([?\M-f] . ,(kbd "C-<left>"))
-       						([?\M-b] . ,(kbd "C-<right>"))
-						(,(kbd "C-/") . [?\C-z]))))))    
-;; Prefered minibuffer    
+      		(exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Prefered minibuffer
     (selectrum-mode +1)
-;; Enable EXWM    
-    (exwm-enable)))
+    ;; Enable EXWM
+    (exwm-enable)
+    :ensure nil)
+  :ensure t)

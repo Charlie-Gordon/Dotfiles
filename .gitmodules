@@ -1,3 +1,5 @@
 [submodule ".emacs.d/lisp/parallel"]
 	path = .emacs.d/lisp/parallel
 	url = git@gitlab.com:Charlie-Gordon/parallel-mode.el.git
+[submodule "/home/i/.emacs.d/lisp/parallel/"]
+	url = https://gitlab.com/Charlie-Gordon/parallel-mode.el
