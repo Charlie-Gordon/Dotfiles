@@ -126,16 +126,20 @@
   (shrface-trial)
   (shrface-default-keybindings)
   :custom (shrface-href-versatile t))
-;;;; parallel.el
+;;;; parallel-mode.el
 (use-package parallel-mode.el
   :ensure nil
   :load-path "lisp/parallel/")
+;;;; LBRY
+(use-package lbry-mode.el
+  :load-path "lisp/lbry-mode/"
+  :ensure nil)
 ;;;; Youtube
 (use-package ytel
   :bind (:map ytel-mode-map
 	      ("RET" . ytel-watch))
-  :custom
-  (ytel-invidious-api-url "https://invidious.snopyta.org")
+  :config
+  (setq ytel-invidious-api-url "https://invidious.snopyta.org")
   :ensure t)
 ;;;; Nov.el
 (use-package nov
