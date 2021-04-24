@@ -6,3 +6,6 @@
 [submodule ".emacs.d/lisp/lbry-mode"]
 	path = .emacs.d/lisp/lbry-mode
 	url = /home/i/Git/lbry-mode/
+[submodule ".emacs.d/lisp/parallel-mode"]
+	path = .emacs.d/lisp/parallel-mode
+	url = git@gitlab.com:Charlie-Gordon/parallel-mode.el.git
