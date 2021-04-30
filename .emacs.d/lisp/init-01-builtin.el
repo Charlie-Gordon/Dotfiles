@@ -18,9 +18,29 @@
   (dired-clean-up-buffers-too t)
   (dired-clean-confirm-killing-deleted-buffers t)
   (dired-x-hands-off-my-keys t)
+  (dired-guess-shell-alist-user '(("" "xdg-open")))
   :config
   (unless (assoc-default "mp4" dired-guess-shell-alist-default)
     (add-to-list 'dired-guess-shell-alist-default '("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\'" "mpv")))
+  :ensure nil)
+;;; dired-subtree
+(use-package dired-subtree
+  :bind (:map dired-mode-map
+	      ("<tab>" . dired-subtree-toggle)
+	      ("<C-tab>" . dired-subtree-cycle))
+  :ensure t)
+;;; tramp
+(use-package tramp
+  :config
+;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm(my dotfiles manager)
+;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
+  (add-to-list 'tramp-methods
+	       '("yadm"
+		 (tramp-login-program "yadm")
+		 (tramp-login-args (("enter")))
+		 (tramp-login-env (("SHELL") ("/bin/sh")))
+		 (tramp-remote-shell "/bin/sh")
+		 (tramp-remote-shell-args ("-c"))))
   :ensure nil)
 ;;; ls-lisp
 (use-package ls-lisp
@@ -69,3 +89,6 @@
   (browse-url-secondary-browser-function 'browse-url-default-browser))
 
 (provide 'init-01-builtin.el)
+;;; lisp-mode
+(use-package paren-face
+  :ensure t)

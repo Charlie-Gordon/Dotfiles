@@ -20,7 +20,7 @@
   :ensure t)
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
-;;;; Font for Thai character
-(set-fontset-font t 'thai (font-spec :family "TH SarabunPSK"
-				     :size 24))
+;;;; FreeSans for unicode
+(set-fontset-font t nil (font-spec :family "FreeSans"
+				     :size 20))
 (provide 'init-10-face.el)

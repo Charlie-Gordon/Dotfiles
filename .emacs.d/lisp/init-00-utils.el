@@ -10,11 +10,12 @@
 ;;   (interactive "D")
 ;;   (dired-at-point (concat "/doas:root@localhost:" (expand-file-name editing-directory))))
 ;;;; Find-file with root permissions
-;; (defadvice find-file (after find-file-sudo activate)
-;;   "Find file as root if necessary."
-;;   (unless (and buffer-file-name
-;; 	       (file-writable-p buffer-file-name))
-;;     (find-alternate-file (concat "/doas:root@localhost:" buffer-file-name))))
+;; From https://emacsredux.com/blog/2013/04/21/edit-files-as-root/
+(defadvice find-file (after find-file-sudo activate)
+  "Find file as root if necessary."
+  (when (and (buffer-file-name)
+	     (not (file-writable-p buffer-file-name)))
+    (find-alternate-file (concat "/doas::" buffer-file-name))))
 ;;;; EWW reflow document when scaled text
 (defun text-scale-mode-hook ()
   "Rerender content of EWW when uses text-scale mode."
