@@ -74,7 +74,10 @@
 (use-package embark
   :ensure t
   :bind
-  ("C-." . embark-act))
+  ("C-." . embark-act)
+  (:map embark-url-map
+	("s" . browse-url-xdg-open)
+	("m" . mpv-play-url)))
 ;;;;; Orderless
 (use-package orderless
   :ensure t
@@ -88,12 +91,6 @@
 (use-package embark-consult
   :ensure t
   :after (embark consult))
-;;;; dired-subtree
-(use-package dired-subtree
-  :bind (:map dired-mode-map
-	      ("<tab>" . dired-subtree-toggle)
-	      ("<C-tab>" . dired-subtree-cycle))
-  :ensure t)
 ;;;; LSP
 (use-package lsp-mode
   :disabled
@@ -137,17 +134,22 @@
 ;;;; Youtube
 (use-package ytel
   :bind (:map ytel-mode-map
-	      ("RET" . ytel-watch))
+ 	      ("RET" . ytel-watch))
   :config
   (setq ytel-invidious-api-url "https://invidious.snopyta.org")
   :ensure t)
+(use-package ytel-show
+  :after ytel
+  :load-path "lisp/ytel-show"
+  :ensure nil)
 ;;;; Nov.el
 (use-package nov
   :config
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
-	      ("C-S-p" . shr-previous-link)))
+	      ("C-S-p" . shr-previous-link))
+  :ensure t)
 ;;;; pdf-tools & restore functions
 (use-package pdf-tools
   :init
@@ -185,19 +187,6 @@
 ;;;; with-editor
 (use-package with-editor
   :ensure t)
-;;;; tramp
-(use-package tramp
-  :config
-  ;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm(my dotfiles manager)
-;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
-  (add-to-list 'tramp-methods
-	       '("yadm"
-		 (tramp-login-program "yadm")
-		 (tramp-login-args (("enter")))
-		 (tramp-login-env (("SHELL") ("/bin/sh")))
-		 (tramp-remote-shell "/bin/sh")
-		 (tramp-remote-shell-args ("-c"))))
-  :ensure nil)
 ;;;; Magit
 (use-package magit
   :requires with-editor tramp 
