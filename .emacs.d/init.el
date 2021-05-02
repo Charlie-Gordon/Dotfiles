@@ -133,13 +133,13 @@
   :ensure nil)
 ;;;; Youtube
 (use-package ytel
-  :bind (:map ytel-mode-map
- 	      ("RET" . ytel-watch))
   :config
   (setq ytel-invidious-api-url "https://invidious.snopyta.org")
   :ensure t)
 (use-package ytel-show
   :after ytel
+  :bind (:map ytel-mode-map
+ 	      ("RET" . ytel-show))
   :load-path "lisp/ytel-show"
   :ensure nil)
 ;;;; Nov.el
