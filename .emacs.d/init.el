@@ -129,6 +129,7 @@
   :load-path "lisp/parallel/")
 ;;;; LBRY
 (use-package lbry-mode.el
+  :disabled
   :load-path "lisp/lbry-mode/"
   :ensure nil)
 ;;;; Youtube
