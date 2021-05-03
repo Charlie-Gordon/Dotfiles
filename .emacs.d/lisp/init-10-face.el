@@ -17,6 +17,11 @@
 (prefer-coding-system 'utf-8)
 ;;;; Modus themes
 (use-package modus-themes
+  :config
+  (load-theme 'modus-vivendi t)
+  :ensure t)
+;;;; Diminish
+(use-package diminish
   :ensure t)
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")

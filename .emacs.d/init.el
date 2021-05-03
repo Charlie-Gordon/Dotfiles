@@ -56,7 +56,7 @@
 ;;;;; Lazy yes or no
 (fset 'yes-or-no-p 'y-or-n-p)
 ;;;;; Keyboard layout
-(add-hook 'after-init-hook 'modremap)
+(add-hook 'after-init-hook #'modremap)
 ;;; * Packages
 ;;;; Completions
 ;;;;; Selectrum
@@ -125,6 +125,7 @@
   :custom (shrface-href-versatile t))
 ;;;; parallel-mode.el
 (use-package parallel-mode.el
+  :disabled
   :ensure nil
   :load-path "lisp/parallel/")
 ;;;; LBRY
@@ -241,8 +242,6 @@
 						(interactive)
 						(exwm-workspace-switch-create ,i))))
 					  (number-sequence 0 9))))
-    (exwm-start-process (kbd "s--") "mixer vol -3")
-    (exwm-start-process (kbd "s-=") "mixer vol +3")
 ;; Line-editing keybindings for X windows
     (exwm-input-simulation-keys '(;; Backward-char
 				  ([?\C-b] . [left])
