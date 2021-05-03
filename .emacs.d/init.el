@@ -125,12 +125,10 @@
   :custom (shrface-href-versatile t))
 ;;;; parallel-mode.el
 (use-package parallel-mode.el
-  :disabled
   :ensure nil
   :load-path "lisp/parallel/")
 ;;;; LBRY
 (use-package lbry-mode.el
-  :disabled
   :load-path "lisp/lbry-mode/"
   :ensure nil)
 ;;;; Youtube
