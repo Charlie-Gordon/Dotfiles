@@ -62,6 +62,7 @@
   (advice-add 'eww-back-url :after 'eww--rename-buffer)
   (advice-add 'eww-forward-url :after 'eww--rename-buffer)
   :bind (:map eww-mode-map
+	      ("<return>" . eww)
 	      ("W" . mpv-play-url))
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")

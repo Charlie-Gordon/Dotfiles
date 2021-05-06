@@ -49,7 +49,7 @@ To be used by `eww-after-render-hook'."
 ;; https://gist.github.com/bsless/19ca4a37eee828b1b62c84971181f506#file-yt-mpv-el
 (defun mpv-play-url (&optional url &rest args)
   "Start mpv for URL."
-  (interactive)
+  (interactive"sURL: ")
   (let ((url (or url
 		 (if (consp (eww-suggested-uris))
 		     (car (eww-suggested-uris))

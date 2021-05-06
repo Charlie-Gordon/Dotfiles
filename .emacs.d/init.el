@@ -80,8 +80,12 @@
 	("m" . mpv-play-url)))
 ;;;;; Orderless
 (use-package orderless
+  :after selectrum
   :ensure t
-  :custom (completion-styles '(orderless partial-completion)))
+  :custom
+  (selectrum-refine-candidates-function #'orderless-filter)
+  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+  (completion-styles '(orderless partial-completion)))
 ;;;;; Marginalia
 (use-package marginalia
   :ensure t
@@ -91,6 +95,16 @@
 (use-package embark-consult
   :ensure t
   :after (embark consult))
+;;;; Scheme
+(use-package quack
+  :ensure t)
+(use-package geiser
+  :ensure t)
+(use-package geiser-mit
+  :after geiser
+  :ensure t)
+(use-package paredit
+  :ensure t)
 ;;;; LSP
 (use-package lsp-mode
   :disabled
@@ -131,17 +145,9 @@
 (use-package lbry-mode.el
   :load-path "lisp/lbry-mode/"
   :ensure nil)
-;;;; Youtube
-(use-package ytel
-  :config
-  (setq ytel-invidious-api-url "https://invidious.snopyta.org")
+;;;; Peertube
+(use-package peertube
   :ensure t)
-(use-package ytel-show
-  :after ytel
-  :bind (:map ytel-mode-map
- 	      ("RET" . ytel-show))
-  :load-path "lisp/ytel-show"
-  :ensure nil)
 ;;;; Nov.el
 (use-package nov
   :config
@@ -227,19 +233,20 @@
 				?\M-:))
 ;; Global keys for EXWM
     (exwm-input-global-keys `(([?\s-.] . reload-emacs-configuration)
-				([?\s-w] . exwm-workspace-switch)
-				([?\s-&] . (lambda (command)
-					     (interactive (list (read-shell-command "$ ")))
-					     (start-process-shell-command command nil command)))
-				([?\s-d] . modus-themes-toggle)
-				([?\s-s] . magit-status-dotfiles)
-				(,(kbd "s-<return>") . eshell)
-				,@(mapcar (lambda (i)
-					    `(,(kbd (format "s-%d" i)) .
-					      (lambda ()
-						(interactive)
-						(exwm-workspace-switch-create ,i))))
-					  (number-sequence 0 9))))
+			      ([?\C-g] . keyboard-escape-quit)
+			      ([?\s-w] . exwm-workspace-switch)
+			      ([?\s-&] . (lambda (command)
+					   (interactive (list (read-shell-command "$ ")))
+					   (start-process-shell-command command nil command)))
+			      ([?\s-d] . modus-themes-toggle)
+			      ([?\s-s] . magit-status-dotfiles)
+			      (,(kbd "s-<return>") . eshell)
+			      ,@(mapcar (lambda (i)
+					  `(,(kbd (format "s-%d" i)) .
+					    (lambda ()
+					      (interactive)
+					      (exwm-workspace-switch-create ,i))))
+					(number-sequence 0 9))))
 ;; Line-editing keybindings for X windows
     (exwm-input-simulation-keys '(;; Backward-char
 				  ([?\C-b] . [left])
