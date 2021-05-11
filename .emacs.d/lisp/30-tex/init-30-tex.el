@@ -19,6 +19,7 @@
      ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")) 
    LaTeX-verbatim-environments '("verbatim" "verbatim*" "Verbatim" "Verbatim*" "lstlisting" "code" "minted" "gascode" "ccode" "pythoncode" "javacode" "bashcode")   
    TeX-view-program-selection '((output-pdf "PDF Tools") (output-html "xdg-open"))
+   TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))
    TeX-view-style nil
    bibtex-maintain-sorted-entries t
    bibtex-align-at-equal-sign t)
@@ -31,6 +32,7 @@
   (setq-default TeX-master nil))
 
 (use-package reftex
+  :disabled
   :custom
   (reftex-plug-into-AUCTeX t
    reftex-bibliography-commands '("addbibresource" "bibliography" "nobibliography")

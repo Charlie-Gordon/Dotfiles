@@ -1,7 +1,7 @@
-;;; * Essential External Programs
+;;; Essential External Programs
 (load "~/.emacs.d/external/stuffs.el" t)
-;;; * Emacs initialization
-;;;; ** Use-package
+;;; Emacs initialization
+;;;; Use-package
 ;;;;; Initialize
 (package-initialize)
 ;;;;; Add package sources
@@ -17,28 +17,28 @@
   (require 'use-package))
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
-;;;; ** Setting load-path
+;;;; Setting load-path
 (let* ((path (expand-file-name "lisp" user-emacs-directory))
        (local-pkgs (mapcar 'file-name-directory (directory-files-recursively path ".*\\.el"))))
   (if (file-accessible-directory-p path)
       (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
     (make-directory path :parents)))
-;;;; ** Utilities functions
+;;;; Utilities functions
 (use-package init-00-utils.el
   :ensure nil)
-;;;; ** Interface tweaks
+;;;; Interface tweaks
 (use-package init-10-face.el
   :ensure nil)
-;;;; ** LaTeX
+;;;; TeX
 (use-package init-30-tex.el
   :ensure nil)
-;;;; ** Buit-in package configuration
+;;;; Buit-in package configuration
 (use-package init-01-builtin.el
   :ensure nil)
-;;;; ** Org-mode configuration
+;;;; Org-mode configuration
 (use-package init-31-org.el
   :ensure nil)
-;;;; ** General Improvement
+;;;; General Improvement
 ;;;;; Sentences end with a single space
 (setq sentence-end-double-space nil)
 ;;;;; Allow access to content from clipboard
@@ -57,7 +57,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 ;;;;; Keyboard layout
 (add-hook 'after-init-hook #'modremap)
-;;; * Packages
+;;; Packages
 ;;;; Completions
 ;;;;; Selectrum
 (use-package selectrum
@@ -93,9 +93,91 @@
   (marginalia-mode 1))
 ;;;;; Embark-consult
 (use-package embark-consult
+  :after (embark consult)
+  :ensure t)
+;;;; Application & utilities
+;;;;; Multimedia
+;;;;;; LBRY
+(use-package lbry-mode.el
+  :load-path "lisp/lbry-mode/"
+  :ensure nil)
+;;;;;; Peertube
+(use-package peertube
+  :ensure t)
+;;;;;; parallel-mode.el
+(use-package parallel-mode.el
+  :ensure nil
+  :load-path "lisp/parallel/")
+;;;;;; Magit
+(use-package magit
+  :requires with-editor tramp 
   :ensure t
-  :after (embark consult))
-;;;; Scheme
+  :bind ("M-g ." . magit))
+;;;;;; shrface
+(use-package shrface
+  :ensure t
+  :defer t
+  :config
+  (shrface-basic)
+  (shrface-trial)
+  (shrface-default-keybindings)
+  :custom (shrface-href-versatile t))
+
+;;;;; Document
+;;;;;; Nov.el
+(use-package nov
+  :config
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  :bind (:map nov-mode-map
+	      ("C-S-n" . shr-next-link)
+	      ("C-S-p" . shr-previous-link))
+  :ensure t)
+;;;;;; PDFs
+(use-package pdf-tools
+  :init (pdf-loader-install)
+  :bind (:map pdf-view-mode-map
+	      ("C-s" . isearch-forward)
+	      ("h" . pdf-annot-add-highlight-markup-annotation)
+	      ("t" . pdf-annot-add-text-annotation)
+	      ("D" . pdf-annot-annot-delete))
+  :config
+  (add-hook 'pdf-view-mode-hook 'pdf-view-restore-mode)
+  :custom
+  (pdf-view-display-size 'fit-page)
+  (pdf-annot-activate-created-annotations t)
+  (pdf-view-resize-factor 1.1)
+  :ensure t)
+(use-package pdf-view-restore
+  :ensure t)
+;;;; Language settings for prose and code
+;;;;; Bookmarks
+(use-package bm
+  :bind-keymap ("C-c m" . bm-show-mode-map)
+  :bind (:map bm-show-mode-map
+	      ("m" . bm-toggle)
+	      ("n" . bm-next)
+	      ("p" . bm-previous)
+	      ("L" . bm-show-all)
+	      ("l" . bm-show)
+	      ("s" . bm-save)
+	      ("r" . bm-load-and-restore))
+  ("<right-fringe> <mouse-5>" . bm-next-mouse)
+  ("<right-fringe> <mouse-4>" . bm-previous-mouse)
+  ("<right-fringe> <mouse-1>" . bm-toggle-mouse)
+  :custom
+  (bm-marker 'bm-marker-right)
+;;  (bm-repository-file (concat emacs-persistence-directory "bm-repository"))
+  (bm-recenter t)
+  (bm-highlight-style 'bm-highlight-only-line)
+  :ensure t)
+;;;;; Yasnippet
+(use-package yasnippet
+  :config
+  (use-package yasnippet-snippets)
+  (yas-load-directory (concat user-emacs-directory "snippets"))
+  (yas-reload-all)
+  (yas-global-mode 1))
+;;;;; Scheme
 (use-package quack
   :ensure t)
 (use-package geiser
@@ -105,118 +187,15 @@
   :ensure t)
 (use-package paredit
   :ensure t)
-;;;; LSP
-(use-package lsp-mode
-  :disabled
-  :ensure t
-  :init (setq lsp-keymap-prefix "C-c l")
-  :hook (emacs-lisp-mode-hook . lsp)
-  :commands lsp)
-;;;; EMMS
-(use-package emms
-  :disabled
-  :ensure t
+;;;;; Lisp (SLIME)
+(use-package slime 
   :config
-  (emms-all)
-  (emms-default-players)
-  :custom
-  (emms-source-file-default-directory "~/Music/"))
-;;;; Yasnippet
-(use-package yasnippet
-  :config
-  (use-package yasnippet-snippets)
-  (yas-load-directory (concat user-emacs-directory "snippets"))
-  (yas-reload-all)
-  (yas-global-mode 1))
-;;;; shrface
-(use-package shrface
-  :ensure t
-  :defer t
-  :config
-  (shrface-basic)
-  (shrface-trial)
-  (shrface-default-keybindings)
-  :custom (shrface-href-versatile t))
-;;;; parallel-mode.el
-(use-package parallel-mode.el
-  :ensure nil
-  :load-path "lisp/parallel/")
-;;;; LBRY
-(use-package lbry-mode.el
-  :load-path "lisp/lbry-mode/"
-  :ensure nil)
-;;;; Peertube
-(use-package peertube
-  :ensure t)
-;;;; Nov.el
-(use-package nov
-  :config
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-  :bind (:map nov-mode-map
-	      ("C-S-n" . shr-next-link)
-	      ("C-S-p" . shr-previous-link))
-  :ensure t)
-;;;; pdf-tools & restore functions
-(use-package pdf-tools
-  :init
-  (pdf-tools-install)
-  :config
-  (setq-default pdf-view-display-size 'fit-page)
-  :bind (:map pdf-view-mode-map
-	      ("g"  . pdf-view-first-page)
-	      ("G"  . pdf-view-last-page)
-	      ("l"  . image-forward-hscroll)
-	      ("h"  . image-backward-hscroll)
-	      ("j"  . pdf-view-next-page)
-	      ("k"  . pdf-view-previous-page)
-	      ("e"  . pdf-view-goto-page)
-	      ("y"  . pdf-view-kill-ring-save)
-	      ("i"  . pdf-misc-display-metadata)
-       	      ("o"  . pdf-occur)
-	      ("b"  . pdf-view-set-slice-from-bounding-box)
-	      ("r" . image-transform-set-rotation)
-	      ("R"  . pdf-view-revert-buffer)
-	      ("C-s" . isearch-forward)
-	      ("C-c C-c" . image-toggle-display))
-  :custom
-  (yas-minor-mode nil)
-  (pdf-cache-image-limit 32)
-  (pdf-view-max-image-width 2048)
-  (pdf-view-resize-factor 1.8)
-  (pdf-isearch-batch-mode t)
-  (pdf-annot-activate-created-annotations t))
-(use-package pdf-view-restore
-  :after pdf-tools
-  :config
-  (add-hook 'pdf-view-mode-hook 'pdf-view-restore-mode)
-  (setq pdf-view-restore-filename "~/.emacs.d/.pdf-view-restore"))
-;;;; with-editor
-(use-package with-editor
-  :ensure t)
-;;;; Magit
-(use-package magit
-  :requires with-editor tramp 
-  :ensure t
-  :bind ("M-g ." . magit))
-;;;; Which-key
-(use-package which-key
-  :diminish which-key-mode
-  :config
-  (which-key-mode)
-  :custom
-  (which-key-idle-delay 0.3))
-;;;; Helpful
-(use-package helpful
-  :bind
-  ("C-h v" . helpful-variable)
-  ("C-h o" . helpful-symbol)
-  ("C-h c" . helpful-command)
-  ("C-h C-k" . helpful-kill-buffers)
-  ("C-h k" . helpful-key)
-  ("C-h f" . helpful-function))
-(put 'dired-find-alternate-file 'disabled nil)
-
-;;;; EXWM
+  (use-package slime-autoloads :ensure nil)
+  (setq inferior-lisp-program "/usr/local/bin/sbcl")
+  (slime-setup '(slime-fancy))
+   :defer t)
+;;;; General interface
+;;;;; EXWM
 (use-package exwm
   :after init-00-utils.el
   :config
@@ -288,3 +267,22 @@
     (exwm-enable)
     :ensure nil)
   :ensure t)
+;;;;; Helpful extras
+;;;;;; Helpful
+(use-package helpful
+  :bind
+  ("C-h v" . helpful-variable)
+  ("C-h o" . helpful-symbol)
+  ("C-h c" . helpful-command)
+  ("C-h C-k" . helpful-kill-buffers)
+  ("C-h k" . helpful-key)
+  ("C-h f" . helpful-function))
+(put 'dired-find-alternate-file 'disabled nil)
+
+;;;;;; Which-key
+(use-package which-key
+  :diminish which-key-mode
+  :config
+  (which-key-mode)
+  :custom
+  (which-key-idle-delay 0.3))

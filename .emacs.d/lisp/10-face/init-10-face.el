@@ -1,6 +1,6 @@
 ;;; init-10-face.el --- The look of emacs
 ;;;; Fringe
-(fringe-mode 1)
+(fringe-mode 8)
 ;;;; Time in modeline
 (setq mode-line-format
       '("%e" "%z" mode-line-front-space mode-line-mule-info mode-line-client mode- mode-line-remote mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position

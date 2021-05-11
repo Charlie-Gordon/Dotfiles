@@ -4,11 +4,6 @@
   "Reload emacs' init.el file."
   (interactive)
   (load-file (concat user-emacs-directory "init.el")))
-;; ;;;; Dired with root permissions
-;; (defun sudired (editing-directory)
-;;   "Dired with root permission."
-;;   (interactive "D")
-;;   (dired-at-point (concat "/doas:root@localhost:" (expand-file-name editing-directory))))
 ;;;; Find-file with root permissions
 ;; From https://emacsredux.com/blog/2013/04/21/edit-files-as-root/
 (defadvice find-file (after find-file-sudo activate)
@@ -16,19 +11,6 @@
   (when (and (buffer-file-name)
 	     (not (file-writable-p buffer-file-name)))
     (find-alternate-file (concat "/doas::" buffer-file-name))))
-;;;; EWW reflow document when scaled text
-(defun text-scale-mode-hook ()
-  "Rerender content of EWW when uses text-scale mode."
-  (eww-reload :local))
-;;;; Eww rename buffer
-(defun eww--rename-buffer ()
-  "Rename EWW buffer using page title or URL.
-To be used by `eww-after-render-hook'."
-  (let ((name (if (eq "" (plist-get eww-data :title))
-                  (plist-get eww-data :url)
-                (plist-get eww-data :title))))
-    (rename-buffer (format "*%s # eww*" name) t)))
-
 ;;;; Magit shortcuts
 (defun magit-status-dotfiles ()
   (interactive)
@@ -55,7 +37,8 @@ To be used by `eww-after-render-hook'."
 		     (car (eww-suggested-uris))
 		   (eww-suggested-uris)))))
     (if url
-	(start-process "mpv"  nil "mpv" url)
+	(progn (start-process "mpv"  nil "mpv" url)
+	       (message "%s%s" "Playing " url))
       (message "No valid URL."))))
 
 (defun ytel-watch ()
@@ -68,10 +51,6 @@ To be used by `eww-after-render-hook'."
 		     (concat "https://www.youtube.com/watch?v=" id
 		     "--ytdl-format=bestvideo[height<=?720]+bestaudio/best")))
       (message "Starting streaming..."))
-;;;; EXWM processes
-(defun exwm-start-process (key command)
-  (exwm-input-set-key key `(lambda ()
-			     (interactive)
-			     (start-process "exwm-processes" nil "sh" "-c" ,command))))
 
 (provide 'init-00-utils.el)
+;;; init-00-utils.el ends here.
