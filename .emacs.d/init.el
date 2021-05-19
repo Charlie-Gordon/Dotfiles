@@ -114,18 +114,18 @@
   (erc-server-reconnect-timeout 3)
   (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
                              "324" "329" "332" "333" "353" "477"))
-  ;; DCC support
   :config
-  (use-package erc-dcc
+  (use-package erc-dcc ;; DCC support
     :ensure nil)
+  (use-package erc-image ;; Image module
+    :ensure t)
+  (use-package erc-hl-nicks
+    :ensure t)
   :ensure nil)
 ;;;;;; LBRY
 (use-package lbry-mode.el
   :load-path "lisp/lbry-mode/"
   :ensure nil)
-;;;;;; Peertube
-(use-package peertube
-  :ensure t)
 ;;;;;; parallel-mode.el
 (use-package parallel-mode.el
   :ensure nil
@@ -135,16 +135,6 @@
   :requires with-editor tramp 
   :ensure t
   :bind ("M-g ." . magit))
-;;;;;; shrface
-(use-package shrface
-  :ensure t
-  :defer t
-  :config
-  (shrface-basic)
-  (shrface-trial)
-  (shrface-default-keybindings)
-  :custom (shrface-href-versatile t))
-
 ;;;;; Document
 ;;;;;; Nov.el
 (use-package nov
@@ -170,7 +160,7 @@
   :ensure t)
 (use-package avy
   :ensure t)
-(use-package avy-pdf-tools
+(use-package dala/pdf-avy-highlight
   :after avy
   :ensure nil)
 
@@ -323,6 +313,3 @@
   (which-key-mode)
   :custom
   (which-key-idle-delay 0.3))
-;;; test
-(use-package indicators
-  :ensure t)
