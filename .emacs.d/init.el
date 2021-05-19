@@ -60,19 +60,20 @@
 ;;;;; Keyboard layout
 (add-hook 'after-init-hook #'modremap)
 ;;; Packages
-;;;; Completions
-;;;;; Selectrum
+;;;; Completions & Navigation
+;;;;; Completions
+;;;;;; Selectrum
 (use-package selectrum
   :ensure t
   :config
   (selectrum-mode +1)
   :bind (:map ctl-x-map
 	      ("C-f" . find-file)))
-;;;;; Consult
+;;;;;; Consult
 (use-package consult
   :bind (:map ctl-x-map
 	      ("b" . consult-buffer)))
-;;;;; Embark
+;;;;;; Embark
 (use-package embark
   :ensure t
   :bind
@@ -80,7 +81,7 @@
   (:map embark-url-map
 	("s" . browse-url-xdg-open)
 	("m" . mpv-play-url)))
-;;;;; Orderless
+;;;;;; Orderless
 (use-package orderless
   :after selectrum
   :ensure t
@@ -88,14 +89,19 @@
   (selectrum-refine-candidates-function #'orderless-filter)
   (selectrum-highlight-candidates-function #'orderless-highlight-matches)
   (completion-styles '(orderless partial-completion)))
-;;;;; Marginalia
+;;;;;; Marginalia
 (use-package marginalia
   :ensure t
   :config
   (marginalia-mode 1))
-;;;;; Embark-consult
+;;;;;; Embark-consult
 (use-package embark-consult
   :after (embark consult)
+  :ensure t)
+
+;;;;; Navigation
+;;;;;; avy
+(use-package avy
   :ensure t)
 ;;;; Application & utilities
 ;;;;; Multimedia
@@ -158,12 +164,9 @@
   :ensure t)
 (use-package pdf-view-restore
   :ensure t)
-(use-package avy
-  :ensure t)
-(use-package dala/pdf-avy-highlight
-  :after avy
+(use-package pdf-avy-highlight
+  :requires avy
   :ensure nil)
-
 ;;;; Language settings for prose and code
 ;;;;; Bookmarks
 (use-package bm

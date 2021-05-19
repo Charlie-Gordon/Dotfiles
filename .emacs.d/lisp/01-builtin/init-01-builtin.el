@@ -9,6 +9,8 @@
   (delete-by-moving-to-trash t)
   (dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
   (dired-dwim-target t)
+  :bind (:map dired-mode-map
+	      ("E" . #'eww-open-file))
   :config
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode)

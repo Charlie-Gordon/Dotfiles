@@ -1,3 +1,22 @@
+;;; pdf-avy-highlight.el --- Highlight in pdf-tools with keyboard  -*- lexical-binding: t; -*-
+
+;; Copyright to the original owner 
+
+;; Author: dalanicolai (Daniel Nicolai)
+;; URL: https://github.com/dalanicolai/dala-emacs-lisp
+;; Keywords: extensions
+
+;;; Commentary:
+;; Snippets taken from Daniel Nicolai's dala-emacs-lisp
+;; <https://github.com/dalanicolai/dala-emacs-lisp>
+;; "This is a function that uses avy to highlight by keyboard with
+;; pdf-tools. After calling the function you type the initial pattern to
+;; set where to highlight from, and subsequently type the number of it's
+;; label. Then repeat this to set the end of the highlighted region. It
+;; works fine, but I concluded that using the mouse is maybe sometimes
+;; not that bad :wink:. (sic)
+;;; Code:
+
 (eval-when-compile
   (require 'pdf-view))
 
@@ -107,5 +126,7 @@ See `pdf-links-action-perform' for the interface."
     (pdf-annot-add-markup-annotation
      edges type color) nil))
 
-(provide 'dala/pdf-avy-highlight)
+(provide 'pdf-avy-highlight)
+;;; pdf-avy-highlight.el ends here
+
 
