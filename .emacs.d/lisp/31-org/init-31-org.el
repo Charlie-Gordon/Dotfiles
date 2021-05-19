@@ -1,7 +1,7 @@
 ;;; init-31-org.el --- Code for initializing org-mode
 ;;;; Org
 (use-package org
-  :hook (visual-line-mode . org-mode)  ;; text-wrap
+  :hook (org-mode . visual-line-mode)
   :ensure t)
 ;;;; Outshine
 (use-package outshine
@@ -13,10 +13,11 @@
   ;; Enables outline-minor-mode for *ALL* programming buffers
   (add-hook 'prog-mode-hook 'outshine-mode)
   ;; Always start with overview
-  (add-hook 'outshine-mode-hook 'outline-hide-body)
+;;  (add-hook 'outshine-mode-hook 'outline-hide-body)
   :ensure t)
 ;;;; Org-brain
 (use-package org-brain
+  :disabled
   :init
   (setq org-brain-path "~/journals/brain")
   :config
@@ -35,13 +36,34 @@
 (use-package org-noter
   :after org
   :ensure t
+  :bind (:map org-noter-doc-mode-map
+	      ("M-h" . org-noter-insert-note-highlight))
   :config
+  (use-package org-noter-highlight
+    :config (add-hook 'nov-post-html-render-hook #'org-noter-rehighlight-buffer)
+    :ensure nil)
   (setq org-noter-default-ntoes-file-naems '("notes.org")
 	org-noter-separate-notes-from-heading t))
+;;;;; Org-marginalia
+(use-package org-marginalia
+  :after org
+  :hook (nov-mode . org-marginalia-mode)
+  :bind (:map org-marginalia-mode-map
+	      ("C-c o" . #'org-marginalia-open)
+	      ("C-c m" . #'org-marginalia-mark)
+	      ("C-c n j" . #'org-marginalia-next)
+	      ("C-c n k" . #'org-marginalia-prev)
+	      ("C-c M" . #'org-marginalia-make-annotation)
+	      ("C-c n J" . #'org-marginalia-browse-forward)
+	      ("C-c n K" . #'org-marginalia-browse-backward))
+  :config
+  (use-package org-marginalia-command-chain
+    :ensure nil)
+  :load-path "~/Git/org-marginalia/"
+  :ensure nil)
 ;;;;; PDFs
 (use-package org-pdftools
   :hook (org-mode . org-pdftools-setup-link))
-
 (use-package org-noter-pdftools
   :after (org-noter org-pdftools)
   :config
