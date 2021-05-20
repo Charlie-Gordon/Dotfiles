@@ -5,7 +5,6 @@
   :ensure t)
 ;;;; Outshine
 (use-package outshine
-  :pin org
   :after org
   :config
   ;; Required for outshine

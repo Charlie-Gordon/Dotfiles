@@ -45,7 +45,7 @@
 (setq x-select-enable-clipboard t
       x-select-enable-primary t)
 ;;;;; Customize file
-(setq custom-file (expand-file-name "lisp/custom.el" user-emacs-directory))
+(setq custom-file (expand-file-name "site-lisp/custom/custom.el" user-emacs-directory))
 ;;;;; Backup files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 ;;;;; Autosave files
@@ -79,8 +79,10 @@
   :bind
   ("C-." . embark-act)
   (:map embark-url-map
-	("s" . browse-url-xdg-open)
-	("m" . mpv-play-url)))
+	("s" . #'browse-url-xdg-open)
+	("m" . #'mpv-play-url))
+  (:map embark-symbol-map
+	("h" . #'helpful-at-point)))
 ;;;;;; Orderless
 (use-package orderless
   :after selectrum
@@ -130,12 +132,12 @@
   :ensure nil)
 ;;;;;; LBRY
 (use-package lbry-mode.el
-  :load-path "lisp/lbry-mode/"
+  :load-path "site-lisp/lbry-mode/"
   :ensure nil)
 ;;;;;; parallel-mode.el
 (use-package parallel-mode.el
   :ensure nil
-  :load-path "lisp/parallel/")
+  :load-path "site-lisp/parallel/")
 ;;;;;; Magit
 (use-package magit
   :requires with-editor tramp 
@@ -197,6 +199,7 @@
   (yas-global-mode 1))
 ;;;;; Markdown
 (use-package markdown-mode
+  :disabled
   :init (setq markdown-command "multimarkdown")
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -223,85 +226,12 @@
   (slime-setup '(slime-fancy))
    :defer t)
 ;;;; General interface
-;;;;; Highlight
-(use-package highlight
-  :ensure t)
-;;;;; EXWM
-(use-package exwm
-  :after init-00-utils.el
-  :config
-  (use-package exwm-config
-    :custom
-;; Prefix keys to ignore
-    (exwm-input-prefix-keys `(?\C-x
-				?\C-u
-				?\C-h
-			        ?\C-g
-			        ?\M-x
-				?\M-`
-				?\M-&
-				?\M-:))
-;; Global keys for EXWM
-    (exwm-input-global-keys `(([?\s-.] . reload-emacs-configuration)
-			      ([?\s-w] . exwm-workspace-switch)
-			      ([?\s-&] . (lambda (command)
-					   (interactive (list (read-shell-command "$ ")))
-					   (start-process-shell-command command nil command)))
-			      ([?\s-d] . modus-themes-toggle)
-			      ([?\s-s] . magit-status-dotfiles)
-			      (,(kbd "s-<return>") . eshell)
-			      ,@(mapcar (lambda (i)
-					  `(,(kbd (format "s-%d" i)) .
-					    (lambda ()
-					      (interactive)
-					      (exwm-workspace-switch-create ,i))))
-					(number-sequence 0 9))))
-;; Line-editing keybindings for X windows
-    (exwm-input-simulation-keys '(;; Backward-char
-				  ([?\C-b] . [left])
-				  ;; Forward-char
-				  ([?\C-f] . [right])
-				  ;; Previous-line
-				  ([?\C-p] . [up])
-				  ;; Next-line
-				  ([?\C-n] . [down])
-				  ;; Beginning of the line
-				  ([?\C-a] . [home])
-				  ;; End of the line
-				  ([?\C-e] . [end])
-				  ;; Forward-word
-				  ([?\M-f] . [C-right])
-				  ;; Backward-word
-				  ([?\M-b] . [C-left])
-				  ([?\M-v] . [prior])
-				  ([?\C-v] . [next])
-				  ([?\C-d] . [delete])
-				  ([?\C-k] . [S-end C-x])
-				  ([?\C-y] . [C-v])))
-    ;; Set the initial workspace number
-    :config
-    (unless (get 'exwm-workspace-number 'saved-value)
-      (setq exwm-workspace-number 4))
-    ;; Fix Ido
-    (exwm-config-ido)
-    (ido-mode 0)
-    ;; Proper modeline
-    (add-hook 'exwm-input-input-mode-change-hook 'force-mode-line-update)
-    ;; Make class name the buffer name
-    (add-hook 'exwm-update-class-hook
-	      (lambda ()
-      		(exwm-workspace-rename-buffer exwm-class-name)))
-    ;; Prefered minibuffer
-    (selectrum-mode +1)
-    ;; Enable EXWM
-    (exwm-enable)
-    :ensure nil)
-  :ensure t)
 ;;;;; Helpful extras
 ;;;;;; Helpful
 (use-package helpful
   :bind
   ("C-h v" . helpful-variable)
+  ("C-h M" . helpful-macro)
   ("C-h o" . helpful-symbol)
   ("C-h c" . helpful-command)
   ("C-h C-k" . helpful-kill-buffers)
