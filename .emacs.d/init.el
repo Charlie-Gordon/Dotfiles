@@ -18,7 +18,7 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 ;;;; Setting load-path
-(let* ((path (expand-file-name "lisp" user-emacs-directory))
+(let* ((path (expand-file-name "site-lisp" user-emacs-directory))
        (local-pkgs (mapcar 'file-name-directory (directory-files-recursively path ".*\\.el"))))
   (if (file-accessible-directory-p path)
       (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
@@ -59,6 +59,13 @@
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 ;;;;; Keyboard layout
 (add-hook 'after-init-hook #'modremap)
+;;;;; Set UTF-8 encoding
+(setq locale-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
 ;;; Packages
 ;;;; Completions & Navigation
 ;;;;; Completions
@@ -100,58 +107,42 @@
 (use-package embark-consult
   :after (embark consult)
   :ensure t)
-
 ;;;;; Navigation
 ;;;;;; avy
 (use-package avy
   :ensure t)
 ;;;; Application & utilities
-;;;;; Multimedia
-;;;;;; ERC
-(use-package erc
-  :custom
-  (erc-autojoin-channels-alist '(("irc.highway.net" "#ebooks")))
-  (erc-autojoin-timing 'ident)
-  (erc-fill-function 'erc-fill-static)
-  (erc-fill-static-center 22)
-  (erc-hide-list '("JOIN" "PART" "QUIT"))
-  (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
-  (erc-lurker-threshold-time 43200)
-  (erc-prompt-for-nickserv-password nil)
-  (erc-server-reconnect-attempts 5)
-  (erc-server-reconnect-timeout 3)
-  (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-                             "324" "329" "332" "333" "353" "477"))
+;;;;; Password-store
+(use-package pass
+  :ensure t)
+;;;;; Torrenting
+(use-package transmission
   :config
-  (use-package erc-dcc ;; DCC support
-    :ensure nil)
-  (use-package erc-image ;; Image module
-    :ensure t)
-  (use-package erc-hl-nicks
-    :ensure t)
-  :ensure nil)
-;;;;;; LBRY
+  (customize-set-variable 'transmission-timer 30)
+  :ensure t)
+;;;;; Multimedia
+;;;;;;  LBRY
 (use-package lbry-mode.el
   :load-path "site-lisp/lbry-mode/"
   :ensure nil)
-;;;;;; parallel-mode.el
+;;;;;;  parallel-mode.el
 (use-package parallel-mode.el
   :ensure nil
   :load-path "site-lisp/parallel/")
-;;;;;; Magit
+;;;;;;  Magit
 (use-package magit
   :requires with-editor tramp 
   :ensure t
   :bind ("M-g ." . magit))
 ;;;;; Document
-;;;;;; Nov.el
+;;;;;;  Nov.el
 (use-package nov
   :mode (("\\.epub\\'" . nov-mode))
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
   :ensure t)
-;;;;;; PDFs
+;;;;;;  PDFs
 (use-package pdf-tools
   :init (pdf-loader-install)
   :bind (:map pdf-view-mode-map

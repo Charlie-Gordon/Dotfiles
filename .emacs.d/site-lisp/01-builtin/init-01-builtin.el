@@ -57,6 +57,30 @@
     :ensure nil)
   :ensure nil)
 ;;;; Application and Utilities
+;;;;; ERC
+(use-package erc
+  :custom
+  (erc-paranoia t)
+  (erc-autojoin-channels-alist '(("irc.highway.net" "#ebooks")))
+  (erc-autojoin-timing 'ident)
+  (erc-fill-function 'erc-fill-static)
+  (erc-fill-static-center 22)
+  (erc-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-lurker-threshold-time 43200)
+  (erc-prompt-for-nickserv-password nil)
+  (erc-server-reconnect-attempts 5)
+  (erc-server-reconnect-timeout 3)
+  (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                             "324" "329" "332" "333" "353" "477"))
+  :config
+  (use-package erc-dcc ;; DCC support
+    :ensure nil)
+  (use-package erc-image ;; Image module
+    :ensure t)
+  (use-package erc-hl-nicks
+    :ensure t)
+  :ensure nil)
 ;;;;; TRAMP
 (use-package tramp
   :config
@@ -96,7 +120,8 @@
   (:map eww-mode-map
 	("<return>" . eww-follow-link)
 	("W" . mpv-play-url)
-	("L" . eww-list-bookmarks))
+	("L" . eww-list-bookmarks)
+	("t" . eww-readable))
   (:map eww-link-keymap
 	("v" . nil)) ;; stop overriding `eww-view-source'
   (:map eww-buffers-mode-map

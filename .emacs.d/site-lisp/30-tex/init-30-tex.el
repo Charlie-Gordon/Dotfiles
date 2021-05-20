@@ -27,8 +27,8 @@
   (add-hook 'LaTeX-mode-hook 'visual-line-mode)
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  (add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "LaTeXMK")))
-  (add-hook 'LaTeX-mode-hook '(lambda () (setq TeX-command-default "LaTeXMK")))
+  (add-hook 'TeX-mode-hook #'(lambda () (setq TeX-command-default "LaTeXMK")))
+  (add-hook 'LaTeX-mode-hook #'(lambda () (setq TeX-command-default "LaTeXMK")))
   (setq-default TeX-master nil))
 
 (use-package reftex
