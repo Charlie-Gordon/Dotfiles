@@ -41,20 +41,16 @@
 
 ;;;; Outline
 (use-package outline
-  :init
-  (defvar outline-minor-mode-prefix "\M-o")
+  :load 01-outline
+  :init (defvar outline-minor-mode-prefix "\M-o")
   :config
   ;; Customize the distracting folding markers.
   ;; https://www.reddit.com/r/emacs/comments/e2u5n9/code_folding_with_outlineminormode/
   (set-display-table-slot standard-display-table 'selective-display
 			  (let ((face-offset (* (face-id 'shadow) (lsh 1 22))))
 			    (vconcat (mapcar (lambda (c) (+ face-offset c)) " +"))))
-  ;; Functions
-  (use-package 01-outline
-    :config
-    ;; Python mode-specific Outline folding.
-    (add-hook 'python-mode-hook 'outline-python)
-    :ensure nil)
+  ;; Python mode-specific Outline folding.
+  (add-hook 'python-mode-hook 'outline-python)
   :ensure nil)
 ;;;; Application and Utilities
 ;;;;; ERC
@@ -111,17 +107,40 @@
   (shr-image-animate nil)
   (shr-use-colors nil)
   (shr-use-fonts nil)
-  (shr-width nil)
+  (shr-width 70)
   (shr-cookie-policy nil)
   :ensure nil)
 ;;;;;; eww 
 (use-package eww
+  :load 01-eww
+  :init (define-prefix-command 'prot/eww-map) ;; Keymapping for Protesilaos's extensions
+  :bind-keymap ("s-e" . prot/eww-map)
   :bind
+  (:map prot/eww-map
+	("b" . prot/eww-visit-bookmark)
+	("e" . prot/eww-browse-dwim)
+	("a" . prot/eww-search-arch-wiki)
+	("A" . prot/eww-search-arch-aur)
+	("d" . prot/eww-search-debbugs)
+	("w" . prot/eww-search-wikipedia)
+	("s" . prot/eww-search-engine))
   (:map eww-mode-map
 	("<return>" . eww-follow-link)
 	("W" . mpv-play-url)
 	("L" . eww-list-bookmarks)
-	("t" . eww-readable))
+	("t" . eww-readable)
+	("n" . shr-next-link)
+	("p" . shr-next-link)
+	("u" .  eww-back-url)
+	("B" . prot/eww-bookmark-page)
+	("D" . prot/eww-download-html)
+	("F" . prot/eww-find-feed)
+	("b" . prot/eww-visit-bookmark)
+	("e" . prot/eww-browse-dwim)
+	("o" . prot/eww-open-in-other-window)
+	("E" . prot/eww-visit-url-on-page)
+	("J" . prot/eww-jump-to-url-on-page)
+	("R" . prot/eww-readable))
   (:map eww-link-keymap
 	("v" . nil)) ;; stop overriding `eww-view-source'
   (:map eww-buffers-mode-map
@@ -137,32 +156,7 @@
   (eww-desktop-remove-duplicates t)
   (eww-form-checkbox-selected-symbol "[X]")
   (eww-form-checkbox-symbol "[ ]")
-  :config
-  (define-prefix-command 'prot/eww-map)
-  ;; Prot's functions
-  (use-package 01-eww
-    :bind-keymap ("s-e" . prot/eww-map)
-    :bind
-    (:map prot/eww-map
-	  ("b" . prot/eww-visit-bookmark)
-	  ("e" . prot/eww-browse-dwim)
-	  ("a" . prot/eww-search-arch-wiki)
-	  ("A" . prot/eww-search-arch-aur)
-	  ("d" . prot/eww-search-debbugs)
-	  ("w" . prot/eww-search-wikipedia)
-	  ("s" . prot/eww-search-engine))
-    (:map eww-mode-map
-	  ("B" . prot/eww-bookmark-page)
-	  ("D" . prot/eww-download-html)
-	  ("F" . prot/eww-find-feed)
-	  ("b" . prot/eww-visit-bookmark)
-	  ("e" . prot/eww-browse-dwim)
-	  ("o" . prot/eww-open-in-other-window)
-	  ("E" . prot/eww-visit-url-on-page)
-	  ("J" . prot/eww-jump-to-url-on-page)
-	  ("R" . prot/eww-readable))
-    :ensure nil)
-  :defer t)
+  :ensure nil)
 
 ;;;; Language setting for prose and coding
 ;;;;; Parentheses (show-paren-mode) (paren-face)

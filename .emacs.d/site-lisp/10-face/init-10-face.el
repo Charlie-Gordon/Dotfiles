@@ -17,12 +17,14 @@
   :ensure t)
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
+(set-face-attribute 'variable-pitch nil :font "Iosevka Aile Oblique")
 ;;;; FreeSans for unicode
 (set-fontset-font t nil (font-spec :family "FreeSans"
 				     :size 20))
 ;;;; EXWM
 (use-package exwm
   :when window-system
+  :load exwm-edit
   :config
   (use-package exwm-config
     :custom
@@ -43,6 +45,10 @@
 					   (start-process-shell-command command nil command)))
 			      ([?\s-d] . modus-themes-toggle)
 			      ([?\s-s] . magit-status-dotfiles)
+			      ([?\s-c] . (lambda (package-name)
+					   (interactive"P")
+					   (consult-ripgrep user-emacs-directory
+							    (concat "\\(use-package " package-name))))
 			      (,(kbd "s-<return>") . eshell)
 			      ,@(mapcar (lambda (i)
 					  `(,(kbd (format "s-%d" i)) .
@@ -95,9 +101,6 @@
     ;; Enable EXWM
     (exwm-enable)
     :ensure nil)
-  (use-package exwm-edit
-    :disabled
-    :ensure t)
   :ensure t)
 
 (provide 'init-10-face.el)

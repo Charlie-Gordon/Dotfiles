@@ -134,16 +134,23 @@
   :requires with-editor tramp 
   :ensure t
   :bind ("M-g ." . magit))
-;;;;; Document
-;;;;;;  Nov.el
+;;;;; Notes
+;;;;;; zettelkasten
+(use-package zettelkasten
+  :disabled
+  :config (zettelkasten-mode 1)
+  :load-path "~/Git/emacs-zettelkasten"
+  :ensure nil)
+;;;;;; Nov.el
 (use-package nov
   :mode (("\\.epub\\'" . nov-mode))
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
   :ensure t)
-;;;;;;  PDFs
+;;;;;; PDFs
 (use-package pdf-tools
+  :load pdf-avy-highlight
   :init (pdf-loader-install)
   :bind (:map pdf-view-mode-map
 	      ("a k" . pdf-keyboard-highlight))
@@ -154,37 +161,14 @@
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
   (pdf-view-resize-factor 1.1)
-  :ensure t)
+  :ensure avy)
 (use-package pdf-view-restore
   :ensure t)
-(use-package pdf-avy-highlight
-  :requires avy
-  :ensure nil)
 ;;;; Language settings for prose and code
-;;;;; Bookmarks
-(use-package bm
-  :bind-keymap ("C-c m" . bm-show-mode-map)
-  :bind (:map bm-show-mode-map
-	      ("m" . bm-toggle)
-	      ("n" . bm-next)
-	      ("p" . bm-previous)
-	      ("L" . bm-show-all)
-	      ("l" . bm-show)
-	      ("s" . bm-save)
-	      ("r" . bm-load-and-restore))
-  ("<right-fringe> <mouse-5>" . bm-next-mouse)
-  ("<right-fringe> <mouse-4>" . bm-previous-mouse)
-  ("<right-fringe> <mouse-1>" . bm-toggle-mouse)
-  :custom
-  (bm-marker 'bm-marker-right)
-;;  (bm-repository-file (concat emacs-persistence-directory "bm-repository"))
-  (bm-recenter t)
-  (bm-highlight-style 'bm-highlight-only-line)
-  :ensure t)
 ;;;;; Yasnippet
 (use-package yasnippet
+  :load yasnippet-snippets
   :config
-  (use-package yasnippet-snippets)
   (yas-load-directory (concat user-emacs-directory "snippets"))
   (yas-reload-all)
   (yas-global-mode 1))
@@ -210,12 +194,12 @@
 ;;;;; Lisp (SLIME)
 (use-package cl-generic
   :ensure t)
-(use-package slime 
+(use-package slime
+  :load slime-autoloads
   :config
-  (use-package slime-autoloads :ensure nil)
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (slime-setup '(slime-fancy))
-   :defer t)
+  :defer t)
 ;;;; General interface
 ;;;;; Helpful extras
 ;;;;;; Helpful
@@ -237,3 +221,4 @@
   (which-key-mode)
   :custom
   (which-key-idle-delay 0.3))
+(put 'list-timers 'disabled nil)

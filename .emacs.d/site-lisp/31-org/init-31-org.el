@@ -31,6 +31,32 @@
   (org-brain-file-entries-use-title nil)
   :ensure t)
 ;;;; Note-taking
+;;;;; Org-roam
+(use-package org-roam
+  :hook (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory (file-truename "/storage/journals/org/"))
+  (org-roam-dailies-directory (file-truename "/storage/journals/org/daily/"))
+  (org-roam-db-update-method 'immediate)
+  (org-roam-dailies-capture-templates
+	'(("d" "default" entry
+	 #'org-roam-capture--get-point
+	 "* %?"
+	 :file-name "daily/%<%Y-%m-%d>"
+	 :head "#+title: %<%Y-%m-%d>\n\n")))
+  :bind
+  (:map org-roam-mode-map
+	(("C-c n l" . org-roam)
+	 ("C-c n f" . org-roam-find-file)
+	 ("C-c n g" . org-roam-graph)
+	 ("C-c j d" . org-roam-dailies-find-today)))
+  (:map org-mode-map
+	(("C-c n i" . org-roam-insert))
+	(("C-c n I" . org-roam-insert-immediate)))
+  :config
+  ;; Org-roam use sqlite3
+  (add-to-list 'exec-path (executable-find "sqlite3"))
+  :ensure t)
 ;;;;; Org-noter
 (use-package org-noter
   :after org
@@ -43,9 +69,15 @@
     :ensure nil)
   (setq org-noter-default-ntoes-file-naems '("notes.org")
 	org-noter-separate-notes-from-heading t))
+;;;;; Org-transclusion
+(use-package org-transclusion
+  :bind ("s-i" . org-transclusion-add-at-point)
+  :load-path "~/Git/org-transclusion"
+  :ensure nil)
 ;;;;; Org-marginalia
 (use-package org-marginalia
   :after org
+  :load 'org-marginalia-command-chain
   :hook (nov-mode . org-marginalia-mode)
   :bind (:map org-marginalia-mode-map
 	      ("C-c o" . #'org-marginalia-open)
@@ -55,9 +87,6 @@
 	      ("C-c M" . #'org-marginalia-make-annotation)
 	      ("C-c n J" . #'org-marginalia-browse-forward)
 	      ("C-c n K" . #'org-marginalia-browse-backward))
-  :config
-  (use-package org-marginalia-command-chain
-    :ensure nil)
   :load-path "~/Git/org-marginalia/"
   :ensure nil)
 ;;;;; PDFs
