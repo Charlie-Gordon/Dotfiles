@@ -59,25 +59,26 @@
   :ensure t)
 ;;;;; Org-noter
 (use-package org-noter
+  :load org-noter-highlight
   :after org
-  :ensure t
+  :hook (nov-post-html-render-hook . org-noter-rehighlight-buffer)
   :bind (:map org-noter-doc-mode-map
 	      ("M-h" . org-noter-insert-note-highlight))
-  :config
-  (use-package org-noter-highlight
-    :config (add-hook 'nov-post-html-render-hook #'org-noter-rehighlight-buffer)
-    :ensure nil)
-  (setq org-noter-default-ntoes-file-naems '("notes.org")
-	org-noter-separate-notes-from-heading t))
+  :custom
+  (org-noter-default-ntoes-file-naems '("notes.org"))
+  (org-noter-separate-notes-from-heading t))
 ;;;;; Org-transclusion
 (use-package org-transclusion
+  :after org
+  :hook (org-mode . org-transclusion-mode)
   :bind ("s-i" . org-transclusion-add-at-point)
   :load-path "~/Git/org-transclusion"
   :ensure nil)
 ;;;;; Org-marginalia
 (use-package org-marginalia
-  :after org
   :load 'org-marginalia-command-chain
+  :disabled
+  :after org
   :hook (nov-mode . org-marginalia-mode)
   :bind (:map org-marginalia-mode-map
 	      ("C-c o" . #'org-marginalia-open)

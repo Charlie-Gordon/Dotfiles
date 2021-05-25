@@ -20,24 +20,23 @@
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile Oblique")
 ;;;; FreeSans for unicode
 (set-fontset-font t nil (font-spec :family "FreeSans"
-				     :size 20))
+				   :size 20))
 ;;;; EXWM
 (use-package exwm
   :when window-system
-  :load exwm-edit
   :config
   (use-package exwm-config
     :custom
-;; Prefix keys to ignore
+    ;; Prefix keys to ignore
     (exwm-input-prefix-keys `(?\C-x
-				?\C-u
-				?\C-h
-			        ?\C-g
-			        ?\M-x
-				?\M-`
-				?\M-&
-				?\M-:))
-;; Global keys for EXWM
+			      ?\C-u
+			      ?\C-h
+			      ?\C-g
+			      ?\M-x
+			      ?\M-`
+			      ?\M-&
+			      ?\M-:))
+    ;; Global keys for EXWM
     (exwm-input-global-keys `(([?\s-.] . reload-emacs-configuration)
 			      ([?\s-w] . exwm-workspace-switch)
 			      ([?\s-&] . (lambda (command)
@@ -56,7 +55,7 @@
 					      (interactive)
 					      (exwm-workspace-switch-create ,i))))
 					(number-sequence 0 9))))
-;; Line-editing keybindings for X windows
+    ;; Line-editing keybindings for X windows
     (exwm-input-simulation-keys '(;; Backward-char
 				  ([?\C-b] . [left])
 				  ;; Forward-char
@@ -87,17 +86,14 @@
     :config
     (unless (get 'exwm-workspace-number 'saved-value)
       (setq exwm-workspace-number 4))
-    ;; Fix Ido
-    (exwm-config-ido)
-    (ido-mode 0)
     ;; Proper modeline
     (add-hook 'exwm-input-input-mode-change-hook 'force-mode-line-update)
     ;; Make class name the buffer name
-    (add-hook 'exwm-update-class-hook
-	      (lambda ()
-      		(exwm-workspace-rename-buffer exwm-class-name)))
-    ;; Prefered completion
-    (selectrum-mode +1)
+    (add-hook 'exwm-update-class-hook #'(lambda ()
+					  (exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Fix Ido
+    ;; (exwm-config-ido)
+    ;; (ido-mode 0)
     ;; Enable EXWM
     (exwm-enable)
     :ensure nil)

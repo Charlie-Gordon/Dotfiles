@@ -71,11 +71,13 @@
 ;;;;; Completions
 ;;;;;; Selectrum
 (use-package selectrum
-  :ensure t
-  :config
-  (selectrum-mode +1)
+  :hook (after-init . selectrum-mode)
   :bind (:map ctl-x-map
-	      ("C-f" . find-file)))
+	      ("C-f" . find-file))
+  :custom
+  ;; Show as many candidates as possible
+  (selectrum-fix-vertical-window-height selectrum-max-window-height)
+  :ensure t)
 ;;;;;; Consult
 (use-package consult
   :bind (:map ctl-x-map
@@ -100,12 +102,8 @@
   (completion-styles '(orderless partial-completion)))
 ;;;;;; Marginalia
 (use-package marginalia
-  :ensure t
   :config
-  (marginalia-mode 1))
-;;;;;; Embark-consult
-(use-package embark-consult
-  :after (embark consult)
+  (marginalia-mode 1)
   :ensure t)
 ;;;;; Navigation
 ;;;;;; avy
@@ -221,4 +219,3 @@
   (which-key-mode)
   :custom
   (which-key-idle-delay 0.3))
-(put 'list-timers 'disabled nil)
