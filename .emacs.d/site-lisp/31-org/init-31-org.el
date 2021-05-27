@@ -59,14 +59,14 @@
   :ensure t)
 ;;;;; Org-noter
 (use-package org-noter
-  :load org-noter-highlight
+  :ensure t
   :after org
-  :hook (nov-post-html-render . org-noter-rehighlight-buffer)
+  :custom
+  (org-noter-default-notes-file-naems '("notes.org"))
+  (org-noter-separate-notes-from-heading t)
   :bind (:map org-noter-doc-mode-map
 	      ("M-h" . org-noter-insert-note-highlight))
-  :custom
-  (org-noter-default-ntoes-file-naems '("notes.org"))
-  (org-noter-separate-notes-from-heading t))
+  :hook (nov-post-html-render . org-noter-rehighlight-buffer))
 ;;;;; Org-transclusion
 (use-package org-transclusion
   :after org
@@ -78,9 +78,9 @@
   :ensure nil)
 ;;;;; Org-marginalia
 (use-package org-marginalia
-  :load org-marginalia-command-chain
+  :ensure nil
+  :load-path "~/Git/org-marginalia/"
   :after org
-  :hook ((nov-mode org-mode) . org-marginalia-mode)
   :bind (:map org-marginalia-mode-map
 	      ("C-c o" . #'org-marginalia-open)
 	      ("C-c m" . #'org-marginalia-mark)
@@ -89,8 +89,7 @@
 	      ("C-c M" . #'org-marginalia-make-annotation)
 	      ("C-c n J" . #'org-marginalia-browse-forward)
 	      ("C-c n K" . #'org-marginalia-browse-backward))
-  :load-path "~/Git/org-marginalia/"
-  :ensure nil)
+  :hook ((nov-mode org-mode) . org-marginalia-mode))
 ;;;;; PDFs
 (use-package org-pdftools
   :hook (org-mode . org-pdftools-setup-link))

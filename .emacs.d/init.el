@@ -25,20 +25,15 @@
       (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
     (make-directory path :parents)))
 ;;;; Utilities functions
-(use-package init-00-utils.el
-  :ensure nil)
+(use-package init-00-utils.el :ensure nil)
 ;;;; Interface tweaks
-(use-package init-10-face.el
-  :ensure nil)
+(use-package init-10-face.el :ensure nil)
 ;;;; TeX
-(use-package init-30-tex.el
-  :ensure nil)
+(use-package init-30-tex.el :ensure nil)
 ;;;; Buit-in package configuration
-(use-package init-01-builtin.el
-  :ensure nil)
+(use-package init-01-builtin.el :ensure nil)
 ;;;; Org-mode configuration
-(use-package init-31-org.el
-  :ensure nil)
+(use-package init-31-org.el :ensure nil)
 ;;;; General Improvement
 ;;;;; Sentences end with a single space
 (setq sentence-end-double-space nil)
@@ -71,6 +66,7 @@
 ;;;;; Helpful extras
 ;;;;;; Helpful
 (use-package helpful
+  :ensure t
   :bind
   ("C-h v" . helpful-variable)
   ("C-h M" . helpful-macro)
@@ -79,38 +75,39 @@
   ("C-h C-k" . helpful-kill-buffers)
   ("C-h k" . helpful-key)
   ("C-h f" . helpful-function))
-(put 'dired-find-alternate-file 'disabled nil)
 ;;;;;; Which-key
 (use-package which-key
-  :diminish which-key-mode
+  :ensure t
+  :custom
+  (which-key-idle-delay 0.3)
   :config
   (which-key-mode)
-  :custom
-  (which-key-idle-delay 0.3))
+  :diminish which-key-mode)
 ;;;; Completions & Navigation
 ;;;;; Completions
 ;;;;;; Selectrum
 (use-package selectrum
-  :hook (after-init . selectrum-mode)
+  :ensure t
+  :custom
+  (selectrum-fix-vertical-window-height selectrum-max-window-height "Show as many candidates as possible")
   :bind (:map ctl-x-map
 	      ("C-f" . find-file))
-  :custom
-  ;; Show as many candidates as possible
-  (selectrum-fix-vertical-window-height selectrum-max-window-height)
-  :ensure t)
+  :hook (after-init . selectrum-mode))
 ;;;;;; Consult
 (use-package consult
-  :load 00-consult
-  :init (define-prefix-command '00/consult-navigate-map)
-  :bind-keymap ("s-a" . 00/consult-navigate-map)
+  :ensure t
   :bind
-  (:map 00/consult-navigate-map
+  (:map 00-consult-browse-map
 	("e" . consult-find-emacs-dir)
 	("s" . consult-find-site-lisp)
 	("g" . consult-find-git-dir)
 	("p" . consult-grep-package))
   (:map ctl-x-map
-	("b" . consult-buffer)))
+	("b" . consult-buffer))
+  :bind-keymap ("s-b" . 00-consult-browse-map)
+  :init (define-prefix-command '00-consult-browse-map)
+  :config
+  (use-package 00-consult :ensure nil))
 ;;;;;; Embark
 (use-package embark
   :ensure t
@@ -123,17 +120,17 @@
 	("h" . #'helpful-at-point)))
 ;;;;;; Orderless
 (use-package orderless
-  :after selectrum
   :ensure t
+  :after selectrum
   :custom
   (selectrum-refine-candidates-function #'orderless-filter)
   (selectrum-highlight-candidates-function #'orderless-highlight-matches)
   (completion-styles '(orderless partial-completion)))
 ;;;;;; Marginalia
 (use-package marginalia
-  :config
-  (marginalia-mode 1)
-  :ensure t)
+  :ensure t
+  :after selectrum
+  :config (marginalia-mode 1))
 ;;;;; Navigation
 ;;;;;; avy
 (use-package avy
@@ -144,87 +141,86 @@
   :ensure t)
 ;;;;; Torrenting
 (use-package transmission
-  :config
-  (customize-set-variable 'transmission-timer 30)
-  :ensure t)
+  :ensure t
+  :custom
+  (transmission-timer 30))
 ;;;;; Multimedia
 ;;;;;; MPV
 (use-package mpv
   :ensure t) 
 ;;;;;;  LBRY
 (use-package lbry-mode.el
-  :load-path "site-lisp/lbry-mode/"
-  :ensure nil)
+  :ensure nil
+  :load-path "site-lisp/lbry-mode/")
 ;;;;;;  parallel-mode.el
 (use-package parallel-mode.el
   :ensure nil
   :load-path "site-lisp/parallel/")
 ;;;;;;  Magit
 (use-package magit
-  :requires with-editor tramp 
   :ensure t
+  :requires with-editor tramp 
   :bind ("M-g ." . magit))
 ;;;;; Notes
 ;;;;;; Nov.el
 (use-package nov
-  :mode (("\\.epub\\'" . nov-mode))
+  :ensure t
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
-  :ensure t)
+  :mode (("\\.epub\\'" . nov-mode)))
 ;;;;;; PDFs
 (use-package pdf-tools
-  :load 00-pdf-avy-highlight
-  :init (pdf-loader-install)
+  :ensure avy
   :bind (:map pdf-view-mode-map
 	      ("a k" . pdf-keyboard-highlight))
+  :init
+  (pdf-loader-install)
+  (use-package pdf-view-restore :ensure t)
+  :hook (pdf-view-mode . pdf-view-restore-mode)
   :config
-  (add-hook 'pdf-view-mode-hook 'pdf-view-restore-mode)
+  (use-package 00-pdf-avy-highlight :ensure nil)
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
-  (pdf-view-resize-factor 1.1)
-  :ensure avy)
-(use-package pdf-view-restore
-  :ensure t)
+  (pdf-view-resize-factor 1.1))
+
 ;;;; Language settings for prose and code
 ;;;;; Yasnippet
 (use-package yasnippet
+  :ensure t
   :hook
-  (after-init . yas-global-mode)
   (yas-after-exit-snippet . save-buffer)
   :config
-  (yas-load-directory (concat user-emacs-directory "snippets"))
-  :ensure t)
+  (yas-load-directory (concat user-emacs-directory "snippets")))
 ;;;;; Markdown
 (use-package markdown-mode
+  :ensure t
   :disabled
-  :init (setq markdown-command "multimarkdown")
-  :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :ensure t)
-;;;;; Scheme
+  :commands (markdown-mode gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+ ;;;;; Scheme
 (use-package quack
   :ensure t)
 (use-package geiser
-  :ensure t)
-(use-package geiser-mit
-  :after geiser
-  :ensure t)
+  :ensure t
+  :config (use-package geiser-mit :ensure t))
 (use-package paredit
   :ensure t)
 ;;;;; Lisp (SLIME)
 (use-package cl-generic
   :ensure t)
 (use-package slime
-  :load slime-autoloads
+  :custom
+  (inferior-lisp-program "/usr/local/bin/sbcl")
+  :defer t
   :config
-  (setq inferior-lisp-program "/usr/local/bin/sbcl")
-  (slime-setup '(slime-fancy))
-  :defer t)
+  (use-package slime-autoloads :ensure nil)
+  (slime-setup '(slime-fancy)))
 (use-package emms
   :ensure t)
 )

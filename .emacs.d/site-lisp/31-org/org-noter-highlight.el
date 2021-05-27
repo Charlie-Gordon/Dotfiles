@@ -19,7 +19,10 @@
 
 ;;; Commentary:
 ;;; Code:
-;;; Dependencies and setup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Dependencies and setup
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (eval-when-compile
   (require 'org-noter))
 
@@ -45,7 +48,8 @@
 associated with the current note.
 Used by `org-noter-highlight--add-property'.")
 
-;;; Build property list
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Function;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun org-noter-highlight-read-color (&optional prompt)
@@ -89,10 +93,6 @@ gray unless user explicitly selcected."
 	   (list 'note-info note-info-prop)
 	   org-noter-highlight-base-properties)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Note window
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun org-noter-highlight--add-property (begin end color &optional page)
   "Insert `org-noter-property-span' and `org-noter-property-highlight-color' 
 in current entry with the cons cell of beginning and end point"
@@ -113,10 +113,6 @@ entry at point-or-marker POM"
 	 (org-noter-highlight (cdr span) color (org-element-context)))
      (user-error "%s" "Document mismatch."))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Document window
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defun org-noter-highlight (span color &optional note-info)
   "Add PROP to region from BEG to END indicated by SPAN cons cell which 
 points to (BEG . END)"
@@ -124,6 +120,11 @@ points to (BEG . END)"
     (let ((inhibit-read-only t))
       (add-text-properties (car span) (cdr span) (org-noter-highlight-plist color note-info)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Commands
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;###autoload
 (defun org-noter-rehighlight-buffer ()
   "Call `org-noter-rehighlight-entry' on all entries with `org-noter-property-note-location'
  key that matches with `nov-documents-index'. Should be a hook of `nov-post-html-render-hook'"
@@ -155,7 +156,8 @@ points to (BEG . END)"
 								   (format "%s" elt))))
 		 current-page-note))
      (user-error "%s" "Document mismatch."))))
-				  
+
+;;;###autoload				  
 (defun org-noter-insert-note-highlight (span-beg span-end)
   "Add note with highlighting to the region"
   (interactive"r")
@@ -166,9 +168,7 @@ points to (BEG . END)"
     (org-noter-highlight (cons span-beg span-end) color (org-element-at-point))
     (org-noter-highlight--add-property span-beg span-end color)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Utilities functions
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;###autoload
 (defun org-noter-highlight-remove-at-point ()
   (interactive)
   (let* ((origin-point (point))
@@ -181,6 +181,7 @@ points to (BEG . END)"
      (org-delete-property org-noter-property-span)))
   (org-noter-rehighlight-buffer)
   (goto-char origin-point)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-noter-highlight)
 ;;; org-noter-highlight.el ends here

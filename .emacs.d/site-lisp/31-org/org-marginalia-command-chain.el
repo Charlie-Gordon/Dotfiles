@@ -21,6 +21,7 @@
 ;;; Commentary:
 ;;; Code:
 
+;;;###autoload
 (defun org-marginalia-make-annotation ()
   (interactive)
   (let ((mark-end (region-end)))
@@ -29,12 +30,14 @@
     (org-marginalia-open (1- mark-end))
     (end-of-buffer)))
 
+;;;###autoload
 (defun org-marginalia-browse-forward ()
   (interactive)
   (let ((buf (current-buffer)))
     (org-marginalia-next) (org-marginalia-open (point))
     (pop-to-buffer buf nil t)))
 
+;;;###autoload
 (defun org-marginalia-browse-backward ()
   (interactive)
   (let ((buf (current-buffer)))

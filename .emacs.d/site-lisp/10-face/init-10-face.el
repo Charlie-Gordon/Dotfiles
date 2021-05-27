@@ -28,17 +28,7 @@
   (use-package exwm-config
     :custom
     ;; Prefix keys to ignore
-    (exwm-input-prefix-keys `(?\C-x
-			      ?\C-u
-			      ?\C-h
-			      ?\C-g
-			      ?\M-x
-			      ?\M-`
-			      ?\M-&
-			      ?\M-:
-			      ?\s-.
-			      ?\s-a
-			      ?\s-v))
+    (exwm-input-prefix-keys '(?\C-x ?\C-u ?\C-h ?\C-g ?\M-x ?\M-` ?\M-& ?\M-: ?\s-b))
     ;; Global keys for EXWM
     (exwm-input-global-keys `(([?\s-.] . reload-emacs-configuration)
 			      ([?\s-w] . exwm-workspace-switch)
@@ -93,9 +83,6 @@
     ;; Make class name the buffer name
     (add-hook 'exwm-update-class-hook #'(lambda ()
 					  (exwm-workspace-rename-buffer exwm-class-name)))
-    ;; Fix Ido
-    ;; (exwm-config-ido)
-    ;; (ido-mode 0)
     ;; Enable EXWM
     (exwm-enable)
     :ensure nil)

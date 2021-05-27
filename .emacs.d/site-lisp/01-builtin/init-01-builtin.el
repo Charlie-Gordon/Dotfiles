@@ -1,12 +1,15 @@
 ;;; init-01-buitin.el --- Configuration for Emacs built-in packages  -*- lexical-binding: t; -*-
 ;;;; Repeatable key chords (repeat-mode)
 (use-package repeat
+  :ensure nil
   :config
-  (repeat-mode 1)
-  :ensure nil)
+  (repeat-mode 1))
 ;;;; Directory, buffer, window management 
 ;;;;; Dired
 (use-package dired
+  :ensure nil
+  :bind (:map dired-mode-map
+	      ("E" . eww-open-file))
   :custom
   (dired-use-ls-dired nil)
   (dired-recursive-copies 'always)
@@ -14,12 +17,8 @@
   (delete-by-moving-to-trash t)
   (dired-listing-switches "-AGFhlv --group-directories-first --time-style=long-iso")
   (dired-dwim-target t)
-  :bind (:map dired-mode-map
-	      ("E" . #'eww-open-file))
-  :config
-  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-  (add-hook 'dired-mode-hook #'hl-line-mode)
-  :ensure nil)
+  :hook
+  (dired-mode . (dired-hide-details-mode hl-line-mode)))
 ;;;;;; dired-x
 (use-package dired-x
   :custom
@@ -61,9 +60,10 @@
   :ensure nil)
 ;;;;; Window management
 (use-package window
+  :ensure nil
   :custom
   (display-buffer-alist
-   `(;; Top side window
+   '(;; Top side window
      ("\\mpv.*"
       (display-buffer-in-side-window)
       (side . top)
@@ -74,6 +74,11 @@
       (side . top)
       (slot . 1))
      ;; Right side window
+     ("\\*[Hh]elp\*.*"
+      (display-buffer-in-side-window)
+      (window-width . 0.25)
+      (side . right)
+      (slot . 0))
      ("\\*Faces\\*"
       (display-buffer-in-side-window)
       (window-width . 0.25)
@@ -85,11 +90,9 @@
       (window-height . 0.2))))
   (window-combination-resize t)
   (window-sides-vertical nil)
-  (switch-to-buffer-in-dedicated-window 'pop)
-  :ensure nil)
+  (switch-to-buffer-in-dedicated-window 'pop))
 ;;;; Outline
 (use-package outline
-  :load 01-outline
   :init (defvar outline-minor-mode-prefix "\M-o")
   :config
   ;; Customize the distracting folding markers.
@@ -99,10 +102,12 @@
 			    (vconcat (mapcar (lambda (c) (+ face-offset c)) " +"))))
   ;; Python mode-specific Outline folding.
   (add-hook 'python-mode-hook 'outline-python)
+  (use-package 01-outline :ensure nil)
   :ensure nil)
 ;;;; Application and Utilities
 ;;;;; ERC
 (use-package erc
+  :ensure nil
   :custom
   (erc-paranoia t)
   (erc-autojoin-channels-alist '(("irc.highway.net" "#ebooks")))
@@ -118,15 +123,11 @@
   (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
                              "324" "329" "332" "333" "353" "477"))
   :config
-  (use-package erc-dcc ;; DCC support
-    :ensure nil)
-  (use-package erc-image ;; Image module
-    :ensure t)
-  (use-package erc-hl-nicks
-    :ensure t)
-  :ensure nil)
+  (use-package erc-dcc :ensure nil)
+  (use-package erc-hl-nicks :ensure t))
 ;;;;; TRAMP
 (use-package tramp
+  :ensure nil
   :config
 ;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm(my dotfiles manager)
 ;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
@@ -136,17 +137,16 @@
 		 (tramp-login-args (("enter")))
 		 (tramp-login-env (("SHELL") ("/bin/sh")))
 		 (tramp-remote-shell "/bin/sh")
-		 (tramp-remote-shell-args ("-c"))))
-  :ensure nil)
+		 (tramp-remote-shell-args ("-c")))))
 
 ;;;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww)
 ;;;;;; browse-url
 (use-package browse-url
+  :ensure t
   :custom
   (browse-url-handlers '(("youtu\\.?be" . mpv-play-url)
 				 ("." . eww-browse-url)))
-  (browse-url-secondary-browser-function 'browse-url-default-browser)
-  :ensure t)
+  (browse-url-secondary-browser-function 'browse-url-default-browser))
 ;;;;;; shr
 (use-package shr
   :custom
@@ -160,9 +160,7 @@
   :ensure nil)
 ;;;;;; eww 
 (use-package eww
-  :load 01-eww
-  :init (define-prefix-command 'prot/eww-map) ;; Keymapping for Protesilaos's extensions
-  :bind-keymap ("s-e" . prot/eww-map)
+  :ensure nil
   :bind
   (:map prot/eww-map
 	("b" . prot/eww-visit-bookmark)
@@ -195,6 +193,8 @@
 	("d" . eww-bookmark-kill))
   (:map eww-bookmark-mode-map
 	("d" . eww-bookmark-kill))
+  :bind-keymap ("s-e" . prot/eww-map)
+  :init (define-prefix-command 'prot/eww-map) ;; Keymapping for Protesilaos's extensions
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
   (eww-download-directory (expand-file-name "~/Downloads/eww/"))
@@ -203,18 +203,17 @@
   (eww-restore-desktop t)
   (eww-desktop-remove-duplicates t)
   (eww-form-checkbox-selected-symbol "[X]")
-  (eww-form-checkbox-symbol "[ ]")
-  :ensure nil)
+  (eww-form-checkbox-symbol "[ ]"))
 
 ;;;; Language setting for prose and coding
 ;;;;; Parentheses (show-paren-mode) (paren-face)
 (use-package paren-face
+  :ensure t
   :hook
   (after-init . show-paren-mode)
   (after-init . electric-pair-mode)
   :config
-  (global-paren-face-mode)
-  :ensure t)
+  (global-paren-face-mode))
 
 (provide 'init-01-builtin.el)
 ;;; init-01-builtin.el ends here
