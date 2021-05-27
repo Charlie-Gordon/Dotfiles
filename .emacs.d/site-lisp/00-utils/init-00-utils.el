@@ -69,4 +69,16 @@ Saves to a temp file and puts the filename in the kill ring."
       (message "Starting streaming..."))
 
 (provide 'init-00-utils.el)
+
+;;;; Volume change
+(use-package 00-volume-control
+  :init (define-prefix-command 'volume-control-map)
+  :bind-keymap ("s-v" . volume-control-map)
+  :bind (:map volume-control-map
+	      ("=" . volume-increase)
+	      ("+" . volume-increase)
+	      ("-" . volume-decrease)
+	      ("m" . volume-mute)
+	      ("M" . volume-max))
+  :ensure nil)
 ;;; init-00-utils.el ends here.

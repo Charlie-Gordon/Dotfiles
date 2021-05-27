@@ -35,7 +35,10 @@
 			      ?\M-x
 			      ?\M-`
 			      ?\M-&
-			      ?\M-:))
+			      ?\M-:
+			      ?\s-.
+			      ?\s-a
+			      ?\s-v))
     ;; Global keys for EXWM
     (exwm-input-global-keys `(([?\s-.] . reload-emacs-configuration)
 			      ([?\s-w] . exwm-workspace-switch)
@@ -44,10 +47,9 @@
 					   (start-process-shell-command command nil command)))
 			      ([?\s-d] . modus-themes-toggle)
 			      ([?\s-s] . magit-status-dotfiles)
-			      ([?\s-c] . (lambda (package-name)
+			      ([?\s-j] . (lambda (file-name)
 					   (interactive"P")
-					   (consult-ripgrep user-emacs-directory
-							    (concat "\\(use-package " package-name))))
+					   (consult-find "/storage/journals")))
 			      (,(kbd "s-<return>") . eshell)
 			      ,@(mapcar (lambda (i)
 					  `(,(kbd (format "s-%d" i)) .

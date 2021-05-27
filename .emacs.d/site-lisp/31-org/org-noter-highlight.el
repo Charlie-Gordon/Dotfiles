@@ -27,6 +27,7 @@
   (let ((map (make-sparse-keymap)))
     (define-key map [mouse-1] 'org-noter-sync-current-note)
     (define-key map [return] 'org-noter-sync-current-note)
+    (define-key map [d] 'org-noter-highlight-remove-at-point)
     map)
   "Keymap on highlighted text")
 
@@ -73,7 +74,7 @@ gray unless user explicitly selcected."
                      inherit-input-method))))
     (read-color prompt)))
 
-(defun org-noter-highlight-plist (&optional bg-color)
+(defun org-noter-highlight-plist (&optional bg-color note-info-prop)
   (let* ((bg-color (or bg-color
 		       (substring-no-properties (org-noter-highlight-read-color))))
 	 (fg-color (readable-foreground-color bg-color))
@@ -85,6 +86,7 @@ gray unless user explicitly selcected."
 				       :foreground fg-color))
 	   (list 'mouse-face (list :background mouse-bg-color
 				   :foreground mouse-fg-color))
+	   (list 'note-info note-info-prop)
 	   org-noter-highlight-base-properties)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -108,19 +110,19 @@ entry at point-or-marker POM"
 		(org-noter--session-property-text session))
        (let ((span (read (org-entry-get pom org-noter-property-span)))
 	     (color (org-entry-get pom org-noter-property-highlight-color)))
-	 (org-noter-highlight (cdr span) color))
+	 (org-noter-highlight (cdr span) color (org-element-context)))
      (user-error "%s" "Document mismatch."))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Document window
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun org-noter-highlight (span color)
+(defun org-noter-highlight (span color &optional note-info)
   "Add PROP to region from BEG to END indicated by SPAN cons cell which 
 points to (BEG . END)"
   (with-selected-window (org-noter--get-doc-window)
     (let ((inhibit-read-only t))
-      (add-text-properties (car span) (cdr span) (org-noter-highlight-plist color)))))
+      (add-text-properties (car span) (cdr span) (org-noter-highlight-plist color note-info)))))
 
 (defun org-noter-rehighlight-buffer ()
   "Call `org-noter-rehighlight-entry' on all entries with `org-noter-property-note-location'
@@ -158,12 +160,27 @@ points to (BEG . END)"
   "Add note with highlighting to the region"
   (interactive"r")
   (let* ((inhibit-read-only t)
-	 (color (org-noter-highlight-read-color)))
-    (org-noter-highlight (cons span-beg span-end) color)
+	 (color (org-noter-highlight-read-color))
+	 (note-entry-prop))
     (org-noter-insert-note (org-noter--get-precise-info))
+    (org-noter-highlight (cons span-beg span-end) color (org-element-at-point))
     (org-noter-highlight--add-property span-beg span-end color)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;; Utilities functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun org-noter-highlight-remove-at-point ()
+  (interactive)
+  (let* ((origin-point (point))
+	 (note-entry-info (get-text-property origin-point 'note-info))
+	 (note-entry-begin (plist-get (cadr note-entry-info) :begin)))
+  (org-noter--with-selected-notes-window
+   "No notes window."
+   (save-excursion
+     (goto-char note-entry-begin)
+     (org-delete-property org-noter-property-span)))
+  (org-noter-rehighlight-buffer)
+  (goto-char origin-point)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'org-noter-highlight)
 ;;; org-noter-highlight.el ends here

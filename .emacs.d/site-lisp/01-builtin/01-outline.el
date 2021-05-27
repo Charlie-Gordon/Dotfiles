@@ -25,8 +25,11 @@
 ;;; Code:
 
 ;; https://www.reddit.com/r/emacs/comments/e2u5n9/code_folding_with_outlineminormode/
+
+;;;###autoload
 (defun outline-overview ()
   "Show only outline headings."
+  (interactive)
   (outline-show-all)
   (outline-hide-body))
 

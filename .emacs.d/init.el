@@ -1,3 +1,4 @@
+(let ((file-name-handler-alist nil))
 ;;; Essential External Programs
 (load "~/.emacs.d/external/stuffs.el" t)
 ;;; Emacs initialization
@@ -65,8 +66,27 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-
 ;;; Packages
+;;;; General interface
+;;;;; Helpful extras
+;;;;;; Helpful
+(use-package helpful
+  :bind
+  ("C-h v" . helpful-variable)
+  ("C-h M" . helpful-macro)
+  ("C-h o" . helpful-symbol)
+  ("C-h c" . helpful-command)
+  ("C-h C-k" . helpful-kill-buffers)
+  ("C-h k" . helpful-key)
+  ("C-h f" . helpful-function))
+(put 'dired-find-alternate-file 'disabled nil)
+;;;;;; Which-key
+(use-package which-key
+  :diminish which-key-mode
+  :config
+  (which-key-mode)
+  :custom
+  (which-key-idle-delay 0.3))
 ;;;; Completions & Navigation
 ;;;;; Completions
 ;;;;;; Selectrum
@@ -80,8 +100,17 @@
   :ensure t)
 ;;;;;; Consult
 (use-package consult
-  :bind (:map ctl-x-map
-	      ("b" . consult-buffer)))
+  :load 00-consult
+  :init (define-prefix-command '00/consult-navigate-map)
+  :bind-keymap ("s-a" . 00/consult-navigate-map)
+  :bind
+  (:map 00/consult-navigate-map
+	("e" . consult-find-emacs-dir)
+	("s" . consult-find-site-lisp)
+	("g" . consult-find-git-dir)
+	("p" . consult-grep-package))
+  (:map ctl-x-map
+	("b" . consult-buffer)))
 ;;;;;; Embark
 (use-package embark
   :ensure t
@@ -119,6 +148,9 @@
   (customize-set-variable 'transmission-timer 30)
   :ensure t)
 ;;;;; Multimedia
+;;;;;; MPV
+(use-package mpv
+  :ensure t) 
 ;;;;;;  LBRY
 (use-package lbry-mode.el
   :load-path "site-lisp/lbry-mode/"
@@ -133,12 +165,6 @@
   :ensure t
   :bind ("M-g ." . magit))
 ;;;;; Notes
-;;;;;; zettelkasten
-(use-package zettelkasten
-  :disabled
-  :config (zettelkasten-mode 1)
-  :load-path "~/Git/emacs-zettelkasten"
-  :ensure nil)
 ;;;;;; Nov.el
 (use-package nov
   :mode (("\\.epub\\'" . nov-mode))
@@ -148,7 +174,7 @@
   :ensure t)
 ;;;;;; PDFs
 (use-package pdf-tools
-  :load pdf-avy-highlight
+  :load 00-pdf-avy-highlight
   :init (pdf-loader-install)
   :bind (:map pdf-view-mode-map
 	      ("a k" . pdf-keyboard-highlight))
@@ -165,11 +191,12 @@
 ;;;; Language settings for prose and code
 ;;;;; Yasnippet
 (use-package yasnippet
-  :load yasnippet-snippets
+  :hook
+  (after-init . yas-global-mode)
+  (yas-after-exit-snippet . save-buffer)
   :config
   (yas-load-directory (concat user-emacs-directory "snippets"))
-  (yas-reload-all)
-  (yas-global-mode 1))
+  :ensure t)
 ;;;;; Markdown
 (use-package markdown-mode
   :disabled
@@ -198,24 +225,6 @@
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (slime-setup '(slime-fancy))
   :defer t)
-;;;; General interface
-;;;;; Helpful extras
-;;;;;; Helpful
-(use-package helpful
-  :bind
-  ("C-h v" . helpful-variable)
-  ("C-h M" . helpful-macro)
-  ("C-h o" . helpful-symbol)
-  ("C-h c" . helpful-command)
-  ("C-h C-k" . helpful-kill-buffers)
-  ("C-h k" . helpful-key)
-  ("C-h f" . helpful-function))
-(put 'dired-find-alternate-file 'disabled nil)
-
-;;;;;; Which-key
-(use-package which-key
-  :diminish which-key-mode
-  :config
-  (which-key-mode)
-  :custom
-  (which-key-idle-delay 0.3))
+(use-package emms
+  :ensure t)
+)

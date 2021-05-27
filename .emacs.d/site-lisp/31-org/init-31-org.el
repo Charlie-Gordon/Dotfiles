@@ -61,7 +61,7 @@
 (use-package org-noter
   :load org-noter-highlight
   :after org
-  :hook (nov-post-html-render-hook . org-noter-rehighlight-buffer)
+  :hook (nov-post-html-render . org-noter-rehighlight-buffer)
   :bind (:map org-noter-doc-mode-map
 	      ("M-h" . org-noter-insert-note-highlight))
   :custom
@@ -72,14 +72,15 @@
   :after org
   :hook (org-mode . org-transclusion-mode)
   :bind ("s-i" . org-transclusion-add-at-point)
+  :custom
+  (org-transclusion-add-at-point-functions (list "other-default" "https"))
   :load-path "~/Git/org-transclusion"
   :ensure nil)
 ;;;;; Org-marginalia
 (use-package org-marginalia
-  :load 'org-marginalia-command-chain
-  :disabled
+  :load org-marginalia-command-chain
   :after org
-  :hook (nov-mode . org-marginalia-mode)
+  :hook ((nov-mode org-mode) . org-marginalia-mode)
   :bind (:map org-marginalia-mode-map
 	      ("C-c o" . #'org-marginalia-open)
 	      ("C-c m" . #'org-marginalia-mark)

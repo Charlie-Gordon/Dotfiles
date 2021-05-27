@@ -1,5 +1,10 @@
 ;;; init-01-buitin.el --- Configuration for Emacs built-in packages  -*- lexical-binding: t; -*-
-;;;; Directory
+;;;; Repeatable key chords (repeat-mode)
+(use-package repeat
+  :config
+  (repeat-mode 1)
+  :ensure nil)
+;;;; Directory, buffer, window management 
 ;;;;; Dired
 (use-package dired
   :custom
@@ -38,7 +43,50 @@
   (ls-lisp-use-insert-directory-program t)
   (insert-directory-program "gnuls")
   :ensure nil)
-
+;;;;; Buffers
+;;;;;; Ibuffer
+;; Use `ibuffer' instead of `list-buffers'
+(use-package ibuffer
+  :bind (:map ctl-x-map
+	      ("C-b" . ibuffer))
+  :custom
+  (ibuffer-expert t)
+  (ibuffer-display-summary nil)
+  (ibuffer-use-other-window nil "Do not open on the other window; use the current one.")
+  (ibuffer-show-empty-filter-groups nil "Do not show empty filter groups.")
+  (ibuffer-movement-cycle nil "Do not go to the top when moving downward at the last item on the list.")
+  (ibuffer-default-sorting-mode 'filename/process)
+  (ibuffer-use-header-line t)
+  (ibuffer-default-shrink-to-minimum-size nil)
+  :ensure nil)
+;;;;; Window management
+(use-package window
+  :custom
+  (display-buffer-alist
+   `(;; Top side window
+     ("\\mpv.*"
+      (display-buffer-in-side-window)
+      (side . top)
+      (slot . -1))
+     ("\\*Messages.*"
+      (display-buffer-in-side-window)
+      (window-height . 0.16)
+      (side . top)
+      (slot . 1))
+     ;; Right side window
+     ("\\*Faces\\*"
+      (display-buffer-in-side-window)
+      (window-width . 0.25)
+      (side . right)
+      (slot . 0))
+     ;; Bottom buffer
+     ("\\*.*\\(e?shell\\|v?term\\).*"
+      (display-buffer-reuse-mode-window display-buffer-at-bottom)
+      (window-height . 0.2))))
+  (window-combination-resize t)
+  (window-sides-vertical nil)
+  (switch-to-buffer-in-dedicated-window 'pop)
+  :ensure nil)
 ;;;; Outline
 (use-package outline
   :load 01-outline
@@ -94,11 +142,11 @@
 ;;;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww)
 ;;;;;; browse-url
 (use-package browse-url
-  :ensure t
   :custom
-  (browse-url-browser-function '(("youtu\\.?be" . mpv-play-url)
+  (browse-url-handlers '(("youtu\\.?be" . mpv-play-url)
 				 ("." . eww-browse-url)))
-  (browse-url-secondary-browser-function 'browse-url-default-browser))
+  (browse-url-secondary-browser-function 'browse-url-default-browser)
+  :ensure t)
 ;;;;;; shr
 (use-package shr
   :custom
@@ -161,13 +209,12 @@
 ;;;; Language setting for prose and coding
 ;;;;; Parentheses (show-paren-mode) (paren-face)
 (use-package paren-face
+  :hook
+  (after-init . show-paren-mode)
+  (after-init . electric-pair-mode)
   :config
   (global-paren-face-mode)
   :ensure t)
-(add-hook 'after-init-hook #'show-paren-mode)
-(add-hook 'after-init-hook #'electric-pair-mode)
-
-
 
 (provide 'init-01-builtin.el)
 ;;; init-01-builtin.el ends here
