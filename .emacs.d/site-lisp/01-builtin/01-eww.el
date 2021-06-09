@@ -189,7 +189,8 @@ new EWW buffer."
   '((debbugs . prot/eww-search-debbugs)
     (Wikipedia . prot/eww-search-wikipedia)
     (ArchWiki . prot/eww-search-arch-wiki)
-    (AUR . prot/eww-search-arch-aur))
+    (AUR . prot/eww-search-arch-aur)
+    (Github . my/eww-search-github))
   "Alist of web search commands.
 The car of each cons cell is an arbitrary string that describes
 the function it is associated with.")
@@ -276,6 +277,23 @@ new EWW buffer."
    (format "https://aur.archlinux.org/packages/?K=%s" (string-replace " " "+" string))
    (if arg 4 nil))
   (add-to-history 'prot/eww--arch-aur-hist string))
+
+(defvar my/eww--github-hist '()
+  "Input history for `my/eww-search-github'.")
+
+;;;###autoload
+(defun my/eww-search-github (string &optional arg)
+  "Search Github repository matching STRING.
+
+With optional prefix ARG (\\[universal-argument]) open URL in a
+new EWW buffer."
+  (interactive
+   (list (read-string "Search Github Repository: " nil 'my/eww--github-hist)
+         current-prefix-arg))
+  (eww
+   (format "https://github.com/search?q=%s" (string-replace " " "+" string))
+   (if arg 4 nil))
+  (add-to-history 'my/eww--github-hist string))
 
 ;;;###autoload
 (defun prot/eww-open-in-other-window ()
