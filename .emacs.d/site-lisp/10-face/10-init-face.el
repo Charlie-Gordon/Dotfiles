@@ -24,11 +24,23 @@
     :ensure nil
     :custom
     ;; Prefix keys to ignore
-    (exwm-input-prefix-keys `(?\C-x ?\C-u ?\C-h ?\C-g ?\M-x ?\M-` ?\M-& ?\M-:))
-    (exwm-input-global-keys (append exwm-input-global-keys
-				  (mapcar '(lambda (key)
-					     (cons (vector (car key)) (cdr key)))
-					  (cdr exwm-input-global-keys-map))))
+    (exwm-input-prefix-keys `(?\C-x ?\C-u ?\C-h ?\C-g ?\M-x ?\M-` ?\M-& ?\M-: ?\C-'))
+    (exwm-input-global-keys
+     `( ;; 's-r': Reset (to line-mode).
+       ([?\s-r] . exwm-reset)
+       ;; 's-w': Switch workspace.
+       ([?\s-w] . exwm-workspace-switch)
+       ;; 's-&': Launch application.
+       ([?\s-&] . (lambda (command)
+                    (interactive (list (read-shell-command "$ ")))
+                    (start-process-shell-command command nil command)))
+       ;; 's-N': Switch to certain workspace.
+       ,@(mapcar (lambda (i)
+                   `(,(kbd (format "s-%d" i)) .
+                     (lambda ()
+                       (interactive)
+                       (exwm-workspace-switch-create ,i))))
+                 (number-sequence 0 9))))
     ;; Line-editing keybindings for X windows
     (exwm-input-simulation-keys '(;; Backward-char
 				  ([?\C-b] . [left])
@@ -56,8 +68,6 @@
 				  ([?\C-k] . [S-end C-x])
 				  ;; Yank(Paste)
 				  ([?\C-y] . [C-v])))
-    :init
-
     :config
     ;; Set the initial workspace number
     (setq exwm-workspace-number 4)

@@ -119,11 +119,6 @@
   (use-package 01-outline :ensure nil)
   :ensure nil)
 ;;;; Application and Utilities
-;;;;; Eshell
-(use-package eshell
-  :bind (:map exwm-input-global-keys-map
-	      ("s-<return>" . eshell))
-  :ensure nil)
 ;;;;; ERC
 (use-package erc
   :ensure nil
@@ -215,7 +210,7 @@
 	("d" . eww-bookmark-kill))
   (:map eww-bookmark-mode-map
 	("d" . eww-bookmark-kill))
-  :bind-keymap ("s-e" . 01-prot-eww-map)
+  :bind-keymap ("C-' e" . 01-prot-eww-map)
   :init (define-prefix-command '01-prot-eww-map) ;; Keymapping for Protesilaos's extensions
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")

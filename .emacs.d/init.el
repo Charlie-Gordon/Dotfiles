@@ -62,35 +62,18 @@
       (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
     (make-directory path :parents)))
 ;;;;; Utilities functions
-(use-package 00-init-utils.el
-  :ensure nil
-  :preface
-  (defvar exwm-input-global-keys-map
-    (let ((map (make-sparse-keymap)))
-	;; 's-&': Launch application.
-	(define-key map [?\s-&] #'(lambda (command)
-				    (interactive (list (read-shell-command "$ ")))
-				    (start-process-shell-command command nil command)))
-	;; 's-r': Reset (to line-mode).
-	(define-key map [?\s-r] 'exwm-reset)
-	;; 's-w': Switch workspace.
-	(define-key map [?\s-w] 'exwm-workspace-switch)
-	;; 's-N': Switch to certain workspace.
-	(mapc #'(lambda (key-alist)
-		 (define-key map (car key-alist) (cdr key-alist)))
-	      (mapcar (lambda (i)
-			`(,(kbd (format "s-%d" i)) .
-			  (lambda ()
-			    (interactive)
-			    (exwm-workspace-switch-create ,i))))
-                      (number-sequence 0 9)))
-	map))
-  :config
-  (use-package 00-navigation :ensure nil))
+(use-package 00-init-utils.el :ensure nil)
 ;;;;; Buit-in package configuration
 (use-package 01-init-builtin.el :ensure nil)
 ;;;;; Interface tweaks
-(use-package 10-init-face.el :ensure nil)
+(use-package 10-init-face.el
+  :ensure nil
+  :config
+  (exwm-input-set-key (kbd "s-.") #'reload-emacs-configuration)
+  (exwm-input-set-key (kbd "s-s") #'magit-status-dotfiles)
+  (exwm-input-set-key (kbd "s-d") #'modus-themes-toggle)
+  (exwm-input-set-key (kbd "s-<return>") #'eshell)
+  (exwm-input-set-key (kbd "<print>") #'screenshot-svg))
 ;;;;; TeX
 (use-package 30-init-tex.el :ensure nil)
 ;;;;; Org-mode configuration
@@ -152,8 +135,6 @@
   :ensure t
   :custom
   (selectrum-fix-vertical-window-height selectrum-max-window-height "Show as many candidates as possible")
-  :bind (:map ctl-x-map
-	      ("C-f" . find-file))
   :hook (after-init . selectrum-mode))
 ;;;;;;;  Consult
 (use-package consult
@@ -202,22 +183,7 @@
          ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
          ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
          ("M-s l" . consult-line))                 ;; required by consult-line to detect isearch
-;;  My config
-(:map 00-consult-browse-map
-	("e" . consult-find-emacs-dir)
-	("s" . consult-find-site-lisp)
-	("g" . consult-find-git-dir)
-	("p" . consult-grep-package)
-	("j" . consult-find-journals))
-  (:map ctl-x-map
-	("b" . consult-buffer))
-  (:map outline-mode-prefix-map
-	("M-j" . consult-outline))
-  (:map exwm-input-global-keys-map
-	("s-b" . 00-consult-browse-map))
-  :bind-keymap ("s-b" . 00-consult-browse-map)
   :init
-  (define-prefix-command '00-consult-browse-map) 
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
@@ -322,9 +288,7 @@
 ;;;;;; Magit
 (use-package magit
   :ensure t
-  :requires with-editor tramp 
-  :bind (:map exwm-input-global-keys-map
-	      ("s-s" . magit-status-dotfiles)))
+  :requires with-editor tramp)
 ;;;;;; Note
 ;;;;;; Nov.el
 (use-package nov

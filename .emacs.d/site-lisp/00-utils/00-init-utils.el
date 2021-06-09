@@ -76,27 +76,15 @@ Saves to a temp file and puts the filename in the kill ring."
 
 ;;;; Volume control
 (use-package 00-volume-control
+  :ensure nil
   :after exwm
-  :bind (:map exwm-input-global-keys-map
-	      ("s-v" . 00-volume-control-map))
-  :bind (:map 00-volume-control-map
-	      ("=" . volume-increase)
-	      ("+" . volume-increase)
-	      ("-" . volume-decrease)
-	      ("m" . volume-mute)
-	      ("M" . volume-max))
-  :bind-keymap ("s-v" . 00-volume-control-map)
-  :init (define-prefix-command '00-volume-control-map)
-  :ensure nil)
+  :bind-keymap ("C-' v" . 00-volume-control-map))
 
-
-(when exwm-input-global-keys-map
-  (define-key exwm-input-global-keys-map (kbd "s-.") #'reload-emacs-configuration)
-  (define-key exwm-input-global-keys-map (kbd "s-s") #'magit-status-dotfiles)
-  (define-key exwm-input-global-keys-map (kbd "s-d") #'modus-themes-toggle)
-  (define-key exwm-input-global-keys-map (kbd "<print>") #'screenshot-svg))
+;;;; Navi
+(use-package 00-navigation
+  :ensure nil
+  :after consult
+  :bind-keymap ("C-' n" . 00-navigation-map))
 
 (provide '00-init-utils.el)
-
-
 ;;; 00-init-utils.el ends here.

@@ -1,4 +1,3 @@
-;;; 00-consult.el --- Extension for Consult -*- lexical-binding: t; -*-
 ;;; 00-navigation.el --- Extension for Navigation -*- lexical-binding: t; -*-
 
 ;; This file is NOT part of GNU Emacs.
@@ -29,6 +28,16 @@
 ;;;; Dependencies and Setup
 (eval-when-compile
   (require 'consult))
+
+(defvar 00-navigation-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "e" #'consult-find-emacs-dir)
+    (define-key map "s" #'consult-find-site-lisp)
+    (define-key map "g" #'consult-find-git-dir)
+    (define-key map "p" #'consult-grep-package)
+    (define-key map "j" #'consult-find-journals)
+    map)
+  "Keymap for navigation")
 
 ;;;; Commands
 ;;;###autoload

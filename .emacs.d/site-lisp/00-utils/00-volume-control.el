@@ -28,10 +28,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Dependencies and Setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;; Empty keymap
+
+;;;;; Keymap
 (defvar 00-volume-control-map
   (let ((map (make-sparse-keymap)))
-    (suppress-keymap map)))
+    (define-key map "=" #'volume-increase)
+    (define-key map "+" #'volume-increase)
+    (define-key map "-" #'volume-decrease)
+    (define-key map "m" #'volume-mute)
+    (define-key map "M" #'volume-max)
+    map)
+  "Keymap for volume control"
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Functions

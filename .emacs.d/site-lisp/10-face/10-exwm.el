@@ -36,8 +36,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;###autoload
-(defun bind-exwm-global-keys-map ()
-  (setq exwm-input-global-keys (cdr exwm-input-global-keys-map)))
 
 (provide '10-exwm)
 ;;; 10-exwm.el ends here

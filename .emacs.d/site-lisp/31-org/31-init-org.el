@@ -2,14 +2,17 @@
 ;;;; Org
 (use-package org
   :ensure t
-  :bind ("C-c c" . org-capture)
+  :bind (("C-c c" . org-capture)
+	 ("C-c a" . org-agenda)
+	 :map org-mode-map
+	 ("C-'" . nil))
   :custom
   (org-export-coding-system 'utf-8)
   (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
   (org-todo-keywords
-   '((sequence "TODO" "|" "DONE")
-     (sequence "QUIZ" "|" "FOR_ZETTEL" "ZETTEL'ED")
-     (sequence "REVIEW" "|" "ANSWERED" "ANKIFIED")))
+   '((sequence "TODO(t)" "|" "DONE(d)")
+     (sequence "QUIZ(q)" "|" "FOR_ZETTEL(d)" "ZETTEL'ED")
+     (sequence "REVIEW(r)" "|" "ANSWERED(d)" "ANKIFIED(a)")))
   (org-todo-keyword-faces
    '(("QUIZ" . org-upcoming-deadline)
      ("FOR_ZETTEL" . org-agenda-current-time)
@@ -40,18 +43,39 @@
   :ensure nil
   :custom
   (org-capture-templates
-   '(("q"
-      "Question bank for this book.")
-     ("qb"
+   '(("Q"
+      "Questions for this book.")
+     
+     ("Qb"
       "Questions bank on this book."
       entry
       (file buffer-file-name)
-      (file "~/.emacs.d/org-template/QUIZ-todo.txt"))
-     ("qq"
-      "Question for this book."
+      (file "~/.emacs.d/org-template/QUIZ-todo.txt")
+      :jump-to-captured t)
+     
+     ("Qq"
+      "A question for this book."
       entry
-      (file buffer-file-name)
-      "** REVIEW Q:%?"))))
+      (file+function buffer-file-name org-maybe-go-to-quiz)
+      "** REVIEW Q:%?"
+      :jump-to-captured t)))
+  :init
+  (defun org-maybe-go-to-quiz ()
+    "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
+    (goto-char
+     (or (car (org-map-entries
+	       (lambda nil (point-marker)) "todo=\"QUIZ\"" 'file))
+	 (point-marker))))
+  (defun my-org-capture-place-template-dont-delete-windows (oldfun args)
+    "Prevent org-capture from modifying window configuration.
+
+Taken this snippet from
+legoscia's answer at
+https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific-window/54251825#54251825"
+    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
+      (apply oldfun args)))
+  :config
+  (advice-add 'org-capture-place-template :around 'my-org-capture-place-template-dont-delete-windows))
 
 (use-package org-anki
   :ensure t
@@ -75,22 +99,6 @@ Edna Syntax: org-anki-this!"
   (add-hook 'outline-minor-mode-hook 'outshine-mode)
   ;; Enables outline-minor-mode for *ALL* programming buffers
   (add-hook 'prog-mode-hook 'outshine-mode))
-;;;; Org-brain
-(use-package org-brain
-  :disabled
-  :init
-  (setq org-brain-path "~/journals/brain")
-  :config
-  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
-  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
-  :custom
-  (org-id-track-globally t)
-  (org-id-locations-file "~/.emacs.d/.org-id-locations")
-  (org-brain-visualize-default-choices 'all)
-  (org-brain-title-max-length 12)
-  (org-brain-include-file-entries nil)
-  (org-brain-file-entries-use-title nil)
-  :ensure t)
 ;;;; Note-taking
 ;;;;; Org-roam
 (use-package org-roam
