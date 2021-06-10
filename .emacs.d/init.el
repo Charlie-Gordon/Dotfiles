@@ -22,9 +22,12 @@
 ;;;; Emacs initialization
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;; Setting up `use-package'
+;;;;; Managing packages
+;;;;;; Package.el (with use-package)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(require 'init-elpa)
+(require 'init-package)
+;;;;;; Local packages (on site-lisp/)
+(use-package init-site-lisp :ensure nil)
 ;;;;; Utilities functions
 (use-package init-utils :ensure nil)
 ;;;;; Buit-in package configuration
