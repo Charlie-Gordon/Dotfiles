@@ -56,7 +56,7 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 ;;;;; Setting load-path
-(let* ((path (expand-file-name "site-lisp" user-emacs-directory))
+(let* ((path (expand-file-name "lisp" user-emacs-directory))
        (local-pkgs (mapcar 'file-name-directory (directory-files-recursively path ".*\\.el"))))
   (if (file-accessible-directory-p path)
       (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
@@ -85,7 +85,7 @@
 (setq x-select-enable-clipboard t
       x-select-enable-primary t)
 ;;;;;; Customize file
-(setq custom-file (expand-file-name "site-lisp/custom/custom.el" user-emacs-directory))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 ;;;;;; Backup files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 ;;;;;; Autosave files
@@ -279,12 +279,12 @@
 (use-package lbry-mode.el
   :disabled
   :ensure nil
-  :load-path "site-lisp/lbry-mode/")
+  :load-path "lisp/lbry-mode/")
 ;;;;;; parallel-mode.el
 (use-package parallel-mode.el
   :disabled
   :ensure nil
-  :load-path "site-lisp/parallel/")
+  :load-path "lisp/parallel/")
 ;;;;;; Magit
 (use-package magit
   :ensure t
