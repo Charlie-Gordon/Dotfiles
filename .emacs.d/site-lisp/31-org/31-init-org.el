@@ -58,7 +58,17 @@
       entry
       (file+function buffer-file-name org-maybe-go-to-quiz)
       "** REVIEW Q:%?"
-      :jump-to-captured t)))
+      :jump-to-captured t)
+
+     ("Q4"
+      "Essential four questions for reading, from Adler's How to Read A Book"
+      entry
+      (file+function buffer-file-name org-maybe-go-to-quiz)
+      "** REVIEW Q:What is [[file:%F][%(file-name-sans-extension \"%f\")]] about as a whole?
+** REVIEW Q:What [[file:%F][%(file-name-sans-extension \"%f\")]] said in detail, and how?
+** REVIEW Q:Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?
+** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?"
+      )))
   :init
   (defun org-maybe-go-to-quiz ()
     "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
