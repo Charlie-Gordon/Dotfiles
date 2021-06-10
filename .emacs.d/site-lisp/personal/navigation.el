@@ -41,12 +41,6 @@
 
 ;;;; Commands
 ;;;###autoload
-(defun consult-find-git-dir (file-name)
-  (interactive"P")
-  (let ((consult-find-command "find . -ipath *ARG* OPTS"))
-    (consult-find "~/Git/" file-name)))
-
-;;;###autoload
 (defun consult-find-emacs-dir (file-name)
   (interactive"P")
   (let ((consult-find-command "find . -ipath *ARG* OPTS"))
@@ -62,7 +56,7 @@
 (defun consult-grep-package (package-name)
   (interactive"P")
   (consult-ripgrep user-emacs-directory
-		   (concat "\\(use-package #^site-lisp\\|^init.*\\.el " package-name)))
+		   (concat " ?\\(.*use-package #^lisp\\|^site-lisp\\|^init.*\\.el " package-name)))
 
 ;;;###autoload
 (defun consult-find-journals (file-name)
