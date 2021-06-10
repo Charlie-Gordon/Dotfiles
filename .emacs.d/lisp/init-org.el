@@ -1,7 +1,7 @@
 ;;; init-org.el --- Code for initializing org-mode
 ;;;; Org
 (use-package org
-  :ensure t
+  :straight t
   :bind (("C-c c" . org-capture)
 	 ("C-c a" . org-agenda)
 	 :map org-mode-map
@@ -88,12 +88,12 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
   (advice-add 'org-capture-place-template :around 'my-org-capture-place-template-dont-delete-windows))
 
 (use-package org-anki
-  :ensure t
+  :straight t
   :custom
   (org-anki-default-deck "one-big-deck"))
 
 (use-package org-edna
-  :ensure t
+  :straight t
   :config
   (defun org-edna-action/org-anki-this! (_last-entry)
     "Action to call `org-anki-sync-entry' on this entry
@@ -102,7 +102,7 @@ Edna Syntax: org-anki-this!"
 
 ;;;; Outshine
 (use-package outshine
-  :ensure t
+  :straight t
   :after org
   :config
   ;; Required for outshine
@@ -112,7 +112,7 @@ Edna Syntax: org-anki-this!"
 ;;;; Note-taking
 ;;;;; Org-roam
 (use-package org-roam
-  :ensure t
+  :straight t
   :bind (:map org-roam-mode-map
 	      ("C-c n l" . org-roam)
 	      ("C-c n f" . org-roam-find-file)
@@ -137,7 +137,7 @@ Edna Syntax: org-anki-this!"
   (add-to-list 'exec-path (executable-find "sqlite3")))
 ;;;;; Org-noter
 (use-package org-noter
-  :ensure t
+  :straight t
   :after org
   :custom
   (org-noter-default-notes-file-naems '("notes.org"))
@@ -207,7 +207,7 @@ With a prefix ARG, remove start location."
                            (org-noter--pretty-print-location location))))))))
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))
-  :ensure t)
+  :straight t)
 
 (provide 'init-org)
 ;;; init-org.el ends here

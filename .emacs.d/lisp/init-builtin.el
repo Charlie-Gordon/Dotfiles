@@ -38,7 +38,7 @@
   :bind (:map dired-mode-map
 	      ("<tab>" . dired-subtree-toggle)
 	      ("<C-tab>" . dired-subtree-cycle))
-  :ensure t)
+  :straight t)
 ;;;;;; ls-lisp 
 (use-package ls-lisp
   :custom
@@ -141,7 +141,7 @@
     :ensure nil
     :custom
     (erc-dcc-get-default-directory "/tmp/"))
-  (use-package erc-hl-nicks :ensure t))
+  (use-package erc-hl-nicks :straight t))
 ;;;;; TRAMP
 (use-package tramp
   :ensure nil
@@ -159,7 +159,7 @@
 ;;;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww)
 ;;;;;; browse-url
 (use-package browse-url
-  :ensure t
+  :straight t
   :custom
   (browse-url-handlers '(("youtu\\.?be" . mpv-play-url)
 				 ("." . eww-browse-url)))
@@ -234,7 +234,7 @@
   :ensure nil)
 ;;;;; Parentheses (show-paren-mode) (paren-face)
 (use-package paren-face
-  :ensure t
+  :straight t
   :hook
   (after-init . show-paren-mode)
   (after-init . electric-pair-mode)

@@ -23,7 +23,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;; Managing packages
-;;;;;; Package.el (with use-package)
+;;;;;; straight.el (with-use-package)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-package)
 ;;;;;; Local packages (on site-lisp/)
@@ -78,7 +78,7 @@
 ;;;;;; Helpful extras
 ;;;;;;  Helpful
 (use-package helpful
-  :ensure t
+  :straight t
   :bind
   ("C-h v" . helpful-variable)
   ("C-h M" . helpful-macro)
@@ -89,7 +89,7 @@
   ("C-h f" . helpful-function))
 ;;;;;;  Which-key
 (use-package which-key
-  :ensure t
+  :straight t
   :custom
   (which-key-idle-delay 0.3)
   :config
@@ -99,13 +99,13 @@
 ;;;;;; Completions
 ;;;;;;;  Selectrum
 (use-package selectrum
-  :ensure t
+  :straight t
   :custom
   (selectrum-fix-vertical-window-height selectrum-max-window-height "Show as many candidates as possible")
   :hook (after-init . selectrum-mode))
 ;;;;;;;  Consult
 (use-package consult
-  :ensure t
+  :straight t
 ;;  Replacing functions with their consult counterparts
   :bind (;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
@@ -185,7 +185,7 @@
 
 ;;;;;;;  Embark
 (use-package embark
-  :ensure t
+  :straight t
   :bind
   ("C-." . embark-act)
   (:map embark-url-map
@@ -195,7 +195,7 @@
 	("h" . #'helpful-at-point)))
 ;;;;;;;  Orderless
 (use-package orderless
-  :ensure t
+  :straight t
   :after selectrum
   :custom
   (selectrum-refine-candidates-function #'orderless-filter)
@@ -203,7 +203,7 @@
   (completion-styles '(orderless partial-completion)))
 ;;;;;;;  Marginalia
 (use-package marginalia
-  :ensure t
+  :straight t
   :after selectrum
   :config (marginalia-mode 1))
 ;;;;;; Navigation
@@ -216,20 +216,20 @@
         affe-highlight-function #'orderless-highlight-matches))
 ;;;;;;;  avy
 (use-package avy
-  :ensure t)
+  :straight t)
 ;;;;; Application & utilities
 ;;;;;; Password-store
 (use-package pass
-  :ensure t)
+  :straight t)
 ;;;;;; Torrenting
 (use-package transmission
-  :ensure t
+  :straight t
   :custom
   (transmission-timer 30))
 ;;;;; Multimedia
 ;;;;;; EMMS
 (use-package emms
-  :ensure t
+  :straight t
   :config
   (use-package emms-setup
     :ensure nil
@@ -238,10 +238,10 @@
     :config
     (emms-all)
     (emms-default-players))
-  (use-package emms-player-simple-mpv :disabled :ensure t))
+  (use-package emms-player-simple-mpv :disabled :straight t))
 ;;;;;; MPV
 (use-package mpv
-  :ensure t)
+  :straight t)
 ;;;;;; LBRY
 (use-package lbry-mode.el
   :disabled
@@ -254,25 +254,25 @@
   :load-path "lisp/parallel/")
 ;;;;;; Magit
 (use-package magit
-  :ensure t
+  :straight t
   :requires with-editor tramp)
 ;;;;;; Note
 ;;;;;; Nov.el
 (use-package nov
-  :ensure t
+  :straight t
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
   :mode (("\\.epub\\'" . nov-mode)))
 ;;;;;; PDFs
 (use-package pdf-tools
-  :ensure avy
+  :straight avy
   :bind (:map pdf-view-mode-map
 	      ("a k" . pdf-keyboard-highlight))
   :init
   (pdf-loader-install)
   (use-package pdf-view-restore
-    :ensure t
+    :straight t
     :custom
     (pdf-view-restore-filename "/storage/journals/library/.pdf-view-restore"))
   :hook (pdf-view-mode . pdf-view-restore-mode)
@@ -286,14 +286,14 @@
 ;;;;;; Yasnippet
 
 (use-package yasnippet
-  :ensure t
+  :straight t
   :config
   (yas-load-directory (concat user-emacs-directory "snippets"))
   (yas-global-mode))
 ;;;;;; Markdown
 
 (use-package markdown-mode
-  :ensure t
+  :straight t
   :disabled
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -304,11 +304,11 @@
 ;;;;;;; Scheme
 
 (use-package quack
-  :ensure t)
+  :straight t)
 (use-package geiser
-  :ensure t
+  :straight t
   :config
-  (use-package geiser-mit :ensure t))
+  (use-package geiser-mit :straight t))
 (use-package paredit
   :hook
   (emacs-lisp-mode . enable-paredit-mode)
@@ -317,11 +317,11 @@
   (lisp-mode . enable-paredit-mode)
   (lisp-interaction-mode . enable-paredit-mode)
   (scheme-mode . enable-paredit-mode)
-  :ensure t)
+  :straight t)
 ;;;;;;; Common-lisp
 
 (use-package cl-generic
-  :ensure t)
+  :straight t)
 (use-package slime
   :custom
   (inferior-lisp-program "/usr/local/bin/sbcl")

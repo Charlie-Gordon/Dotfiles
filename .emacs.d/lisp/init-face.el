@@ -3,23 +3,23 @@
 (use-package modus-themes
   :config
   (load-theme 'modus-vivendi t)
-  :ensure t)
+  :straight t)
 ;;;; Grayscale theme for the night
 (use-package tao-theme
-  :ensure t)
+  :straight t)
 ;;;; Diminish
 (use-package diminish
-  :ensure t)
+  :straight t)
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile Oblique")
 ;;;; EXWM
 (use-package exwm
-  :ensure
+  :straight t
   :when window-system
   :config
-  (use-package exwm-edit :ensure t)
-  (use-package pinentry :ensure t)
+  (use-package exwm-edit :straight t)
+  (use-package pinentry :straight t)
   (use-package exwm-config
     :ensure nil
     :custom
