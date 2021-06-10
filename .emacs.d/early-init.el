@@ -1,22 +1,28 @@
+;;; early-init.el --- Emacs 27+ pre-initialization config -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;;
 ;; Prior to Emacs 27, the `init.el' was supposed to handle the
 ;; initialisation of the package manager, by means of calling
 ;; `package-initialize'.  Starting with Emacs 27, the default
 ;; behaviour is to start the package manager before loading the init
 ;; file.
 
-;;; Initialise installed packages
+;;; Code:
+
+;;;; Initialise installed packages
 (setq package-enable-at-startup t)
 
-;;; Disable GUI elements
+;;;; Disable GUI elements
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-;;; Time in modeline
+;;;; Time in modeline
 (display-time-mode 1)
 (setq display-time-day-and-date t)
-;;; Fringe
+;;;; Fringe
 (fringe-mode 4)
-;;; FreeSans for unicode
+;;;; FreeSans for unicode
 (set-fontset-font t nil (font-spec :family "FreeSans"
 				   :size 20))
 
@@ -32,3 +38,7 @@
 (setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
+
+(provide 'early-init)
+;;; early-init.el ends here
+
