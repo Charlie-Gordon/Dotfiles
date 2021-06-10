@@ -207,13 +207,6 @@
   :after selectrum
   :config (marginalia-mode 1))
 ;;;;;; Navigation
-;;;;;;; affe
-(use-package affe
-  :after orderless
-  :config
-  ;; Configure Orderless
-  (setq affe-regexp-function #'orderless-pattern-compiler
-        affe-highlight-function #'orderless-highlight-matches))
 ;;;;;;;  avy
 (use-package avy
   :straight t)
@@ -290,6 +283,7 @@
   :config
   (yas-load-directory (concat user-emacs-directory "snippets"))
   (yas-global-mode))
+
 ;;;;;; Markdown
 
 (use-package markdown-mode
@@ -300,32 +294,37 @@
          ("\\.markdown\\'" . markdown-mode))
   :commands (markdown-mode gfm-mode)
   :init (setq markdown-command "multimarkdown"))
+
 ;;;;;; Lisp
 ;;;;;;; Scheme
 
 (use-package quack
   :straight t)
+
 (use-package geiser
   :straight t
   :config
   (use-package geiser-mit :straight t))
+
 (use-package paredit
+  :straight t
   :hook
   (emacs-lisp-mode . enable-paredit-mode)
   (eval-expression-minibuffer-setup . enable-paredit-mode)
   (ielm-mode . enable-paredit-mode)
   (lisp-mode . enable-paredit-mode)
   (lisp-interaction-mode . enable-paredit-mode)
-  (scheme-mode . enable-paredit-mode)
-  :straight t)
+  (scheme-mode . enable-paredit-mode))
+
 ;;;;;;; Common-lisp
 
 (use-package cl-generic
   :straight t)
+
 (use-package slime
+  :defer t
   :custom
   (inferior-lisp-program "/usr/local/bin/sbcl")
-  :defer t
   :config
   (use-package slime-autoloads :ensure nil)
   (slime-setup '(slime-fancy)))

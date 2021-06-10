@@ -1,4 +1,4 @@
-;;; 31-org-marginalia-command-chain.el --- Command chains from functions of org-marginalia  -*- lexical-binding: t; -*-
+;;; org-marginalia-command-chain.el --- Command chains from functions of org-marginalia  -*- lexical-binding: t; -*-
 
 ;; Keywords: extensions
 
@@ -41,5 +41,5 @@
     (org-marginalia-prev) (org-marginalia-open (point))
     (pop-to-buffer buf nil t)))
 
-(provide '31-org-marginalia-command-chain)
-;;; 31-org-marginalia-command-chain.el ends here
+(provide 'org-marginalia-command-chain)
+;;; org-marginalia-command-chain.el ends here
