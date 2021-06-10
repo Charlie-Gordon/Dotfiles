@@ -179,7 +179,7 @@
 (use-package eww
   :ensure nil
   :bind
-  (:map 01-prot-eww-map
+  (:map prot-eww-map
 	("b" . prot/eww-visit-bookmark)
 	("e" . prot/eww-browse-dwim)
 	("a" . prot/eww-search-arch-wiki)
@@ -210,8 +210,8 @@
 	("d" . eww-bookmark-kill))
   (:map eww-bookmark-mode-map
 	("d" . eww-bookmark-kill))
-  :bind-keymap ("C-' e" . 01-prot-eww-map)
-  :init (define-prefix-command '01-prot-eww-map) ;; Keymapping for Protesilaos's extensions
+  :bind-keymap ("C-' e" . prot-eww-map)
+  :init (define-prefix-command 'prot-eww-map) ;; Keymapping for Protesilaos's extensions
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
   (eww-download-directory (expand-file-name "~/Downloads/eww/"))
