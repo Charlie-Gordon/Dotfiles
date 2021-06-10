@@ -5,5 +5,5 @@
 	path = .emacs.d/lisp/lbry-mode
 	url = git@gitlab.com:Charlie-Gordon/lbry-mode-el.git
 [submodule ".emacs.d/lisp/lbry-mode"]
-	path = .emacs.d/lisp/lbry-mode
+	path = .emacs.d/lisp/site-lisp/
 	url = git@gitlab.com:Charlie-Gordon/lbry-mode-el.git
