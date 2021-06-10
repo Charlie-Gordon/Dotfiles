@@ -1,8 +1,9 @@
 ;;; init-misc.el --- Miscellaneous config -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;;;; Better help
-;;;;;;  Helpful
 (use-package helpful
   :straight t
   :bind
@@ -13,16 +14,6 @@
   ("C-h C-k" . helpful-kill-buffers)
   ("C-h k" . helpful-key)
   ("C-h f" . helpful-function))
-;;;;;;  Which-key
-(use-package which-key
-  :straight t
-  :custom
-  (which-key-idle-delay 0.3)
-  :config
-  (which-key-mode)
-  :diminish which-key-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;; Sentences end with a single space
 (setq sentence-end-double-space nil)
