@@ -8,8 +8,15 @@
 ;; that I adapted to fit my setup.
 
 ;;; Code:
+(use-package browse-url
+  :ensure nil
+  :custom
+  (browse-url-handlers '(("youtu\\.?be" . mpv-play-url)
+				 ("." . eww-browse-url)))
+  (browse-url-secondary-browser-function 'browse-url-default-browser))
 
 (use-package shr
+  :ensure nil
   :custom
   (shr-max-image-proportion 0.6)
   (shr-discard-aria-hidded t)
@@ -17,43 +24,42 @@
   (shr-use-colors nil)
   (shr-use-fonts nil)
   (shr-width 70)
-  (shr-cookie-policy nil)
-  :ensure nil)
+  (shr-cookie-policy nil))
 
 (use-package eww
   :ensure nil
   :bind
   (:map prot-eww-map
-	("b" . prot/eww-visit-bookmark)
-	("e" . prot/eww-browse-dwim)
-	("a" . prot/eww-search-arch-wiki)
-	("A" . prot/eww-search-arch-aur)
-	("d" . prot/eww-search-debbugs)
-	("w" . prot/eww-search-wikipedia)
-	("s" . prot/eww-search-engine))
-  (:map eww-mode-map
-	("<return>" . eww-follow-link)
-	("W" . mpv-play-url)
-	("L" . eww-list-bookmarks)
-	("t" . eww-readable)
-	("n" . shr-next-link)
-	("p" . shr-next-link)
-	("u" .  eww-back-url)
-	("B" . prot/eww-bookmark-page)
-	("D" . prot/eww-download-html)
-	("F" . prot/eww-find-feed)
-	("b" . prot/eww-visit-bookmark)
-	("e" . prot/eww-browse-dwim)
-	("o" . prot/eww-open-in-other-window)
-	("E" . prot/eww-visit-url-on-page)
-	("J" . prot/eww-jump-to-url-on-page)
-	("R" . prot/eww-readable))
-  (:map eww-link-keymap
-	("v" . nil)) ;; stop overriding `eww-view-source'
-  (:map eww-buffers-mode-map
-	("d" . eww-bookmark-kill))
-  (:map eww-bookmark-mode-map
-	("d" . eww-bookmark-kill))
+        ("b" . prot/eww-visit-bookmark)
+        ("e" . prot/eww-browse-dwim)
+        ("a" . prot/eww-search-arch-wiki)
+        ("A" . prot/eww-search-arch-aur)
+        ("d" . prot/eww-search-debbugs)
+        ("w" . prot/eww-search-wikipedia)
+        ("s" . prot/eww-search-engine)
+        :map eww-mode-map
+        ("<return>" . eww-follow-link)
+        ("W" . mpv-play-url)
+        ("L" . eww-list-bookmarks)
+        ("t" . eww-readable)
+        ("n" . shr-next-link)
+        ("p" . shr-next-link)
+        ("u" .  eww-back-url)
+        ("B" . prot/eww-bookmark-page)
+        ("D" . prot/eww-download-html)
+        ("F" . prot/eww-find-feed)
+        ("b" . prot/eww-visit-bookmark)
+        ("e" . prot/eww-browse-dwim)
+        ("o" . prot/eww-open-in-other-window)
+        ("E" . prot/eww-visit-url-on-page)
+        ("J" . prot/eww-jump-to-url-on-page)
+        ("R" . prot/eww-readable)
+        :map eww-link-keymap
+        ("v" . nil) ;; stop overriding `eww-view-source'
+        :map eww-buffers-mode-map
+        ("d" . eww-bookmark-kill)
+        :map eww-bookmark-mode-map
+        ("d" . eww-bookmark-kill))
   :bind-keymap ("C-' e" . prot-eww-map)
   :init (define-prefix-command 'prot-eww-map) ;; Keymapping for Protesilaos's extensions
   :custom
@@ -363,9 +369,9 @@ images."
 Also replace multiple hyphens with a single one and remove any
 trailing hyphen."
   (replace-regexp-in-string
-    "-$" ""
+   "-$" ""
    (replace-regexp-in-string
-   "-\\{2,\\}" "-"
+    "-\\{2,\\}" "-"
     (replace-regexp-in-string "--+\\|\s+" "-" str))))
 
 (defun prot/eww--sluggify (str)
@@ -384,7 +390,7 @@ trailing hyphen."
                   (concat (format-time-string "%Y%m%d_%H%M%S") "--" name ".html"))))
          (out (prot/common-shell-command-with-exit-code-and-output
                "wget" "-q" (format "%s" (plist-get eww-data :url))
-                      "-O" (format "%s" (shell-quote-argument path)))))
+               "-O" (format "%s" (shell-quote-argument path)))))
     (if (= (car out) 0)
         (message "Downloaded page at %s" path)
       (message "Error downloading page: %s" (cdr out)))))
