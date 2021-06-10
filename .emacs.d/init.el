@@ -29,8 +29,6 @@
 (use-package init-site-lisp :ensure nil)
 ;;;;; Utilities functions
 (use-package init-utils :ensure nil)
-;;;;; Buit-in package configuration
-(use-package init-builtin :ensure nil)
 ;;;;; Interface tweaks
 (use-package init-face
   :ensure nil
@@ -44,8 +42,18 @@
 (use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
 (use-package init-org :ensure nil)
+
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Builtin packages
+;;;;;; Dired
+(use-package init-dired :ensure nil)
+;;;;;; Outline
+(use-package init-outline :ensure nil)
+;;;;;; EWW & SHR
+(use-package init-eww-shr :ensure nil)
+;;;;; Git
+(use-package init-git :ensure nil)
 ;;;;; Completions & Navigation
 ;;;;;; Completions
 ;;;;;;;  Selectrum
@@ -151,6 +159,7 @@
   :init (setq markdown-command "multimarkdown"))
 
 ;;;;;; Lisp
+(use-package init-paredit :ensure nil)
 ;;;;;;; Scheme
 
 (use-package quack
