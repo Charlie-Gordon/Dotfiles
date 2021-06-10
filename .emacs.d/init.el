@@ -1,21 +1,4 @@
 ;;; init.el --- Configuration for emacs             -*- lexical-binding: t; -*-
-
-;; Keywords: convenience, lisp
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-
 ;;; Commentary:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -38,33 +21,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Emacs initialization
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;;; Use-package
-;;;;;; Initialize
-(package-initialize)
-;;;;;; Add package sources
-(unless (assoc-default "melpa" package-archives) 
- (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-(unless (assoc-default "org" package-archives)
-  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t))
-;;;;;; Bootstrapping Use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile
-  (require 'use-package))
-(setq use-package-always-ensure t)
-(setq use-package-verbose t)
-;;;;; Setting load-path
-(let* ((path (expand-file-name "lisp" user-emacs-directory))
-       (local-pkgs (mapcar 'file-name-directory (directory-files-recursively path ".*\\.el"))))
-  (if (file-accessible-directory-p path)
-      (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
-    (make-directory path :parents)))
+;;;;; Setting up `use-package'
+(require 'init-elpa)
 ;;;;; Utilities functions
-(use-package 00-init-utils.el :ensure nil)
+(use-package init-utils :ensure nil)
 ;;;;; Buit-in package configuration
-(use-package 01-init-builtin.el :ensure nil)
+(use-package init-builtin :ensure nil)
 ;;;;; Interface tweaks
 (use-package 10-init-face.el
   :ensure nil
