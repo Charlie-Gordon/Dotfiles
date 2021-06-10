@@ -1,4 +1,4 @@
-;;; init-package.el --- Settings for package.el -*- lexical-binding: t; -*-
+;;; init-straight.el --- Settings for Straight package manager -*- lexical-binding: t; -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; This file is NOT part of GNU Emacs.
@@ -46,7 +46,5 @@
 
 (setq use-package-verbose t)
 
-;;;; Start package.el
-
-(provide 'init-package)
-;;; init-package.el ends here
+(provide 'init-straight)
+;;; init-straight.el ends here

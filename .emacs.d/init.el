@@ -24,7 +24,7 @@
 ;;;;; Managing packages
 ;;;;;; straight.el (with-use-package)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(require 'init-package)
+(require 'init-straight)
 ;;;;;; Local packages (on site-lisp/)
 (use-package init-site-lisp :ensure nil)
 ;;;;; Utilities functions
