@@ -1,4 +1,4 @@
-;;; init-org.el --- Code for initializing org-mode
+;;; init-org.el --- Code for initializing org-mode -*- lexical-binding: t; -*-
 ;;;; Org
 (use-package org
   :straight t
@@ -24,8 +24,8 @@
 (use-package org-agenda
   :ensure nil
   :config
-;; Daniel Patru's answer at
-;;  https://stackoverflow.com/questions/17215868/recursively-adding-org-files-in-a-top-level-directory-for-org-agenda-files-take
+  ;; Daniel Patru's answer at
+  ;;  https://stackoverflow.com/questions/17215868/recursively-adding-org-files-in-a-top-level-directory-for-org-agenda-files-take
   (defun org-get-agenda-files-recursively (dir)
     "Get org agenda files from root DIR."
     (directory-files-recursively dir "\.org$"))
@@ -45,21 +45,18 @@
   (org-capture-templates
    '(("Q"
       "Questions for this book.")
-     
      ("Qb"
       "Questions bank on this book."
       entry
       (file buffer-file-name)
       (file "~/.emacs.d/org-template/QUIZ-todo.txt")
       :jump-to-captured t)
-     
      ("Qq"
       "A question for this book."
       entry
       (file+function buffer-file-name org-maybe-go-to-quiz)
       "** REVIEW Q:%?"
       :jump-to-captured t)
-
      ("Q4"
       "Essential four questions for reading, from Adler's How to Read A Book"
       entry
@@ -67,8 +64,7 @@
       "** REVIEW Q:What is [[file:%F][%(file-name-sans-extension \"%f\")]] about as a whole?
 ** REVIEW Q:What [[file:%F][%(file-name-sans-extension \"%f\")]] said in detail, and how?
 ** REVIEW Q:Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?
-** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?"
-      )))
+** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")))
   :init
   (defun org-maybe-go-to-quiz ()
     "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
@@ -103,7 +99,7 @@ Edna Syntax: org-anki-this!"
 ;;;; Outshine
 (use-package outshine
   :straight t
-  :after org
+  :after outline
   :config
   ;; Required for outshine
   (add-hook 'outline-minor-mode-hook 'outshine-mode)
@@ -173,10 +169,12 @@ Edna Syntax: org-anki-this!"
 	      ("C-c n J" . org-marginalia-browse-forward)
 	      ("C-c n K" . org-marginalia-browse-backward))
   :hook ((nov-mode org-mode) . org-marginalia-mode))
-;;;;; PDFs
+;;;;; pdf-tools integration
 (use-package org-pdftools
   :hook (org-mode . org-pdftools-setup-link))
+
 (use-package org-noter-pdftools
+  :straight t
   :after (org-noter org-pdftools)
   :config
   ;; Add a function to ensure precise note is inserted
@@ -206,8 +204,7 @@ With a prefix ARG, remove start location."
             (org-entry-put nil org-noter-property-note-location
                            (org-noter--pretty-print-location location))))))))
   (with-eval-after-load 'pdf-annot
-    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))
-  :straight t)
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
 (provide 'init-org)
 ;;; init-org.el ends here

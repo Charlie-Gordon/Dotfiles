@@ -1,6 +1,8 @@
-;;; init-consult.el --- Configuration for Consult -*- lexical-binding: t; -*-
+;;; init-completion.el --- Minimal completion framework config -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
+;;;; Selectrum
+;;;; Consult
 (use-package consult
   :straight t
 ;;  Replacing functions with their consult counterparts
@@ -80,7 +82,29 @@
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help))
 
-(use-package navigation :ensure nil)
+;;;; Embark
+(use-package embark
+  :straight t
+  :bind
+  ("C-." . embark-act)
+  (:map embark-url-map
+	("s" . #'browse-url-xdg-open)
+	("m" . #'mpv-play-url))
+  (:map embark-symbol-map
+	("h" . #'helpful-at-point)))
+;;;; Orderless
+(use-package orderless
+  :straight t
+  :after selectrum
+  :custom
+  (selectrum-refine-candidates-function #'orderless-filter)
+  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+  (completion-styles '(orderless partial-completion)))
+;;;; Marginalia
+(use-package marginalia
+  :straight t
+  :after selectrum
+  :config (marginalia-mode 1))
 
-(provide 'init-consult)
-;;; init-consult.el ends here
+(provide 'init-completion)
+;;; init-completion.el ends here
