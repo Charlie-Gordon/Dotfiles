@@ -21,7 +21,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Emacs initialization
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;;;;; Managing packages
 ;;;;;; straight.el (with-use-package)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -45,30 +44,8 @@
 (use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
 (use-package init-org :ensure nil)
-
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;; General interface
-;;;;;; Helpful extras
-;;;;;;  Helpful
-(use-package helpful
-  :straight t
-  :bind
-  ("C-h v" . helpful-variable)
-  ("C-h M" . helpful-macro)
-  ("C-h o" . helpful-symbol)
-  ("C-h c" . helpful-command)
-  ("C-h C-k" . helpful-kill-buffers)
-  ("C-h k" . helpful-key)
-  ("C-h f" . helpful-function))
-;;;;;;  Which-key
-(use-package which-key
-  :straight t
-  :custom
-  (which-key-idle-delay 0.3)
-  :config
-  (which-key-mode)
-  :diminish which-key-mode)
 ;;;;; Completions & Navigation
 ;;;;;; Completions
 ;;;;;;;  Selectrum
@@ -145,7 +122,7 @@
 (use-package magit
   :straight t
   :requires with-editor tramp)
-;;;;;; Note
+;;;;; Note
 ;;;;;; Nov.el
 (use-package nov
   :straight t
@@ -154,23 +131,7 @@
 	      ("C-S-p" . shr-previous-link))
   :mode (("\\.epub\\'" . nov-mode)))
 ;;;;;; PDFs
-(use-package pdf-tools
-  :straight avy
-  :bind (:map pdf-view-mode-map
-	      ("a k" . pdf-keyboard-highlight))
-  :init
-  (pdf-loader-install)
-  (use-package pdf-view-restore
-    :straight t
-    :custom
-    (pdf-view-restore-filename "/storage/journals/library/.pdf-view-restore"))
-  :hook (pdf-view-mode . pdf-view-restore-mode)
-  :custom
-  (pdf-annot-minor-mode-map-prefix "a")
-  (pdf-view-display-size 'fit-page)
-  (pdf-annot-activate-created-annotations t)
-  (pdf-view-resize-factor 1.1))
-
+(use-package init-pdftools :ensure nil)
 ;;;;; Language settings for prose and code
 ;;;;;; Yasnippet
 (use-package yasnippet
@@ -219,6 +180,6 @@
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; End:
-;;;; General Improvement
-(use-package init-local :ensure nil)
+;;;;; Miscellaneous
+(use-package init-misc :ensure nil)
 ;;; init.el ends here
