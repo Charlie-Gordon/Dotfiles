@@ -11,7 +11,7 @@
 ;;; Code:
 
 ;;;; Initialise installed packages
-(setq package-enable-at-startup t)
+(setq package-enable-at-startup nil)
 
 ;;;; Disable GUI elements
 (menu-bar-mode -1)
