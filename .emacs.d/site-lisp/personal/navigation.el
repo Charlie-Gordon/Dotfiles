@@ -29,7 +29,7 @@
 (eval-when-compile
   (require 'consult))
 
-(defvar 00-navigation-map
+(defvar navigation-map
   (let ((map (make-sparse-keymap)))
     (define-key map "e" #'consult-find-emacs-dir)
     (define-key map "s" #'consult-find-site-lisp)

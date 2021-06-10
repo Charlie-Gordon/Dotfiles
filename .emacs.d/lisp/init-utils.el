@@ -77,15 +77,15 @@ Saves to a temp file and puts the filename in the kill ring."
       (message "No valid URL."))))
 
 ;;;; Volume control
-(use-package 00-volume-control
+(use-package volume-control
   :ensure nil
   :after exwm
-  :bind-keymap ("C-' v" . 00-volume-control-map))
+  :bind-keymap ("C-' v" . volume-control-map))
 ;;;; Navigation
-(use-package 00-navigation
+(use-package navigation
   :ensure nil
   :after consult
-  :bind-keymap ("C-' n" . 00-navigation-map))
+  :bind-keymap ("C-' n" . navigation-map))
 
 (provide 'init-utils)
 ;;; init-utils.el ends here

@@ -30,7 +30,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;; Keymap
-(defvar 00-volume-control-map
+(defvar volume-control-map
   (let ((map (make-sparse-keymap)))
     (define-key map "=" #'volume-increase)
     (define-key map "+" #'volume-increase)
