@@ -1,41 +1,70 @@
-;;; init-eww.el --- Extensions for EWW                 -*- lexical-binding: t; -*-
-
-;; Copyright (C) 2021  Protesilaos Stavrou
-
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/dotemacs
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "28.1"))
-
-;; This file is NOT part of GNU Emacs.
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or (at
-;; your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+;;; init-eww-shr.el --- Extensions for EWW                 -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;
 ;; Extensions for the eww, intended for my Emacs setup.
-;; Note that all of this code came from Protesilaos Stavrou's dotfiles
+;; Note that some of this code came from Protesilaos Stavrou's dotfiles
 ;; <https://protesilaos.com/dotemacs/> (for documentation please refer to
 ;; <https://protesilaos.com/dotemacs/#h:524bc702-ff55-4ed9-9a38-26d30d64591d>)
-;; that I adapted to fit my naming scheme.
+;; that I adapted to fit my setup.
 
 ;;; Code:
 
-(require 'shr)
-(require 'eww)
-;; (require 'prot/common)
-;; (require 'prot/pulse)
+(use-package shr
+  :custom
+  (shr-max-image-proportion 0.6)
+  (shr-discard-aria-hidded t)
+  (shr-image-animate nil)
+  (shr-use-colors nil)
+  (shr-use-fonts nil)
+  (shr-width 70)
+  (shr-cookie-policy nil)
+  :ensure nil)
+
+(use-package eww
+  :ensure nil
+  :bind
+  (:map prot-eww-map
+	("b" . prot/eww-visit-bookmark)
+	("e" . prot/eww-browse-dwim)
+	("a" . prot/eww-search-arch-wiki)
+	("A" . prot/eww-search-arch-aur)
+	("d" . prot/eww-search-debbugs)
+	("w" . prot/eww-search-wikipedia)
+	("s" . prot/eww-search-engine))
+  (:map eww-mode-map
+	("<return>" . eww-follow-link)
+	("W" . mpv-play-url)
+	("L" . eww-list-bookmarks)
+	("t" . eww-readable)
+	("n" . shr-next-link)
+	("p" . shr-next-link)
+	("u" .  eww-back-url)
+	("B" . prot/eww-bookmark-page)
+	("D" . prot/eww-download-html)
+	("F" . prot/eww-find-feed)
+	("b" . prot/eww-visit-bookmark)
+	("e" . prot/eww-browse-dwim)
+	("o" . prot/eww-open-in-other-window)
+	("E" . prot/eww-visit-url-on-page)
+	("J" . prot/eww-jump-to-url-on-page)
+	("R" . prot/eww-readable))
+  (:map eww-link-keymap
+	("v" . nil)) ;; stop overriding `eww-view-source'
+  (:map eww-buffers-mode-map
+	("d" . eww-bookmark-kill))
+  (:map eww-bookmark-mode-map
+	("d" . eww-bookmark-kill))
+  :bind-keymap ("C-' e" . prot-eww-map)
+  :init (define-prefix-command 'prot-eww-map) ;; Keymapping for Protesilaos's extensions
+  :custom
+  (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
+  (eww-download-directory (expand-file-name "~/Downloads/eww/"))
+  (eww-bookmarks-directory (locate-user-emacs-file "eww-bookmarks/"))
+  (eww-header-line-format nil)
+  (eww-restore-desktop t)
+  (eww-desktop-remove-duplicates t)
+  (eww-form-checkbox-selected-symbol "[X]")
+  (eww-form-checkbox-symbol "[ ]"))
 
 (defgroup prot/eww ()
   "Tweaks for EWW."
@@ -365,7 +394,7 @@ trailing hyphen."
   "Rerender content of EWW when uses text-scale mode."
   (eww-reload :local))
 
-(provide 'init-eww)
-;;; init-eww.el ends here
+(provide 'init-eww-shr)
+;;; init-eww-shr.el ends here
 
 
