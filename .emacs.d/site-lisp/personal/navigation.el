@@ -1,4 +1,4 @@
-;;; 00-navigation.el --- Extension for Navigation -*- lexical-binding: t; -*-
+;;; navigation.el --- Extension for Navigation -*- lexical-binding: t; -*-
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -70,5 +70,5 @@
   (let ((consult-find-command "find . -ipath *ARG* OPTS"))
     (consult-find "/storage/journals" file-name)))
 
-(provide '00-navigation)
-;;; 00-navigation.el ends here
+(provide 'navigation)
+;;; navigation.el ends here
