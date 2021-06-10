@@ -1,4 +1,4 @@
-;;; 01-eww.el --- Extensions for EWW                 -*- lexical-binding: t; -*-
+;;; init-eww.el --- Extensions for EWW                 -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Protesilaos Stavrou
 
@@ -365,7 +365,7 @@ trailing hyphen."
   "Rerender content of EWW when uses text-scale mode."
   (eww-reload :local))
 
-(provide '01-eww)
-;;; 01-eww.el ends here
+(provide 'init-eww)
+;;; init-eww.el ends here
 
 

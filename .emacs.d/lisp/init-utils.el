@@ -1,4 +1,6 @@
-;;; 00-init-utils.el --- Functions used by other el files
+;;; init-utils.el --- Elisp helper functions and commands -*- lexical-binding: t; -*-
+;;; Commentary:
+;;; Code:
 ;;;; Reload configuration
 ;;;###autoload
 (defun reload-emacs-configuration ()
@@ -79,12 +81,12 @@ Saves to a temp file and puts the filename in the kill ring."
   :ensure nil
   :after exwm
   :bind-keymap ("C-' v" . 00-volume-control-map))
-
-;;;; Navi
+;;;; Navigation
 (use-package 00-navigation
   :ensure nil
   :after consult
   :bind-keymap ("C-' n" . 00-navigation-map))
 
-(provide '00-init-utils.el)
-;;; 00-init-utils.el ends here.
+(provide 'init-utils)
+;;; init-utils.el ends here
+

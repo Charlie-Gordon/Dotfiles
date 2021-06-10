@@ -11,8 +11,8 @@
 ;; From Jordon Biondo at
 ;; https://emacs.stackexchange.com/questions/2286/what-can-i-do-to-speed-up-my-start-up
 (let ((file-name-handler-alist nil))
-  
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
 ;;;; Essential External Programs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
@@ -21,14 +21,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Emacs initialization
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;;;; Setting up `use-package'
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-elpa)
 ;;;;; Utilities functions
 (use-package init-utils :ensure nil)
 ;;;;; Buit-in package configuration
 (use-package init-builtin :ensure nil)
 ;;;;; Interface tweaks
-(use-package 10-init-face.el
+(use-package init-face
   :ensure nil
   :config
   (exwm-input-set-key (kbd "s-.") #'reload-emacs-configuration)
@@ -37,9 +39,9 @@
   (exwm-input-set-key (kbd "s-<return>") #'eshell)
   (exwm-input-set-key (kbd "<print>") #'screenshot-svg))
 ;;;;; TeX
-(use-package 30-init-tex.el :ensure nil)
+(use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
-(use-package 31-init-org.el :ensure nil)
+(use-package init-org :ensure nil)
 ;;;;; General Improvement
 ;;;;;; Sentences end with a single space
 (setq sentence-end-double-space nil)
@@ -233,7 +235,7 @@
     :config
     (emms-all)
     (emms-default-players))
-  (use-package emms-player-simple-mpv :ensure t))
+  (use-package emms-player-simple-mpv :disabled :ensure t))
 ;;;;;; MPV
 (use-package mpv
   :ensure t)
@@ -275,13 +277,11 @@
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
-  (pdf-view-resize-factor 1.1)
-  :config
-  (use-package 00-pdf-avy-highlight :ensure nil))
+  (pdf-view-resize-factor 1.1))
 
 ;;;;; Language settings for prose and code
 ;;;;;; Yasnippet
-)
+
 (use-package yasnippet
   :ensure t
   :config
@@ -327,5 +327,11 @@
   (use-package slime-autoloads :ensure nil)
   (slime-setup '(slime-fancy)))
 
+)
+
+(provide 'init)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Local Variables:
+;; no-byte-compile: t
+;; End:
 ;;; init.el ends here

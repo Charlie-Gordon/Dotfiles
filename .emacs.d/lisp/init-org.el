@@ -1,4 +1,4 @@
-;;; 31-init-org.el --- Code for initializing org-mode
+;;; init-org.el --- Code for initializing org-mode
 ;;;; Org
 (use-package org
   :ensure t
@@ -209,4 +209,5 @@ With a prefix ARG, remove start location."
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))
   :ensure t)
 
-(provide '31-init-org.el)
+(provide 'init-org)
+;;; init-org.el ends here

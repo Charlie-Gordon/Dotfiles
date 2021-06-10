@@ -1,4 +1,4 @@
-;;; 10-init-face.el --- The look of emacs
+;;; init-face.el --- The look of emacs
 ;;;; Modus themes
 (use-package modus-themes
   :config
@@ -82,5 +82,5 @@
     (setf epg-pinentry-mode 'loopback)
     (pinentry-start)))
 
-(provide '10-init-face.el)
-;;; 10-init-face ends here
+(provide 'init-face)
+;;; init-face.el ends here

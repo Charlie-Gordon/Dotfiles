@@ -1,4 +1,4 @@
-;;; 01-outline.el --- Configuration for Outline minor mode  -*- lexical-binding: t; -*-
+;;; init-outline.el --- Configuration for Outline minor mode  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  i-am
 
@@ -43,7 +43,7 @@
 	     (group (group (* space)) "@"))))
   (outline-overview))
 
-(provide '01-outline)
-;;; 01-outline.el ends here
+(provide 'init-outline)
+;;; init-outline.el ends here
 
 

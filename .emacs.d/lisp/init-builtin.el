@@ -1,4 +1,4 @@
-;;; 01-init-buitin.el --- Configuration for Emacs built-in packages  -*- lexical-binding: t; -*-
+;;; init-buitin.el --- Configuration for Emacs built-in packages  -*- lexical-binding: t; -*-
 ;;;; Repeatable key chords (repeat-mode)
 (use-package repeat
   :ensure nil
@@ -116,7 +116,7 @@
 			    (vconcat (mapcar (lambda (c) (+ face-offset c)) "-"))))
   ;; Python mode-specific Outline folding.
   (add-hook 'python-mode-hook 'outline-python)
-  (use-package 01-outline :ensure nil)
+  (use-package init-outline :ensure nil)
   :ensure nil)
 ;;;; Application and Utilities
 ;;;;; ERC
@@ -222,7 +222,7 @@
   (eww-form-checkbox-selected-symbol "[X]")
   (eww-form-checkbox-symbol "[ ]")
   :config
-  (use-package 01-eww :ensure nil))
+  (use-package init-eww :ensure nil))
 
 ;;;; Language setting for prose and coding
 ;;;;; Eldoc
@@ -241,5 +241,5 @@
   :config
   (global-paren-face-mode))
 
-(provide '01-init-builtin.el)
-;;; 01-init-builtin.el ends here
+(provide 'init-builtin)
+;;; init-builtin.el ends here

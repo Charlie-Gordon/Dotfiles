@@ -1,4 +1,4 @@
-;;; 00-volume-control.el --- Extension to control system volume -*- lexical-binding: t; -*-
+;;; volume-control.el --- Extension to control system volume -*- lexical-binding: t; -*-
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -91,5 +91,5 @@ AMOUNT has to be an integer. if AMOUNT is zero then mute."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(provide '00-volume-control)
-;;; 00-volume-control.el ends here
+(provide 'volume-control)
+;;; volume-control.el ends here
