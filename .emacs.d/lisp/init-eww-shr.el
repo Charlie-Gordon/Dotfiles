@@ -37,6 +37,7 @@
         ("d" . prot/eww-search-debbugs)
         ("w" . prot/eww-search-wikipedia)
         ("s" . prot/eww-search-engine)
+        ("l" . eww-list-bookmarks)
         :map eww-mode-map
         ("<return>" . eww-follow-link)
         ("W" . mpv-play-url)
