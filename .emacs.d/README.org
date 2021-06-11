@@ -9,6 +9,7 @@ Here're some explanation for my configuration
  `- lisp/ loads on initialize time, contains all of my configuration
  `- org-template/ contains org-capture templates, for my note-taking
  `- site-lisp/ contains third-party packages or configuration, more on its README.
+ `- snippets/ contains all of my personal yasnippets' snippets (very fun to say it out loud).
  `- early-init.el sets things up before Emacs starts, removing some UI elements mostly.
  `- init.el loads all the configuration in lisp/, and some packages that require little configuration.
 #+end_example>

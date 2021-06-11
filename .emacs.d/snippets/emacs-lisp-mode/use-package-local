@@ -1,0 +1,4 @@
+# key: upl
+# name: use-package-local
+# --
+(use-package ${1:enumerate} :ensure ${2:nil})$0

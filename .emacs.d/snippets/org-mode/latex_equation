@@ -1,0 +1,4 @@
+# key: $_
+# name: latex_equation
+# --
+\\($1\\)$0
