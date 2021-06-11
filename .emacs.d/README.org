@@ -1,0 +1,14 @@
+#+TITLE: A fairly reasonable Emacs config
+This is my emacs configuration tree structure like Steve Purcell's [[https://github.com/purcell/emacs.d][emacs.d]]
+I stole some code from there and from Protesilaos Stavrou's [[https://protesilaos.com/dotemacs/][dotemacs]] as well.
+Here're some explanation for my configuration
+#+begin_example
+.emacs.d
+ |
+ `- external/ contains files related to other programs
+ `- lisp/ loads on initialize time, contains all of my configuration
+ `- org-template/ contains org-capture templates, for my note-taking
+ `- site-lisp/ contains third-party packages or configuration, more on its README.
+ `- early-init.el sets things up before Emacs starts, removing some UI elements mostly.
+ `- init.el loads all the configuration in lisp/, and some packages that require little configuration.
+#+end_example>
