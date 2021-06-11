@@ -73,6 +73,7 @@
 (use-package yasnippet
   :straight t
   :config
+  (straight-use-package 'yasnippet-snippets)
   (yas-load-directory (concat user-emacs-directory "snippets"))
   (yas-global-mode))
 
