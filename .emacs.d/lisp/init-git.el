@@ -5,15 +5,16 @@
 (use-package magit
   :straight t
   :bind
-  (("<f-12>" . magit-status)
+  (("<f12>" . magit-status)
    :map magit-status-mode-map
    ("C-M-<up>" . magit-section-up))
   :custom
   (magit-diff-refine-hunk t)
+  (magit-repository-directories `(("~/Git/" . 2)))
   :init
   (use-package tramp :ensure nil)
   :config
-  ;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm(my dotfiles manager)
+  ;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm
   ;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
   (unless (assoc-default "yadm" tramp-methods)
     (add-to-list 'tramp-methods
@@ -23,8 +24,6 @@
 		   (tramp-login-env (("SHELL") ("/bin/sh")))
 		   (tramp-remote-shell "/bin/sh")
 		   (tramp-remote-shell-args ("-c"))))))
-
-;; (maybe-require-package 'magit-todos)
 
 (use-package git-commit
   :straight t
