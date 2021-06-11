@@ -2,9 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package calctex
+  :straight '(calctex :type git :host github :repo "johnbcoughlin/calctex" :files ("calctex/calctex.el" "org-calctex/org-caltex.el")))
+
 (use-package tex
-  :disabled
-  :ensure auctex
+  :straight auctex cdlatex
   :custom
   (TeX-PDF-mode t
    TeX-engine 'xetex
