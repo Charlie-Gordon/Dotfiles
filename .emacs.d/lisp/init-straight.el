@@ -42,6 +42,10 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+(setq straight-host-usernames
+      '((github . "Charlie-Gordon")
+        (gitlab . "Charlie-Gordon")))
+
 (straight-use-package 'use-package)
 
 (setq use-package-verbose t)
