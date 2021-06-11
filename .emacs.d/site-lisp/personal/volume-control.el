@@ -62,7 +62,7 @@
   ;; Setting transcient keymap
   (unless overriding-terminal-local-map
     (let ((prefix-keys (substring (this-single-command-keys) 0 -1))
-          (map 00-volume-control-map))
+          (map volume-control-map))
       (when (keymapp map) (set-transient-map map t)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
