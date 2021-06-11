@@ -2,6 +2,32 @@
 ;;; Commentary:
 ;;; Code:
 ;;;; Selectrum
+(use-package selectrum
+  :straight t
+  :bind (:map ctl-x-map
+              ("C-z" . selectrum-repeat))
+  :custom
+  ;; Fill as many candidates as possible, even if it doesn't have that
+  ;; many.
+  (selectrum-fix-vertical-window-height selectrum-max-window-height)
+  :hook
+  (after-init . selectrum-mode))
+
+;;;; Orderless
+(use-package orderless
+  :straight t
+  :after selectrum
+  :custom
+  (selectrum-refine-candidates-function #'orderless-filter)
+  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
+  (completion-styles '(orderless partial-completion)))
+
+;;;; Marginalia
+(use-package marginalia
+  :straight t
+  :after selectrum
+  :config (marginalia-mode 1))
+
 ;;;; Consult
 (use-package consult
   :straight t
@@ -92,19 +118,6 @@
 	("m" . #'mpv-play-url))
   (:map embark-symbol-map
 	("h" . #'helpful-at-point)))
-;;;; Orderless
-(use-package orderless
-  :straight t
-  :after selectrum
-  :custom
-  (selectrum-refine-candidates-function #'orderless-filter)
-  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
-  (completion-styles '(orderless partial-completion)))
-;;;; Marginalia
-(use-package marginalia
-  :straight t
-  :after selectrum
-  :config (marginalia-mode 1))
 
 (provide 'init-completion)
 ;;; init-completion.el ends here
