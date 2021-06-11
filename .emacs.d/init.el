@@ -63,19 +63,11 @@
 (use-package init-completion :ensure nil)
 ;;;;; Git
 (use-package init-git :ensure nil)
-
-;;;;;; Password-store
-(use-package pass
-  :straight t)
-;;;;;; Torrenting
-(use-package transmission
-  :straight t
-  :custom
-  (transmission-timer 30))
 ;;;;; Lisp
 (use-package init-paredit :ensure nil)
 (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
+(use-package init-notetake :ensure nil)
 (use-package init-local :ensure nil)
 (use-package init-editing-utils :ensure nil)
 (use-package init-misc :ensure nil))

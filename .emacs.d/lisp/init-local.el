@@ -79,10 +79,15 @@
     (emms-source-file-default-directory "/storage/journals/resources/")
     :config
     (emms-all)
-    (emms-default-players))
-  (use-package emms-player-simple-mpv :disabled :straight t))
+    (emms-default-players)))
+;;;; Torrent
+(use-package transmission
+  :straight t)
 ;;;; MPV
 (use-package mpv
+  :straight t)
+;;;; Vterm
+(use-package vterm
   :straight t)
 
 (provide 'init-local)
