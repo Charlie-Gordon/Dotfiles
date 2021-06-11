@@ -9,7 +9,7 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;; EPUB(with nov.el)
+;;;; EPUB(with nov.el)
 (use-package nov
   :straight t
   :bind (:map nov-mode-map
@@ -17,9 +17,9 @@
 	      ("C-S-p" . shr-previous-link))
   :mode (("\\.epub\\'" . nov-mode)))
 
-;;;;; PDF
+;;;; PDF
 (use-package pdf-tools
-  :straight avy `(pdf-avy-highlight :type git :host github :repo "dalanicolai/dala-emacs-lisp"
+  :straight avy '(pdf-avy-highlight :type git :host github :repo "dalanicolai/dala-emacs-lisp"
 				    :files ("pdf-avy-highlight.el"))
   :bind (:map pdf-view-mode-map
 	      ("a k" . pdf-keyboard-highlight))
@@ -35,6 +35,16 @@
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
   (pdf-view-resize-factor 1.1))
+
+;;;; Trying out SRS (space-repetition system)
+(use-package anki-editor
+  :straight t)
+
+(use-package org-fc
+  :straight '(org-fc :type git :host github :repo "l3kn/org-fc"))
+
+(use-package org-drill
+  :straight t)
 
 (provide 'init-notetake)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

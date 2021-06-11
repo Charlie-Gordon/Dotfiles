@@ -17,9 +17,21 @@
    '(("QUIZ" . org-upcoming-deadline)
      ("FOR_ZETTEL" . org-agenda-current-time)
      ("ANSWERED" . org-scheduled-previously)))
+  (org-image-actual-width nil)
+  (org-format-latex-options
+   '(:foreground default
+                 :background default :scale 1.6
+                 :html-foreground "Black" :html-background "Transparent"
+                 :html-scale 1.0 :matchers
+                 ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :hook
   (org-mode . visual-line-mode)
   (org-mode . org-edna-mode))
+
+(use-package org-fragtog
+  :straight t
+  :hook
+  (org-mode . org-fragtog-mode))
 
 (use-package org-agenda
   :ensure nil
@@ -37,7 +49,11 @@
     "Add org-agenda files from root DIR."
     (nconc org-agenda-files 
 	   (org-get-agenda-files-recursively dir)))
-  (org-set-agenda-files-recursively "/storage/journals/"))
+  (org-set-agenda-files-recursively "/storage/journals/")
+  (setq org-agenda-custom-commands
+        '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
+           ((org-show-context-detail 'minimal)
+            (org-agenda-prefix-format ""))))))
 
 (use-package org-capture
   :ensure nil
@@ -49,14 +65,12 @@
       "Questions bank on this book."
       entry
       (file buffer-file-name)
-      (file "~/.emacs.d/org-template/QUIZ-todo.txt")
-      :jump-to-captured t)
+      (file "~/.emacs.d/org-template/QUIZ-todo.txt"))
      ("Qq"
       "A question for this book."
       entry
       (file+function buffer-file-name org-maybe-go-to-quiz)
-      "** REVIEW Q:%?"
-      :jump-to-captured t)
+      "** REVIEW Q:%?")
      ("Q4"
       "Essential four questions for reading, from Adler's How to Read A Book"
       entry
@@ -84,7 +98,8 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
   (advice-add 'org-capture-place-template :around 'my-org-capture-place-template-dont-delete-windows))
 
 (use-package org-anki
-  :straight t
+  :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
+                       :fork t)
   :custom
   (org-anki-default-deck "one-big-deck"))
 
@@ -137,12 +152,7 @@ Edna Syntax: org-anki-this!"
   :after org
   :custom
   (org-noter-default-notes-file-naems '("notes.org"))
-  (org-noter-separate-notes-from-heading t)
-  :bind (:map org-noter-doc-mode-map
-	      ("M-h" . org-noter-insert-note-highlight))
-  :hook (nov-post-html-render . org-noter-rehighlight-buffer)
-  :config
-  (use-package org-noter-highlight :ensure nil))
+  (org-noter-separate-notes-from-heading t))
 ;;;;; Org-transclusion
 (use-package org-transclusion
   :ensure nil
