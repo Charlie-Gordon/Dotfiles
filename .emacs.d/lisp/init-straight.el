@@ -48,7 +48,5 @@
 
 (straight-use-package 'use-package)
 
-(setq use-package-verbose t)
-
 (provide 'init-straight)
 ;;; init-straight.el ends here
