@@ -13,6 +13,9 @@
 ;;;; Initialise installed packages
 (setq package-enable-at-startup nil)
 
+;;;; Is this operating system an Android?
+(defconst *termux* (string-match "Android" (shell-command-to-string "uname -a")))
+
 ;;;; Disable GUI elements
 (menu-bar-mode -1)
 (tool-bar-mode -1)
