@@ -17,7 +17,7 @@
 ;;;; Essential External Programs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   
-(load "~/.emacs.d/external/stuffs.el" t)
+(unless *termux* (load "~/.emacs.d/external/stuffs.el" t))
   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Emacs initialization
