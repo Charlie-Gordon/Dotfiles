@@ -7,7 +7,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;;
+(defconst *termux* (string-match "Android" (shell-command-to-string "uname -a")))
 ;; From Jordon Biondo at
 ;; https://emacs.stackexchange.com/questions/2286/what-can-i-do-to-speed-up-my-start-up
 (let ((file-name-handler-alist nil))
@@ -31,6 +32,7 @@
 (use-package init-utils :ensure nil)
 ;;;;; Interface tweaks
 (use-package init-face
+  :unless *termux*
   :ensure nil
   :config
   (exwm-input-set-key (kbd "s-.") #'reload-emacs-configuration)
@@ -39,7 +41,7 @@
   (exwm-input-set-key (kbd "s-<return>") #'eshell)
   (exwm-input-set-key (kbd "<print>") #'screenshot-svg))
 ;;;;; TeX
-(use-package init-tex :ensure nil)
+(use-package init-tex :ensure nil :unless *termux*)
 ;;;;; Org-mode configuration
 (use-package init-org :ensure nil)
 
@@ -47,7 +49,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Builtin packages
 ;;;;;; Dired
-(use-package init-dired :ensure nil)
+(use-package init-dired :ensure nil :unless *termux*)
 ;;;;;; Outline
 (use-package init-outline :ensure nil)
 ;;;;;; EWW & SHR
@@ -67,7 +69,7 @@
 (use-package init-paredit :ensure nil)
 (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
-(use-package init-notetake :ensure nil)
+(use-package init-notetake :ensure nil :unless *termux*)
 (use-package init-local :ensure nil)
 (use-package init-editing-utils :ensure nil)
 (use-package init-misc :ensure nil))
