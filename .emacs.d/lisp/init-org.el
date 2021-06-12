@@ -155,8 +155,7 @@ Edna Syntax: org-anki-this!"
   (org-noter-separate-notes-from-heading t))
 ;;;;; Org-transclusion
 (use-package org-transclusion
-  :ensure nil
-  :load-path "~/Git/org-transclusion"
+  :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion")
   :after org
   :bind ("s-i" . org-transclusion-add-at-point)
   :custom
