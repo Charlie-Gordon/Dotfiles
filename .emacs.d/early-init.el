@@ -18,17 +18,16 @@
 
 ;;;; Disable GUI elements
 (menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-;;;; Time in modeline
-(display-time-mode 1)
-(setq display-time-day-and-date t)
-;;;; Fringe
-(fringe-mode 4)
-;;;; FreeSans for unicode
-(set-fontset-font t nil (font-spec :family "FreeSans"
-				   :size 20))
-
+(unless *termux*
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (fringe-mode 4)
+  ;; Time in modeline 
+  (display-time-mode 1)
+  (setq display-time-day-and-date t)
+  ;; FreeSans for unicode
+  (set-fontset-font t nil (font-spec :family "FreeSans"
+				     :size 20)))
 ;; Line spacing, can be 0 for code and 1 or 2 for text
 (setq-default line-spacing 0)
 (setq pop-up-windows nil)
