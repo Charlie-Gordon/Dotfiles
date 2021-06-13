@@ -16,9 +16,10 @@
 ;;;; Is this operating system an Android?
 (defconst *termux* (string-match "Android" (shell-command-to-string "uname -a")))
 
-;;;; Disable GUI elements
-(menu-bar-mode -1)
+
 (unless *termux*
+  (menu-bar-mode 1)
+;;;; Disable GUI elements
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (fringe-mode 4)
