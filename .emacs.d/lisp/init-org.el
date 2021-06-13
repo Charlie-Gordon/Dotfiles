@@ -137,8 +137,6 @@ Edna Syntax: org-anki-this!"
 	      ("C-c n i" . org-roam-insert)
 	      ("C-c n I" . org-roam-insert-immediate))
   :custom
-  (org-roam-directory (expand-file-name "org/" *journals-dir*))
-  (org-roam-dailies-directory (expand-file-name "daily/" org-roam-directory))
   (org-roam-db-update-method 'immediate)
   (org-roam-dailies-capture-templates
 	'(("d" "default" entry
@@ -148,6 +146,8 @@ Edna Syntax: org-anki-this!"
 	 :head "#+title: %<%Y-%m-%d>\n\n")))
   :hook (after-init . org-roam-mode)
   :config
+  (setq org-roam-directory (expand-file-name "org/" *journals-dir*)
+        org-roam-dailies-directory (expand-file-name "daily/" org-roam-directory))
   ;; Org-roam use sqlite3
   (add-to-list 'exec-path (executable-find "sqlite3")))
 ;;;;; Org-noter
