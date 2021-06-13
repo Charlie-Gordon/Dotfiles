@@ -18,7 +18,6 @@
   :straight t
   :when window-system
   :config
-  (use-package exwm-edit :straight t)
   (use-package pinentry :straight t)
   (use-package exwm-config
     :ensure nil
@@ -81,6 +80,7 @@
     ;; Get encryption established
     (setf epg-pinentry-mode 'loopback)
     (pinentry-start)))
+
 
 (provide 'init-face)
 ;;; init-face.el ends here

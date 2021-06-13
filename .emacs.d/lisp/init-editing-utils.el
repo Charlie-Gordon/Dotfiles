@@ -70,6 +70,7 @@
   (which-key-mode)
   :diminish which-key-mode)
 
+;;; Snippets
 (use-package yasnippet
   :straight t
   :config
@@ -77,7 +78,21 @@
   (yas-load-directory (concat user-emacs-directory "snippets"))
   (yas-global-mode))
 
-(use-package navigation :ensure nil)
+
+(use-package exwm-edit
+  :straight t
+  :bind
+  (:map exwm-mode-map
+        ("C-c '" . exwm-edit--compose))
+  :hook
+  (exwm-edit-compose . visual-line-mode))
+
+
+;;; Quick navigation
+(use-package navigation
+  :ensure nil
+  :after consult
+  :bind-keymap ("C-' n" . navigation-map))
 
 (provide 'init-editing-utils)
 ;;; init-editing-utils.el ends here

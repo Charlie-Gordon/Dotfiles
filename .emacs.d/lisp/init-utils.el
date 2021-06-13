@@ -81,11 +81,6 @@ Saves to a temp file and puts the filename in the kill ring."
   :ensure nil
   :after exwm
   :bind-keymap ("C-' v" . volume-control-map))
-;;;; Navigation
-(use-package navigation
-  :ensure nil
-  :after consult
-  :bind-keymap ("C-' n" . navigation-map))
 
 (provide 'init-utils)
 ;;; init-utils.el ends here
