@@ -4,7 +4,6 @@ I stole some code from there and from Protesilaos Stavrou's [[https://protesilao
 Here're some explanation for my configuration
 #+begin_example
 .emacs.d
- |
  `- external/ contains files related to other programs
  `- lisp/ loads on initialize time, contains all of my configuration
  `- org-template/ contains org-capture templates, for my note-taking
@@ -12,4 +11,4 @@ Here're some explanation for my configuration
  `- snippets/ contains all of my personal yasnippets' snippets (very fun to say it out loud).
  `- early-init.el sets things up before Emacs starts, removing some UI elements mostly.
  `- init.el loads all the configuration in lisp/, and some packages that require little configuration.
-#+end_example>
+#+end_example
