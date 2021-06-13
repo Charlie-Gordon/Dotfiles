@@ -1,0 +1,14 @@
+#+TITLE: dotfiles
+
+To be honest, it's mostly just Emacs. Some of the Emacs packages I use
+require a more involved installation, namely, [[https://github.com/vedang/pdf-tools][pdf-tools]] and [[https://github.com/org-roam/org-roam][org-roam]].
+Be sure to read their respective README for instructions.
+
+* Installation
+
+I use a [[https://yadm.io/][yadm]] (Yet Another Dotfiles Manager) to manage my dotfiles, if
+your're using it, just
+#+begin_example
+yadm clone https://gitlab.com/Charlie-Gordon/dotfiles.git
+#+end_example
+Otherwise you can copy individual files or directories to your $HOME, thanks!
