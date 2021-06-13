@@ -41,7 +41,7 @@
       (window-width . 0.25)
       (side . right)
       (slot . 0))
-     ("\\*Faces\\*"
+     ("\\*Faces\\|Colors\\*"
       (display-buffer-in-side-window)
       (window-width . 0.25)
       (side . right)
@@ -81,6 +81,9 @@
     :config
     (emms-all)
     (emms-default-players)))
+;;;; Pass
+(use-package password-store
+  :straight t)
 ;;;; Torrent
 (use-package transmission
   :straight t)
