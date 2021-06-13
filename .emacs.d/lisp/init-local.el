@@ -6,6 +6,7 @@
 ;;;; Buffer management
 ;; Use `ibuffer' instead of `list-buffers'
 (use-package ibuffer
+  :termux
   :ensure nil
   :bind (:map ctl-x-map
 	      ("C-b" . ibuffer))

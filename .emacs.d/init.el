@@ -8,6 +8,11 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
+
+(defconst *journals-dir* (if *termux*
+			     "~/storage/shared/journals/"
+			   "/storage/journals/"))
+
 ;; From Jordon Biondo at
 ;; https://emacs.stackexchange.com/questions/2286/what-can-i-do-to-speed-up-my-start-up
 (let ((file-name-handler-alist nil))
@@ -42,7 +47,7 @@
 ;;;;; TeX
 (use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
-(use-package init-org :ensure nil)
+(use-package init-org :ensure nil :termux)
 
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,7 +66,7 @@
   :config
   (repeat-mode 1))
 ;;;;; Completions
-(use-package init-completion :ensure nil)
+(use-package init-completion :ensure nil :termux)
 ;;;;; Git
 (use-package init-git :ensure nil)
 ;;;;; Lisp

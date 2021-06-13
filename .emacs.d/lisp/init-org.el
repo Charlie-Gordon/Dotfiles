@@ -1,6 +1,7 @@
 ;;; init-org.el --- Code for initializing org-mode -*- lexical-binding: t; -*-
 ;;;; Org
 (use-package org
+  :termux
   :straight t
   :bind (("C-c c" . org-capture)
 	 ("C-c a" . org-agenda)
@@ -34,6 +35,7 @@
   (org-mode . org-fragtog-mode))
 
 (use-package org-agenda
+  :termux
   :ensure nil
   :config
   ;; Daniel Patru's answer at
@@ -49,7 +51,7 @@
     "Add org-agenda files from root DIR."
     (nconc org-agenda-files 
 	   (org-get-agenda-files-recursively dir)))
-  (org-set-agenda-files-recursively "/storage/journals/")
+  (org-set-agenda-files-recursively *journals-dir*)
   (setq org-agenda-custom-commands
         '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
            ((org-show-context-detail 'minimal)
@@ -98,12 +100,14 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
   (advice-add 'org-capture-place-template :around 'my-org-capture-place-template-dont-delete-windows))
 
 (use-package org-anki
+  :termux
   :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
                        :fork t)
   :custom
   (org-anki-default-deck "one-big-deck"))
 
 (use-package org-edna
+  :termux
   :straight t
   :config
   (defun org-edna-action/org-anki-this! (_last-entry)
@@ -133,8 +137,8 @@ Edna Syntax: org-anki-this!"
 	      ("C-c n i" . org-roam-insert)
 	      ("C-c n I" . org-roam-insert-immediate))
   :custom
-  (org-roam-directory (file-truename "/storage/journals/org/"))
-  (org-roam-dailies-directory (file-truename "/storage/journals/org/daily/"))
+  (org-roam-directory (expand-file-name "org/" *journals-dir*))
+  (org-roam-dailies-directory (expand-file-name "daily/" org-roam-directory))
   (org-roam-db-update-method 'immediate)
   (org-roam-dailies-capture-templates
 	'(("d" "default" entry
