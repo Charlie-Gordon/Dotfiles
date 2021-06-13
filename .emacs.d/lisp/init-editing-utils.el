@@ -87,12 +87,22 @@
   :hook
   (exwm-edit-compose . visual-line-mode))
 
-
 ;;; Quick navigation
+
+(use-package affe
+  :straight t
+  :after orderless
+  :config
+  ;; Configure Orderless
+  (setq affe-regexp-function #'orderless-pattern-compiler
+        affe-highlight-function #'orderless-highlight-matches)
+  ;; Manual preview key for `affe-grep'
+  (consult-customize affe-grep :preview-key (kbd "M-.")))
+
 (use-package navigation
   :termux
   :ensure nil
-  :after consult
+  :after consult affe
   :bind-keymap ("C-' n" . navigation-map))
 
 (provide 'init-editing-utils)

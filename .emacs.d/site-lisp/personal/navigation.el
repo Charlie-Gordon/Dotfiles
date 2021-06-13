@@ -27,7 +27,8 @@
 ;;; Code:
 ;;;; Dependencies and Setup
 (eval-when-compile
-  (require 'consult))
+  (require 'consult)
+  (require 'affe))
 
 (defvar navigation-map
   (let ((map (make-sparse-keymap)))
@@ -36,6 +37,7 @@
     (define-key map "g" #'consult-find-git-dir)
     (define-key map "p" #'consult-grep-package)
     (define-key map "j" #'consult-find-journals)
+    (define-key map "o" #'affe-search-org)
     map)
   "Keymap for navigation")
 
@@ -63,6 +65,12 @@
   (interactive"P")
   (let ((consult-find-command "find . -ipath *ARG* OPTS"))
     (consult-find "/storage/journals" file-name)))
+
+;;;###autoload
+(defun affe-search-org()  
+    (interactive)
+    (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
+      (affe-grep *journals-dir*)))
 
 (provide 'navigation)
 ;;; navigation.el ends here
