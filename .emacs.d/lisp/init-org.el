@@ -27,6 +27,13 @@
                  :html-foreground "Black" :html-background "Transparent"
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
+  :config
+  (custom-set-faces
+   '(org-level-1 ((t (:inherit outline-1 :height 1.05))))
+   '(org-level-2 ((t (:inherit outline-1 :height 1.05))))
+   '(org-level-3 ((t (:inherit outline-1 :height 1.05))))
+   '(org-level-4 ((t (:inherit outline-1 :height 1.05))))
+   '(org-level-5 ((t (:inherit outline-1 :height 1.05)))))
   :hook
   (org-mode . visual-line-mode)
   (org-mode . org-edna-mode))
