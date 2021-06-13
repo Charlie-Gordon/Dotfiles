@@ -15,9 +15,11 @@
      (sequence "QUIZ(q)" "|" "FOR_ZETTEL(d)" "ZETTEL'ED")
      (sequence "REVIEW(r)" "|" "ANSWERED(d)" "ANKIFIED(a)")))
   (org-todo-keyword-faces
-   '(("QUIZ" . org-upcoming-deadline)
-     ("FOR_ZETTEL" . org-agenda-current-time)
-     ("ANSWERED" . org-scheduled-previously)))
+   '(("QUIZ" . "Skyblue1")
+     ("FOR_ZETTEL" . "SkyBlue3")
+     ("ZETTEL'ED" . "SkyBlue4")
+     ("ANSWERED" . "PaleGreen2")
+     ("ANKIFIED" . "PaleGreen4")))
   (org-image-actual-width nil)
   (org-format-latex-options
    '(:foreground default
