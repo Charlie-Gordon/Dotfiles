@@ -90,6 +90,7 @@
 
 ;;; Quick navigation
 (use-package navigation
+  :termux
   :ensure nil
   :after consult
   :bind-keymap ("C-' n" . navigation-map))

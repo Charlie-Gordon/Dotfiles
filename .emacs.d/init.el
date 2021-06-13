@@ -75,7 +75,7 @@
 ;;;;; Miscellaneous
 (use-package init-notetake :ensure nil)
 (use-package init-local :ensure nil)
-(use-package init-editing-utils :ensure nil)
+(use-package init-editing-utils :ensure nil :termux)
 (use-package init-misc :ensure nil))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Local Variables:
