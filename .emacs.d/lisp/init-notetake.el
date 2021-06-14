@@ -11,7 +11,10 @@
 
 ;;;; EPUB(with nov.el)
 (use-package nov
-  :straight t
+  :load-path "site-lisp/nov.el/"
+  :preface
+  (use-package esxml
+    :straight t)
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
