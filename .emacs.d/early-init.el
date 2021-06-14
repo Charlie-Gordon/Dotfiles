@@ -18,7 +18,7 @@
 
 
 (unless *termux*
-  (menu-bar-mode 1)
+  (menu-bar-mode -1)
 ;;;; Disable GUI elements
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
