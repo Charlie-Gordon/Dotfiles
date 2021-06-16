@@ -27,16 +27,6 @@
                  :html-foreground "Black" :html-background "Transparent"
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
-  :config
-  (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.05))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.05))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.05))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.05))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.05))))
-   '(org-level-6 ((t (:inherit outline-6 :height 1.05))))
-   '(org-level-7 ((t (:inherit outline-7 :height 1.05))))
-   '(org-level-8 ((t (:inherit outline-8 :height 1.05)))))
   :hook
   (org-mode . visual-line-mode)
   (org-mode . org-edna-mode))
@@ -115,6 +105,8 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
   :termux
   :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
                        :fork t)
+  :bind (:map org-mode-map
+              ("C-c C-'" . org-anki-cloze-dwim))
   :custom
   (org-anki-default-deck "one-big-deck"))
 
@@ -171,7 +163,8 @@ Edna Syntax: org-anki-this!"
   (org-noter-separate-notes-from-heading t))
 ;;;;; Org-transclusion
 (use-package org-transclusion
-  :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion")
+  :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion"
+                               :fork t)
   :after org
   :bind ("<f9>" . org-transclusion-add)
   :custom
