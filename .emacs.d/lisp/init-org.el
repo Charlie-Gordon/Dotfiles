@@ -119,6 +119,15 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
 Edna Syntax: org-anki-this!"
     (org-anki-sync-entry)))
 
+(use-package org-ref
+  :straight t
+  :custom
+  (reftex-default-bibliography (expand-file-name "resources/bibliography/references.bib" *journals-dir*))
+  (org-ref-bibliography-notes (expand-file-name "org/ref-notes.org" *journals-dir*))
+  (org-ref-pdf-directory (expand-file-name "library/" *journals-dir*))
+  (bibtex-completion-bibliography reftex-default-bibliography)
+  (bibtex-completion-library-path org-ref-pdf-directory))
+
 ;;;; Outshine
 (use-package outshine
   :straight t
@@ -151,17 +160,27 @@ Edna Syntax: org-anki-this!"
   :hook (after-init . org-roam-mode)
   :config
   (setq org-roam-directory (expand-file-name "org/" *journals-dir*)
-        org-roam-dailies-directory (expand-file-name "daily/" org-roam-directory))
+        org-roam-dailies-directory (expand-file-name "daily/" org-roam-directory)
+        org-roam-buffer-no-delete-other-windows t)
   ;; Org-roam use sqlite3
   (add-to-list 'exec-path (executable-find "sqlite3")))
+
+(use-package org-roam-bibtex
+  :straight t
+  :after org-roam org-ref
+  :hook (org-roam-mode . org-roam-bibtex-mode))
+
 ;;;;; Org-noter
 (use-package org-noter
   :straight '(org-noter :type git :host github :repo "weirdNox/org-noter"
                         :fork t)
-  :after org
+  :after org pdf-view
   :custom
-  (org-noter-default-notes-file-naems '("notes.org"))
-  (org-noter-separate-notes-from-heading t))
+  (org-noter-always-create-frame nil)
+  (org-noter-separate-notes-from-heading t)
+  (org-noter-hide-other nil)
+  (org-noter-notes-search-path *journals-dir*))
+
 ;;;;; Org-transclusion
 (use-package org-transclusion
   :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion"
