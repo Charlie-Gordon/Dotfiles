@@ -37,16 +37,24 @@
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
-  (pdf-view-resize-factor 1.1))
+  (pdf-view-resize-factor 1.1)
+  :config
+  (defun prot/pdf-tools-backdrop ()
+    (face-remap-add-relative
+     'default
+     `(:background ,(modus-themes-color 'bg-alt))))
+
+  (defun prot/pdf-tools-midnight-mode-toggle ()
+    (when (derived-mode-p 'pdf-view-mode)
+      (if (eq (car custom-enabled-themes) 'modus-vivendi)
+          (pdf-view-midnight-minor-mode 1)
+        (pdf-view-midnight-minor-mode -1))
+      (prot/pdf-tools-backdrop)))
+  (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package anki-editor
-  :straight t)
-
-(use-package org-fc
-  :straight '(org-fc :type git :host github :repo "l3kn/org-fc"))
-
-(use-package org-drill
   :straight t)
 
 (provide 'init-notetake)
