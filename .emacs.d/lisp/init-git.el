@@ -6,6 +6,9 @@
   :straight t
   :bind
   (("<f12>" . magit-status)
+   :map ctl-x-map
+   ("g g" . magit-status)
+   ("g l" . magit-list-repositories)
    :map magit-status-mode-map
    ("C-M-<up>" . magit-section-up))
   :custom
