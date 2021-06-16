@@ -3,6 +3,7 @@
 ;;; Code:
 
 (use-package calctex
+  :disabled
   :straight '(calctex :type git :host github :repo "johnbcoughlin/calctex" :files ("calctex/calctex.el" "org-calctex/org-caltex.el")))
 
 (use-package tex
