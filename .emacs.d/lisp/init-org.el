@@ -156,7 +156,8 @@ Edna Syntax: org-anki-this!"
   (add-to-list 'exec-path (executable-find "sqlite3")))
 ;;;;; Org-noter
 (use-package org-noter
-  :straight t
+  :straight '(org-noter :type git :host github :repo "weirdNox/org-noter"
+                        :fork t)
   :after org
   :custom
   (org-noter-default-notes-file-naems '("notes.org"))
