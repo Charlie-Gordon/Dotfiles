@@ -105,10 +105,6 @@
   :after consult affe
   :bind-keymap ("C-' n" . navigation-map))
 
-;;; Why not? Clippy for Emacs
-(use-package clippy
-  :straight t)
-
 ;;; Writing
 (use-package typoel
   :straight '(typoel :type git :host github :repo "jorgenschaefer/typoel")
