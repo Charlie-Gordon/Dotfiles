@@ -14,7 +14,8 @@
   :custom
   (magit-diff-refine-hunk t)
   (magit-repository-directories `(("~/Git/" . 2)
-                                  (,(expand-file-name "straight/" straight-base-dir) . 2)))
+                                  (,(expand-file-name "straight/" straight-base-dir) . 2)
+                                  (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
   :init
   (use-package tramp :ensure nil)
   :config
