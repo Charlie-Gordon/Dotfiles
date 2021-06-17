@@ -8,13 +8,12 @@
    'paredit-backward-delete
    'paredit-close-round)
   :ensure nil)
-;;;; Dim parentheses 
-(use-package paren-face
+
+(use-package highlight-parentheses
   :straight t
   :hook
-  (after-init . show-paren-mode)
-  :config
-  (global-paren-face-mode))
+  (prog-mode . highlight-parentheses-mode)
+  :diminish)
 
 ;;;; Scheme
 
