@@ -30,6 +30,7 @@
   ;; FreeSans for unicode
   (set-fontset-font t nil (font-spec :family "FreeSans"
 				     :size 20)))
+(setq enable-recursive-minibuffers t)
 ;; Line spacing, can be 0 for code and 1 or 2 for text
 (setq-default line-spacing 0)
 (setq pop-up-windows nil)
