@@ -57,6 +57,8 @@
 				  ([?\M-f] . [C-right])
 				  ;; Backward-word
 				  ([?\M-b] . [C-left])
+                                  ;; Delete-word
+                                  ([?\M-d] . [C-delete])
 				  ;; Down screenful
 				  ([?\M-v] . [prior])
 				  ;; Up screenful
