@@ -17,12 +17,6 @@
 ;; https://emacs.stackexchange.com/questions/2286/what-can-i-do-to-speed-up-my-start-up
 (let ((file-name-handler-alist nil))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
-;;;; Essential External Programs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  
-(unless *termux* (load "~/.emacs.d/external/stuffs.el" t))
-  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Emacs initialization
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -35,6 +29,8 @@
 (use-package init-site-lisp :ensure nil)
 ;;;;; Utilities functions
 (use-package init-utils :ensure nil)
+;;;;; Early local configuration
+(use-package init-preload-local :ensure nil)
 ;;;;; Interface tweaks
 (use-package init-face
   :ensure nil
@@ -51,6 +47,24 @@
 
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;; Individual configuration
+;;;;;; Repeat mode
+(use-package repeat
+  :ensure nil
+  :config
+  (repeat-mode 1))
+;;;;;; Eldoc
+(when (fboundp 'global-eldoc-mode)
+  (add-hook 'after-init-hook 'global-eldoc-mode))
+;;;;;; Emacsclient
+(add-hook 'after-init-hook
+          '(lambda ()
+             (require 'server)
+             (unless (server-running-p)
+               (server-start))))
+;;;;;; Load customize'd variables
+(when (file-exists-p custom-file)
+  (load custom-file))
 ;;;;; Builtin packages
 ;;;;;; Dired
 (use-package init-dired :ensure nil)
@@ -60,11 +74,6 @@
 (use-package init-eww-shr :ensure nil)
 ;;;;;; ERC
 (use-package init-erc :ensure nil)
-;;;;;; Repeat mode
-(use-package repeat
-  :ensure nil
-  :config
-  (repeat-mode 1))
 ;;;;; Completions
 (use-package init-completion :ensure nil :termux)
 ;;;;; Git
@@ -73,10 +82,11 @@
 (use-package init-paredit :ensure nil)
 (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
+(use-package init-misc :ensure nil)
 (use-package init-notetake :ensure nil)
-(use-package init-local :ensure nil)
 (use-package init-editing-utils :ensure nil :termux)
-(use-package init-misc :ensure nil))
+(use-package init-local :ensure nil)
+)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Local Variables:
 ;; no-byte-compile: t
