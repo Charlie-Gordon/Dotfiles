@@ -79,12 +79,13 @@
       "Essential four questions for reading, from Adler's How to Read A Book"
       entry
       (file+function buffer-file-name org-maybe-go-to-quiz)
-      ,(s-join "\n"
-               (list
-                "** REVIEW Q:What is [[file:%F][%(file-name-sans-extension \"%f\")]] about as a whole?"
-                "** REVIEW Q:What [[file:%F][%(file-name-sans-extension \"%f\")]] said in detail, and how?"
-                "** REVIEW Q:Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?"
-                "** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")))))
+      ,(string-join
+        (list
+         "** REVIEW Q:What is [[file:%F][%(file-name-sans-extension \"%f\")]] about as a whole?"
+         "** REVIEW Q:What [[file:%F][%(file-name-sans-extension \"%f\")]] said in detail, and how?"
+         "** REVIEW Q:Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?"
+         "** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")
+        "\n"))))
   
   :init
   (defun org-maybe-go-to-quiz ()
@@ -172,7 +173,6 @@ Edna Syntax: org-anki-this!"
           :file-name "/storage/journals/org/daily/%<%Y-%m-%d>"
           :head "#+title: %<%Y-%m-%d>\n\n")))
 
-
 (use-package org-roam-bibtex
   :straight t
   :requires bibtex-completion
@@ -194,15 +194,16 @@ Edna Syntax: org-anki-this!"
       (function org-roam-capture--get-point)
       ""
       :file-name "refs/${citekey}"
-      :head ,(s-join "\n"
-                     (list
-                      "#+title:${title}"
-                      "#+roam_key: ${ref}"
-                      "* On %(orb-process-file-field \"${citekey}\")"
-                      ":PROPERTIES:"
-                      ":NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
-                      ":NOTER_PAGE:"
-                      ":END:")))))
+      :head ,(string-join
+              (list
+               "#+title:${title}"
+               "#+roam_key: ${ref}"
+               "* On %(orb-process-file-field \"${citekey}\")"
+               ":PROPERTIES:"
+               ":NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
+               ":NOTER_PAGE:"
+               ":END:")
+              "\n"))))
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :diminish)
 
