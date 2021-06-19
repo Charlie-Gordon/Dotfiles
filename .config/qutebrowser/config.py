@@ -118,4 +118,7 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Enable JavaScript.
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
+
 config.set('colors.webpage.darkmode.enabled', True)
+# Gruvbox theme
+#config.set('content.user_stylesheets', '~/.config/qutebrowser/gruvbox-all-sites.css')
