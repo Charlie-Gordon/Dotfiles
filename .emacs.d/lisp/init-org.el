@@ -28,8 +28,18 @@
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :hook
-  (org-mode . visual-line-mode)
-  (org-mode . org-edna-mode))
+  (org-mode . visual-line-mode))
+
+(use-package org-edna
+  :termux
+  :straight t
+  :hook
+  (org-mode . org-edna-mode)
+  :config
+  (defun org-edna-action/org-anki-this! (_last-entry)
+    "Action to call `org-anki-sync-entry' on this entry
+Edna Syntax: org-anki-this!"
+    (org-anki-sync-entry)))
 
 (use-package org-fragtog
   :straight t
@@ -41,7 +51,7 @@
   :ensure nil
   :config
   ;; Daniel Patru's answer at
-  ;;  https://stackoverflow.com/questions/17215868/recursively-adding-org-files-in-a-top-level-directory-for-org-agenda-files-take
+  ;; https://stackoverflow.com/questions/17215868/recursively-adding-org-files-in-a-top-level-directory-for-org-agenda-files-take
   (defun org-get-agenda-files-recursively (dir)
     "Get org agenda files from root DIR."
     (directory-files-recursively dir "\.org$"))
@@ -86,7 +96,6 @@
          "** REVIEW Q:Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?"
          "** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")
         "\n"))))
-  
   :init
   (defun org-maybe-go-to-quiz ()
     "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
@@ -97,8 +106,7 @@
   (defun my-org-capture-place-template-dont-delete-windows (oldfun args)
     "Prevent org-capture from modifying window configuration.
 
-Taken this snippet from
-legoscia's answer at
+Taken this snippet from legoscia's answer at
 https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific-window/54251825#54251825"
     (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
       (apply oldfun args)))
@@ -114,21 +122,13 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
   :custom
   (org-anki-default-deck "one-big-deck"))
 
-(use-package org-edna
-  :termux
-  :straight t
-  :config
-  (defun org-edna-action/org-anki-this! (_last-entry)
-    "Action to call `org-anki-sync-entry' on this entry
-Edna Syntax: org-anki-this!"
-    (org-anki-sync-entry)))
-
 (use-package org-ref
   :straight t
   :custom
-  (reftex-default-bibliography `(,(expand-file-name "org/bib/library.bib" *journals-dir*)))
-  (org-ref-bibliography-notes (expand-file-name "org/ref-notes.org" *journals-dir*))
-  (org-ref-pdf-directory (expand-file-name "library/" *journals-dir*))
+  (reftex-default-bibliography `(,(expand-file-name "muhbib.bib" *library-dir*)))
+  (org-ref-bibliography-notes (expand-file-name "org/bib-notes.org" *journals-dir*))
+  (org-ref-pdf-directory *library-dir*)
+  (org-ref-default-bibliography reftex-default-bibliography)
   (bibtex-completion-bibliography reftex-default-bibliography)
   (bibtex-completion-library-path org-ref-pdf-directory))
 
@@ -141,6 +141,7 @@ Edna Syntax: org-anki-this!"
   (add-hook 'outline-minor-mode-hook 'outshine-mode)
   ;; Enables outline-minor-mode for *ALL* programming buffers
   (add-hook 'prog-mode-hook 'outshine-mode))
+
 ;;;; Note-taking
 ;;;;; Org-roam
 (use-package org-roam
@@ -165,12 +166,12 @@ Edna Syntax: org-anki-this!"
   (add-to-list 'exec-path (executable-find "sqlite3"))
   (setq org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*)
         org-roam-index-file "index.org"
-        org-roam-dailies-directory (expand-file-name "daily/" org-roam-directory))
+        org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*))
   (setq org-roam-dailies-capture-templates
         '("d" "default" entry
           #'org-roam-capture--get-point
           "* %?"
-          :file-name "/storage/journals/org/daily/%<%Y-%m-%d>"
+          :file-name (eval (concat org-roam-dailies-directory "%<%Y-%m-%d>"))
           :head "#+title: %<%Y-%m-%d>\n\n")))
 
 (use-package org-roam-bibtex
@@ -228,6 +229,7 @@ Edna Syntax: org-anki-this!"
   (org-transclusion-add-all-on-activate nil)
   :config
   (use-package text-clone :ensure nil))
+
 ;;;;; Org-marginalia
 (use-package org-marginalia
   :disabled
@@ -243,6 +245,7 @@ Edna Syntax: org-anki-this!"
 	      ("C-c n J" . org-marginalia-browse-forward)
 	      ("C-c n K" . org-marginalia-browse-backward))
   :hook ((nov-mode org-mode) . org-marginalia-mode))
+
 ;;;;; pdf-tools integration
 (use-package org-pdftools
   :hook (org-mode . org-pdftools-setup-link))
