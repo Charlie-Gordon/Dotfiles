@@ -8,13 +8,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Calibre
+(use-package calibredb
+  :ensure nil
+  :config
+  (setq calibredb-root-dir "/storage/library")
+  (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+  (setq calibredb-library-alist '(("/storage/library/"))))
 
 ;;;; EPUB(with nov.el)
 (use-package nov
-  :load-path "site-lisp/nov.el/"
-  :preface
-  (use-package esxml
-    :straight t)
+  :straight t
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
