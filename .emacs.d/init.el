@@ -13,6 +13,10 @@
 			     "~/storage/shared/journals/"
 			   "/storage/journals/"))
 
+(defconst *library-dir* (if *termux*
+                            ""
+                          "/storage/library/"))
+
 ;; From Jordon Biondo at
 ;; https://emacs.stackexchange.com/questions/2286/what-can-i-do-to-speed-up-my-start-up
 (let ((file-name-handler-alist nil))
