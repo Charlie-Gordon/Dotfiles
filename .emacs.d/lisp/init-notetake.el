@@ -12,9 +12,15 @@
 (use-package calibredb
   :ensure nil
   :config
-  (setq calibredb-root-dir "/storage/library")
+  (setq calibredb-root-dir *library-dir*)
   (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
-  (setq calibredb-library-alist '(("/storage/library/"))))
+  (setq calibredb-library-alist `((,calibredb-root-dir)))
+  (setq calibredb-ref-default-bibliography (concat (file-name-as-directory calibredb-root-dir) "muhbib.bib"))
+)
+
+;;;; Ebib
+(use-package ebib
+  :straight t)
 
 ;;;; EPUB(with nov.el)
 (use-package nov
@@ -35,7 +41,7 @@
   (use-package pdf-view-restore
     :straight t
     :custom
-    (pdf-view-restore-filename "/storage/journals/library/.pdf-view-restore"))
+    (pdf-view-restore-filename (concat *journals-dir* ".pdf-view-restore")))
   :hook (pdf-view-mode . pdf-view-restore-mode)
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
