@@ -4,9 +4,7 @@
 ;;; `(file-name-nondirectory (buffer-file-name))` --- ${1:`(cadr (split-string (file-name-base) "-"))`} -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
-;;;; Dependencies and Setup
-(use-package ${2:`(cdr (split-string (file-name-base) "-"))`}
-  :straight t)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 $0
 
