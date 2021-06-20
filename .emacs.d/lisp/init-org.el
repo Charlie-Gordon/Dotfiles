@@ -96,21 +96,19 @@ Edna Syntax: org-anki-this!"
          "** REVIEW Q:Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?"
          "** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")
         "\n"))))
-  :init
+  :config
   (defun org-maybe-go-to-quiz ()
     "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
     (goto-char
      (or (car (org-map-entries
 	       (lambda nil (point-marker)) "todo=\"QUIZ\"" 'file))
 	 (point-marker))))
+  
   (defun my-org-capture-place-template-dont-delete-windows (oldfun args)
-    "Prevent org-capture from modifying window configuration.
-
-Taken this snippet from legoscia's answer at
-https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific-window/54251825#54251825"
+    "Prevent org-capture from modifying window configuration."
     (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
       (apply oldfun args)))
-  :config
+  
   (advice-add 'org-capture-place-template :around 'my-org-capture-place-template-dont-delete-windows))
 
 (use-package org-anki
@@ -129,11 +127,12 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
   (org-ref-bibliography-notes (expand-file-name "org/bib-notes.org" *journals-dir*))
   (org-ref-pdf-directory *library-dir*)
   (org-ref-default-bibliography reftex-default-bibliography)
-  (bibtex-completion-bibliography reftex-default-bibliography)
-  (bibtex-completion-library-path org-ref-pdf-directory))
+  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
+
 
 ;;;; Outshine
 (use-package outshine
+  :disabled
   :straight t
   :after outline
   :config
@@ -172,7 +171,10 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
           #'org-roam-capture--get-point
           "* %?"
           :file-name (eval (concat org-roam-dailies-directory "%<%Y-%m-%d>"))
-          :head "#+title: %<%Y-%m-%d>\n\n")))
+          :head "#+TITLE: %<%Y-%m-%d>\n\n")))
+
+(defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
+  "Format of the title to use for `orb-templates'.")
 
 (use-package org-roam-bibtex
   :straight t
@@ -184,27 +186,33 @@ https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific
                ("C-c m a" . orb-note-actions)))
   :custom
   (orb-autokey-format "%a%y")
+  (orb-file-field-extensions '("pdf" "epub"))
   (orb-templates
-   `(("r" "ref" plain
-      (function org-roam-capture--get-point)
-      ""
-      :file-name "${citekey}"
-      :head "#+TITLE: ${title}\n#+ROAM_KEY: ${ref}\n"
-      :unnarrowed t)
-     ("n" "ref + noter" plain
-      (function org-roam-capture--get-point)
-      ""
-      :file-name "refs/${citekey}"
-      :head ,(string-join
-              (list
-               "#+title:${title}"
-               "#+roam_key: ${ref}"
-               "* On %(orb-process-file-field \"${citekey}\")"
-               ":PROPERTIES:"
-               ":NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
-               ":NOTER_PAGE:"
-               ":END:")
-              "\n"))))
+        `(("r" "ref" plain
+           (function org-roam-capture--get-point)
+           ""
+           :file-name "refs/${citekey}"
+           :head ,(string-join
+                   (list
+                    (concat "#+TITLE: " orb-title-format)
+                    "#+ROAM_KEY: ${ref}"
+                    "")
+                   "\n")
+           :unnarrowed t)
+          ("n" "ref + noter" plain
+           (function org-roam-capture--get-point)
+           ""
+           :file-name "refs/${citekey}"
+           :head ,(string-join
+                   (list
+                    (concat "#+TITLE: " orb-title-format)
+                    "#+ROAM_KEY: ${ref}"
+                    ""
+                    "* ${title}"
+                    ":PROPERTIES:"
+                    ":NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
+                    ":END:")
+                   "\n"))))
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :diminish)
 
