@@ -37,6 +37,7 @@
     (define-key map "g" #'consult-find-git-dir)
     (define-key map "p" #'consult-grep-package)
     (define-key map "j" #'consult-find-journals)
+    (define-key map "l" #'consult-find-library)
     (define-key map "o" #'affe-search-org)
     map)
   "Keymap for navigation")
@@ -64,7 +65,13 @@
 (defun consult-find-journals (file-name)
   (interactive"P")
   (let ((consult-find-command "find . -ipath *ARG* OPTS"))
-    (consult-find "/storage/journals" file-name)))
+    (consult-find *journals-dir* file-name)))
+
+;;;###autoload
+(defun consult-find-library (file-name)
+  (interactive"P")
+  (let ((consult-find-command "find . -ipath *ARG* OPTS"))
+    (consult-find *library-dir* file-name)))
 
 ;;;###autoload
 (defun affe-search-org()  
