@@ -13,7 +13,7 @@
    ("C-M-<up>" . magit-section-up))
   :custom
   (magit-diff-refine-hunk t)
-  (magit-repository-directories `(("~/Git/" . 2)
+  (magit-repository-directories `(("~/git/" . 2)
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
   :init
