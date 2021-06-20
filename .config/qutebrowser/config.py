@@ -88,29 +88,29 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
 config.set('colors.webpage.darkmode.enabled', True)
-# Gruvbox theme
 # config.set('content.user_stylesheets', '~/.config/qutebrowser/gruvbox-all-sites.css')
-
+# * UI customization
+# ** Base16 Theme (zenburn)
 # base16-qutebrowser (https://github.com/theova/base16-qutebrowser)
 # Base16 qutebrowser template by theova
-# Gruvbox dark, hard scheme by Dawid Kurek (dawikur@gmail.com), morhetz (https://github.com/morhetz/gruvbox)
+# Zenburn scheme by elnawe
 
-base00 = "#000000"
-base01 = "#100f10"
-base02 = "#323232"
-base03 = "#a8a8a8"
-base04 = "#e0e6f0"
-base05 = "#ffffff"
-base06 = "#f4f4f4"
-base07 = "#bfc0c4"
-base08 = "#fe6060"
-base09 = "#fba849"
-base0A = "#f0dd60"
-base0B = "#44bc44"
-base0C = "#90c4ed"
-base0D = "#2fafff"
-base0E = "#feacd0"
-base0F = "#d0ba95"
+base00 = "#383838"
+base01 = "#404040"
+base02 = "#606060"
+base03 = "#6f6f6f"
+base04 = "#808080"
+base05 = "#dcdccc"
+base06 = "#c0c0c0"
+base07 = "#ffffff"
+base08 = "#dca3a3"
+base09 = "#dfaf8f"
+base0A = "#e0cf9f"
+base0B = "#5f7f5f"
+base0C = "#93e0e3"
+base0D = "#7cb8bb"
+base0E = "#dc8cc3"
+base0F = "#000000"
 
 # set qutebrowser colors
 
@@ -389,6 +389,7 @@ c.colors.tabs.selected.even.bg = base02
 # color).
 # c.colors.webpage.bg = base00
 
+# ** Font
 # Default font families to use. Whenever "default_family" is used in a
 # font setting, it's replaced with the fonts listed here. If set to an
 # empty value, a system-specific monospace default is used.
@@ -418,10 +419,8 @@ c.fonts.prompts = 'default_size Iosevka Aile'
 # Type: Font
 c.fonts.statusbar = '12pt "Iosevka Aile"'
 
-# Bindings to use dmenu rather than qutebrowser's builtin search.
-#config.bind('o', 'spawn --userscript dmenu-open')
-#config.bind('O', 'spawn --userscript dmenu-open --tab')
 
+# * Custom key bindings
 # Bindings for normal mode
 config.bind('xD', 'hint links spawn --detach mpv {hint-url}')
 config.bind('xd', 'hint links spawn --detach mpv --ytdl-format="best[height<360]" {hint-url}')
