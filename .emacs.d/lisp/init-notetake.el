@@ -21,7 +21,13 @@
 ;;;; Ebib
 (use-package ebib
   :straight t)
-
+;;;; Bibtex completion
+(use-package bibtex-completion
+  :straight t
+  :custom
+  (bibtex-completion-bibliography reftex-default-bibliography)
+  (bibtex-completion-library-path org-ref-pdf-directory)
+  (bibtex-completion-pdf-field "file"))
 ;;;; EPUB(with nov.el)
 (use-package nov
   :straight t
