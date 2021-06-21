@@ -44,10 +44,6 @@
 	      ("a k" . pdf-keyboard-highlight))
   :init
   (pdf-loader-install)
-  (use-package pdf-view-restore
-    :straight t
-    :custom
-    (pdf-view-restore-filename (concat *journals-dir* ".pdf-view-restore")))
   :hook (pdf-view-mode . pdf-view-restore-mode)
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
