@@ -22,7 +22,13 @@
 (set-language-environment "UTF-8")
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
+;; From Mastering Emacs
+;; https://masteringemacs.org/article/working-coding-systems-unicode-emacs
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
 ;;;; Modifier remap
 (start-process "modmap" nil "doas"
                (executable-find "xkeysnail")
