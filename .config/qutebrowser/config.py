@@ -13,12 +13,11 @@
 # Change the argument to True to still load settings configured via autoconfig.yml
 config.load_autoconfig(False)
 
-config.set('content.cookies.accept', 'all', 'chrome-devtools://*')
 
-config.set('content.cookies.accept', 'all', 'devtools://*')
 # * Minimize fingerprinting
 # The default of qutebrowser is pretty good.
 # This will break some sites.
+# See https://github.com/qutebrowser/qutebrowser/issues/4045
 # ** Common user agent
 config.set('content.headers.user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36')
 # ** Disable reading from canvas
@@ -28,6 +27,12 @@ config.set('content.webgl', False)
 # ** Common HTTP_ACCEPT header
 config.set('content.headers.accept_language', 'en-US,en;q=0.5')
 config.set('content.headers.custom', {"accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"})
+# ** WebRTC exposes LAN IP address
+config.set('content.webrtc_ip_handling_policy', 'default-public-interface-only')
+# ** Disable geolocation
+config.set('content.geolocation', False)
+config.set('content.cookies.accept', 'no-3rdparty')
+
 # * UI customization
 # ** Base16 Theme (zenburn)
 # base16-qutebrowser (https://github.com/theova/base16-qutebrowser)
@@ -150,7 +155,6 @@ c.colors.keyhint.fg = base05
 
 # Highlight color for keys to complete the current keychain.
 c.colors.keyhint.suffix.fg = base05
-
 # Background color of the keyhint widget.
 c.colors.keyhint.bg = base00
 
@@ -366,3 +370,7 @@ config.set('content.javascript.enabled', True, 'qute://*/*')
 
 config.set('colors.webpage.darkmode.enabled', True)
 # config.set('content.user_stylesheets', '~/.config/qutebrowser/gruvbox-all-sites.css')
+c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
+                       'wk': 'https://en.wikipedia.org/wiki/{}',
+                       'od': 'https://odysee.com/$/search?q={}',
+                       'yt': 'https://www.youtube.com/results?search_query={}'}
