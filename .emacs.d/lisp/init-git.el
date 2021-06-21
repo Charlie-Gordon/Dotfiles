@@ -18,6 +18,8 @@
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
   :init
   (use-package tramp :ensure nil)
+  (use-package vc
+    :straight t)
   :config
   ;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm
   ;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
