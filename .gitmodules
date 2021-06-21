@@ -7,3 +7,6 @@
 [submodule ".emacs.d/lisp/lbry-mode"]
 	path = .emacs.d/lisp/site-lisp/
 	url = git@gitlab.com:Charlie-Gordon/lbry-mode-el.git
+[submodule ".config/mpv/scripts/occivink"]
+	path = .config/mpv/scripts/occivink
+	url = https://github.com/occivink/mpv-scripts
