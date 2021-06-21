@@ -26,9 +26,8 @@
 
 ;;; Code:
 ;;;; Dependencies and Setup
-(eval-when-compile
-  (require 'consult)
-  (require 'affe))
+(require 'consult)
+(require 'affe)
 
 (defvar navigation-map
   (let ((map (make-sparse-keymap)))
@@ -39,6 +38,7 @@
     (define-key map "j" #'consult-find-journals)
     (define-key map "l" #'consult-find-library)
     (define-key map "o" #'affe-search-org)
+    (define-key map "b" #'helm-bibtex)
     map)
   "Keymap for navigation")
 
