@@ -102,14 +102,7 @@ Edna Syntax: org-anki-this!"
     (goto-char
      (or (car (org-map-entries
 	       (lambda nil (point-marker)) "todo=\"QUIZ\"" 'file))
-	 (point-marker))))
-  
-  (defun my-org-capture-place-template-dont-delete-windows (oldfun args)
-    "Prevent org-capture from modifying window configuration."
-    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
-      (apply oldfun args)))
-  
-  (advice-add 'org-capture-place-template :around 'my-org-capture-place-template-dont-delete-windows))
+	 (point-marker)))))
 
 (use-package org-anki
   :termux
@@ -132,7 +125,6 @@ Edna Syntax: org-anki-this!"
 
 ;;;; Outshine
 (use-package outshine
-  :disabled
   :straight t
   :after outline
   :config
@@ -221,11 +213,14 @@ Edna Syntax: org-anki-this!"
   :straight '(org-noter :type git :host github :repo "weirdNox/org-noter"
                         :fork t)
   :after org pdf-view
-  :custom
+  :custom       
+  (org-noter-doc-split-fraction '(0.57 0.43))
+  (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other nil)
-  (org-noter-notes-search-path (list *journals-dir*)))
+  (org-noter-notes-search-path (list *journals-dir*
+                                     (expand-file-name "org/refs/" *journals-dir*))))
 
 ;;;;; Org-transclusion
 (use-package org-transclusion
