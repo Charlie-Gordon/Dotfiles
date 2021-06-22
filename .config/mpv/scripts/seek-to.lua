@@ -1,0 +1,1 @@
+/home/i/.config/mpv/scripts/occivink/scripts/seek-to.lua
