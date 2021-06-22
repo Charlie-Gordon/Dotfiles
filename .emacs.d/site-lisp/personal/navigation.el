@@ -38,7 +38,6 @@
     (define-key map "j" #'consult-find-journals)
     (define-key map "l" #'consult-find-library)
     (define-key map "o" #'affe-search-org)
-    (define-key map "b" #'helm-bibtex)
     map)
   "Keymap for navigation")
 

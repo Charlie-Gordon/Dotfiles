@@ -24,6 +24,8 @@
 ;;;; Bibtex completion
 (use-package bibtex-completion
   :straight t
+  :bind
+  ("C-' b" . helm-bibtex)
   :custom
   (bibtex-completion-bibliography reftex-default-bibliography)
   (bibtex-completion-library-path org-ref-pdf-directory)
