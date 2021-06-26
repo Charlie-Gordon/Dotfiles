@@ -3,7 +3,7 @@
 ;;; Code:
 ;;;; Reload configuration
 ;;;###autoload
-(defun reload-emacs-configuration ()
+(defun my/reload-emacs-configuration ()
   "Reload emacs' init.el file."
   (interactive)
   (load-file (concat user-emacs-directory "init.el")))
@@ -13,15 +13,17 @@
 (defadvice find-file (after find-file-sudo activate)
   "Find file as root if necessary."
   (when (and (buffer-file-name)
-	     (not (file-writable-p buffer-file-name)))
+             (not (file-writable-p buffer-file-name)))
     (find-alternate-file (concat "/doas::" buffer-file-name))))
+
 ;;;; Magit shortcuts
 ;;;###autoload
-(defun magit-status-dotfiles ()
+(defun my/magit-status-dotfiles ()
   (interactive)
   "Open magit in dotfiles repository."
   (magit-status "/yadm::"))
 
+(global-set-key (kbd "C-c d") 'my/magit-status-dotfiles)
 ;;;; Screenshot
 ;; https://www.reddit.com/r/emacs/comments/idz35e/emacs_27_can_take_svg_screenshots_of_itself/
 ;;;###autoload
@@ -44,18 +46,19 @@ Saves to a temp file and puts the filename in the kill ring."
 (defun pinentry-emacs (desc prompt ok error)
   (let ((str (read-passwd
               (concat
-	       (replace-regexp-in-string "%22" "\""
-					 (replace-regexp-in-string
-					  "%0A" "\n" desc))
-	       prompt ": "))))
+               (replace-regexp-in-string "%22" "\""
+                                         (replace-regexp-in-string
+                                          "%0A" "\n" desc))
+               prompt ": "))))
     str))
+
 ;;;; Occur
 ;;;###autoload
 (defun occur-list-urls (&optional to-buffer)
   "Produce buttonised list of all URLs in the current buffer."
   (interactive)
   (let ((to-buffer (or to-buffer
-		       (current-buffer))))
+                       (current-buffer))))
     (add-hook 'occur-hook #'goto-address-mode)
     (occur-1 "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)\\(//[-a-z0-9_.]+:[0-9]*\\)?\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+([-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]*)\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)?\\|[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)\\)"
   "\\&" (list (current-buffer)) (get-buffer-create " occur-output"))
@@ -64,17 +67,40 @@ Saves to a temp file and puts the filename in the kill ring."
 ;;;; mpv-play-url
 ;; https://gist.github.com/bsless/19ca4a37eee828b1b62c84971181f506#file-yt-mpv-el
 ;;;###autoload
-(defun mpv-play-url (&optional url &rest args)
+(defun my/mpv-play-url (&optional url &rest args)
   "Start mpv for URL."
   (interactive"sURL: ")
   (let ((url (or url
-		 (if (consp (eww-suggested-uris))
-		     (car (eww-suggested-uris))
-		   (eww-suggested-uris)))))
+                 (if (consp (eww-suggested-uris))
+                     (car (eww-suggested-uris))
+                   (eww-suggested-uris)))))
     (if url
-	(progn (start-process "mpv"  nil "mpv" url)
-	       (message "%s%s" "Playing " url))
+        (progn (start-process "mpv"  nil "mpv" url)
+               (message "%s%s" "Playing " url))
       (message "No valid URL."))))
+
+;;;; Org-roam
+;;;###autoload
+(defun my/count-org-file-in-directory (directory)
+  "A wrapper for `file-expand-wildcards' with \"*.org\" as its pattern.
+
+Return 0 when `file-expand-wildcards' returns nil i.e. no files matched its pattern.
+If `file-expand-wildcards' returns non-nil then return the length of the list of files
+names that matches its pattern i.e. count them.
+
+Used to determines filename in `org-roam-capture-templates'."
+  (let ((org-files))
+    (if (directory-name-p directory)
+        nil
+      (message "%s is not a directory name using %s instead."
+               directory (directory-file-name directory))
+      (setq directory (directory-file-name directory)))
+    (setq org-files (file-expand-wildcards (concat directory "*.org")))
+    (if org-files
+        (length org-files)
+      0)))
+
+(global-set-key (kbd "<f5>") (lambda () (interactive) (find-file "~/")))
 
 ;;;; Volume control
 (use-package volume-control
@@ -84,4 +110,3 @@ Saves to a temp file and puts the filename in the kill ring."
 
 (provide 'init-utils)
 ;;; init-utils.el ends here
-
