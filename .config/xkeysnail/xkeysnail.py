@@ -22,4 +22,6 @@ define_multipurpose_modmap({
     Key.LEFT_CTRL: [Key.ESC, Key.LEFT_CTRL],
     Key.RIGHT_CTRL: [Key.ESC, Key.RIGHT_CTRL],
     Key.LEFT_SHIFT: [Key.KPLEFTPAREN, Key.LEFT_SHIFT],
-    Key.RIGHT_SHIFT: [Key.KPRIGHTPAREN, Key.RIGHT_SHIFT] })
+    Key.RIGHT_SHIFT: [Key.KPRIGHTPAREN, Key.RIGHT_SHIFT],
+    Key.TAB: [Key.TAB, Key.LEFT_META]
+})
