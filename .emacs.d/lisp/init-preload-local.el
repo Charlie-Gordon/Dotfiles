@@ -28,12 +28,7 @@
 ;; https://masteringemacs.org/article/working-coding-systems-unicode-emacs
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-
-;;;; Modifier remap
-(start-process "modmap" nil "doas"
-               (executable-find "xkeysnail")
-               "--quiet"
-               (expand-file-name "external/xkeysnail.py" user-emacs-directory))
+(start-process-shell-command "modmap" nil  "doas /usr/local/bin/xkeysnail --quiet ~/.config/xkeysnail/xkeysnail.py")
 
 (provide 'init-preload-local)
 ;;; init-preload-local.el ends here
