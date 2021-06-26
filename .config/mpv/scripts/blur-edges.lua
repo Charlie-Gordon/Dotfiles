@@ -1,1 +1,0 @@
-/usr/home/i/.config/mpv/scripts/occivink/scripts/blur-edges.lua

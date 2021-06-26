@@ -10,3 +10,6 @@
 [submodule ".config/mpv/scripts/occivink"]
 	path = .config/mpv/scripts/occivink
 	url = https://github.com/occivink/mpv-scripts
+[submodule ".config/mpv/scripts/pedro"]
+	path = .config/mpv/scripts/pedro
+	url = https://github.com/pvpscript/mpv-video-splice
