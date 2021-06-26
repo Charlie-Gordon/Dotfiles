@@ -5,6 +5,8 @@
 
 (use-package paredit
   :straight t
+  :bind (:map paredit-mode-map
+              ("C-<backspace>" . paredit-backward-kill-word))
   :hook
   (emacs-lisp-mode . enable-paredit-mode)
   (eval-expression-minibuffer-setup . enable-paredit-mode)
