@@ -16,7 +16,6 @@
 ;;;; Is this operating system an Android?
 (defconst *termux* (string-match "Android" (shell-command-to-string "uname -a")))
 
-
 (unless *termux*
 ;;  (desktop-save-mode 1)
   (menu-bar-mode -1)
@@ -26,10 +25,7 @@
   (fringe-mode 4)
   ;; Time in modeline 
   (display-time-mode 1)
-  (setq display-time-day-and-date t)
-  ;; FreeSans for unicode
-  (set-fontset-font t nil (font-spec :family "FreeSans"
-				     :size 20)))
+  (setq display-time-day-and-date t))
 (setq enable-recursive-minibuffers t)
 ;; Line spacing, can be 0 for code and 1 or 2 for text
 (setq-default line-spacing 0)
