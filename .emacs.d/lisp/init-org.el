@@ -118,6 +118,7 @@ Edna Syntax: org-anki-this!"
   :custom
   (reftex-default-bibliography `(,(expand-file-name "muhbib.bib" *library-dir*)))
   (org-ref-bibliography-notes (expand-file-name "org/bib-notes.org" *journals-dir*))
+  (org-ref-notes-function #'orb-notes-fn)
   (org-ref-pdf-directory *library-dir*)
   (org-ref-default-bibliography reftex-default-bibliography)
   (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
@@ -158,12 +159,22 @@ Edna Syntax: org-anki-this!"
   (setq org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*)
         org-roam-index-file "index.org"
         org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*))
+  
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           #'org-roam-capture--get-point
+           "%?"
+           :file-name
+           "/storage/journals/org/slip-box/%(number-to-string (float (1+ (my/count-org-file-in-directory org-roam-directory))))"
+           :head "#+title: ${title}\n"
+           :unnarrowed t)))
   (setq org-roam-dailies-capture-templates
-        '("d" "default" entry
-          #'org-roam-capture--get-point
-          "* %?"
-          :file-name (eval (concat org-roam-dailies-directory "%<%Y-%m-%d>"))
-          :head "#+TITLE: %<%Y-%m-%d>\n\n")))
+        '(("d" "default" plain
+            #'org-roam-capture--get-point
+            "* %?"
+            :file-name "%<%Y-%m-%d>"
+            :head "#+TITLE: %<%Y-%m-%d>\n\n"
+            :unnarrowed t))))
 
 (defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
   "Format of the title to use for `orb-templates'.")
@@ -221,6 +232,12 @@ Edna Syntax: org-anki-this!"
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list *journals-dir*
                                      (expand-file-name "org/refs/" *journals-dir*))))
+
+(use-package org-noter-synoptic
+  :ensure nil
+  :after org-noter
+  :hook
+  (org-noter-notes-mode . org-noter-synoptic--find-companion))
 
 ;;;;; Org-transclusion
 (use-package org-transclusion
