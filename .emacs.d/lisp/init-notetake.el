@@ -10,6 +10,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Calibre
 (use-package calibredb
+  :disabled
   :ensure nil
   :config
   (setq calibredb-root-dir *library-dir*)
@@ -29,6 +30,7 @@
   :custom
   (bibtex-completion-bibliography reftex-default-bibliography)
   (bibtex-completion-library-path org-ref-pdf-directory)
+  (bibtex-completion-notes-path (expand-file-name "refs/" org-roam-directory))
   (bibtex-completion-pdf-field "file"))
 ;;;; EPUB(with nov.el)
 (use-package nov
@@ -46,7 +48,6 @@
 	      ("a k" . pdf-keyboard-highlight))
   :init
   (pdf-loader-install)
-  :hook (pdf-view-mode . pdf-view-restore-mode)
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
