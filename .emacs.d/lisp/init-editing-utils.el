@@ -35,6 +35,8 @@
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
 
+(save-place-mode t)
+
 (use-package autorevert
   :ensure nil
   :config
@@ -68,7 +70,7 @@
   (which-key-idle-delay 0.3)
   :config
   (which-key-mode)
-  :diminish which-key-mode)
+  :diminish)
 
 ;;; Snippets
 (use-package yasnippet
