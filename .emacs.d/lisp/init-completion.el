@@ -117,10 +117,10 @@
   :bind
   ("C-." . embark-act)
   (:map embark-url-map
-	("s" . #'browse-url-xdg-open)
-	("m" . #'mpv-play-url))
+	("s" . browse-url-xdg-open)
+	("m" . my/mpv-play-url))
   (:map embark-symbol-map
-	("h" . #'helpful-at-point)))
+	("h" . helpful-at-point)))
 
 (provide 'init-completion)
 ;;; init-completion.el ends here

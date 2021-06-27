@@ -11,7 +11,7 @@
 (use-package browse-url
   :ensure nil
   :custom
-  (browse-url-handlers '(("youtu\\.?be" . mpv-play-url)
+  (browse-url-handlers '(("youtu\\.?be" . my/mpv-play-url)
 				 ("." . eww-browse-url)))
   (browse-url-secondary-browser-function 'browse-url-default-browser))
 
@@ -40,7 +40,7 @@
         ("l" . eww-list-bookmarks)
         :map eww-mode-map
         ("<return>" . eww-follow-link)
-        ("W" . mpv-play-url)
+        ("W" . my/mpv-play-url)
         ("L" . eww-list-bookmarks)
         ("t" . eww-readable)
         ("n" . shr-next-link)
@@ -65,7 +65,7 @@
   :init (define-prefix-command 'prot-eww-map) ;; Keymapping for Protesilaos's extensions
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
-  (eww-download-directory (expand-file-name "~/Downloads/eww/"))
+  (eww-download-directory (expand-file-name "~/Downloads/"))
   (eww-bookmarks-directory (locate-user-emacs-file "eww-bookmarks/"))
   (eww-header-line-format nil)
   (eww-restore-desktop t)
