@@ -28,6 +28,9 @@
 ;; https://masteringemacs.org/article/working-coding-systems-unicode-emacs
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+;;;; Enable disabled command
+(setq disabled-command-function nil)
 (start-process-shell-command "modmap" nil  "doas /usr/local/bin/xkeysnail --quiet ~/.config/xkeysnail/xkeysnail.py")
 
 (provide 'init-preload-local)
