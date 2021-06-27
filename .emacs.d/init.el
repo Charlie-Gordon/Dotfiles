@@ -7,7 +7,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 
 (defconst *journals-dir* (if *termux*
 			     "~/storage/shared/journals/"
@@ -36,14 +35,7 @@
 ;;;;; Early local configuration
 (use-package init-preload-local :ensure nil)
 ;;;;; Interface tweaks
-(use-package init-face
-  :ensure nil
-  :config
-  (exwm-input-set-key (kbd "s-.") #'reload-emacs-configuration)
-  (exwm-input-set-key (kbd "s-s") #'magit-status-dotfiles)
-  (exwm-input-set-key (kbd "s-d") #'modus-themes-toggle)
-  (exwm-input-set-key (kbd "s-<return>") #'eshell)
-  (exwm-input-set-key (kbd "<print>") #'screenshot-svg))
+(use-package init-face :ensure nil)
 ;;;;; TeX
 (use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
@@ -80,6 +72,8 @@
 (use-package init-erc :ensure nil)
 ;;;;; Completions
 (use-package init-completion :ensure nil :termux)
+;;;;; Hyperbole
+(use-package init-hyperbole :ensure nil)
 ;;;;; Git
 (use-package init-git :ensure nil)
 ;;;;; Lisp
@@ -89,11 +83,12 @@
 (use-package init-misc :ensure nil)
 (use-package init-notetake :ensure nil)
 (use-package init-editing-utils :ensure nil :termux)
-(use-package init-local :ensure nil)
-)
+(use-package init-local :ensure nil))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; End:
 (provide 'init)
 ;;; init.el ends here
+
