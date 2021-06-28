@@ -6,7 +6,9 @@
 (use-package paredit
   :straight t
   :bind (:map paredit-mode-map
-              ("C-<backspace>" . paredit-backward-kill-word))
+              ("C-<backspace>" . paredit-backward-kill-word)
+              ("M-s" . nil)
+              ("M-s M-s" . paredit-splice-sexp))
   :hook
   (emacs-lisp-mode . enable-paredit-mode)
   (eval-expression-minibuffer-setup . enable-paredit-mode)
