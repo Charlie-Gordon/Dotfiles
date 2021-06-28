@@ -19,9 +19,6 @@
   (setq calibredb-ref-default-bibliography (concat (file-name-as-directory calibredb-root-dir) "muhbib.bib"))
 )
 
-;;;; Ebib
-(use-package ebib
-  :straight t)
 ;;;; Bibtex completion
 (use-package bibtex-completion
   :straight t
