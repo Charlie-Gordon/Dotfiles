@@ -219,6 +219,15 @@ Edna Syntax: org-anki-this!"
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :diminish)
 
+;;;;; Org-transclusion
+(use-package org-transclusion
+  :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion")
+  :after org
+  :bind ("<f9>" . org-transclusion-add)
+  :custom
+  (org-transclusion-add-all-on-activate nil)
+  (org-transclusion-exclude-elements '()))
+
 ;;;;; Org-noter
 (use-package org-noter
   :straight '(org-noter :type git :host github :repo "weirdNox/org-noter"
@@ -233,38 +242,14 @@ Edna Syntax: org-anki-this!"
   (org-noter-notes-search-path (list *journals-dir*
                                      (expand-file-name "org/refs/" *journals-dir*))))
 
+
+(use-package text-clone :ensure nil)
+
 (use-package org-noter-synoptic
-  :ensure nil
-  :after org-noter
-  :hook
-  (org-noter-notes-mode . org-noter-synoptic--find-companion))
-
-;;;;; Org-transclusion
-(use-package org-transclusion
-  :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion"
-                               :fork t)
-  :after org
-  :bind ("<f9>" . org-transclusion-add)
-  :custom
-  (org-transclusion-add-all-on-activate nil)
+  :after text-clone org-roam-bibtex org-noter
   :config
-  (use-package text-clone :ensure nil))
-
-;;;;; Org-marginalia
-(use-package org-marginalia
-  :disabled
-  :ensure nil
-  :load-path "~/Git/org-marginalia/"
-  :after org
-  :bind (:map org-marginalia-mode-map
-	      ("C-c o" . org-marginalia-open)
-	      ("C-c m" . org-marginalia-mark)
-	      ("C-c n j" . org-marginalia-next)
-	      ("C-c n k" . org-marginalia-prev)
-	      ("C-c M" . org-marginalia-make-annotation)
-	      ("C-c n J" . org-marginalia-browse-forward)
-	      ("C-c n K" . org-marginalia-browse-backward))
-  :hook ((nov-mode org-mode) . org-marginalia-mode))
+  (add-hook 'org-noter-notes-mode-hook 'org-noter-synoptic--find-companion)
+  :ensure nil)
 
 ;;;;; pdf-tools integration
 (use-package org-pdftools

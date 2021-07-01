@@ -32,6 +32,8 @@
 
 (add-hook 'after-init-hook 'global-auto-revert-mode)
 
+(show-paren-mode 1)
+
 (setq global-auto-revert-non-file-buffers t
       auto-revert-verbose nil)
 
