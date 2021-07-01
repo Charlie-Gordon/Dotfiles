@@ -13,3 +13,6 @@
 [submodule ".config/mpv/scripts/pedro"]
 	path = .config/mpv/scripts/pedro
 	url = https://github.com/pvpscript/mpv-video-splice
+[submodule ".emacs.d/site-lisp/org-noter-synoptic"]
+	path = .emacs.d/site-lisp/org-noter-synoptic
+	url = https://gitlab.com/Charlie-Gordon/org-noter-synoptic
