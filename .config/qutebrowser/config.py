@@ -370,7 +370,10 @@ config.set('content.javascript.enabled', True, 'qute://*/*')
 
 config.set('colors.webpage.darkmode.enabled', True)
 # config.set('content.user_stylesheets', '~/.config/qutebrowser/gruvbox-all-sites.css')
+
 c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
                        'wk': 'https://en.wikipedia.org/wiki/{}',
                        'od': 'https://odysee.com/$/search?q={}',
-                       'yt': 'https://www.youtube.com/results?search_query={}'}
+                       'yt': 'https://www.youtube.com/results?search_query={}',
+                       'gl': 'https://gitlab.com/explore?name={}',
+                       'gh': 'https://github.com/search?q={}'}
