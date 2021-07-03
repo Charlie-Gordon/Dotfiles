@@ -43,7 +43,8 @@
   (load bootstrap-file nil 'nomessage))
 
 (setq straight-host-usernames
-      '((github . "Charlie-Gordon")
+      '(;; (github . "Charlie-Gordon")
+        (github . "c1-g")               ; Lost my old account.
         (gitlab . "Charlie-Gordon")))
 
 (straight-use-package 'use-package)
