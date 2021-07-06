@@ -74,6 +74,8 @@
 (use-package init-completion :ensure nil :termux)
 ;;;;; Hyperbole
 (use-package init-hyperbole :ensure nil)
+;;;;; Emacs application framework
+(use-package init-eaf :ensure nil)
 ;;;;; Git
 (use-package init-git :ensure nil)
 ;;;;; Lisp
