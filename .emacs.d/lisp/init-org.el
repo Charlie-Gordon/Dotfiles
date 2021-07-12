@@ -2,6 +2,7 @@
 ;;;; Org
 (use-package org
   :termux
+  :commands org-anki-sync-entry
   :straight t
   :bind (("C-c c" . org-capture)
 	 ("C-c a" . org-agenda)
@@ -39,7 +40,8 @@
   (defun org-edna-action/org-anki-this! (_last-entry)
     "Action to call `org-anki-sync-entry' on this entry
 Edna Syntax: org-anki-this!"
-    (org-anki-sync-entry)))
+    (org-anki-sync-entry))
+  :diminish)
 
 (use-package org-fragtog
   :straight t
@@ -75,6 +77,11 @@ Edna Syntax: org-anki-this!"
   (org-capture-templates
    `(("Q"
       "Questions for this book.")
+     ("Qa"
+      "Anki flashcard."
+      entry
+      (file "/storage/journals/org/anki.org")
+      "* REVIEW Q:%?")
      ("Qb"
       "Questions bank on this book."
       entry
@@ -132,7 +139,8 @@ Edna Syntax: org-anki-this!"
   ;; Required for outshine
   (add-hook 'outline-minor-mode-hook 'outshine-mode)
   ;; Enables outline-minor-mode for *ALL* programming buffers
-  (add-hook 'prog-mode-hook 'outshine-mode))
+  (add-hook 'prog-mode-hook 'outshine-mode)
+  :diminish)
 
 ;;;; Note-taking
 ;;;;; Org-roam
@@ -174,7 +182,8 @@ Edna Syntax: org-anki-this!"
             "* %?"
             :file-name "%<%Y-%m-%d>"
             :head "#+TITLE: %<%Y-%m-%d>\n\n"
-            :unnarrowed t))))
+            :unnarrowed t)))
+  :diminish)
 
 (defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
   "Format of the title to use for `orb-templates'.")
