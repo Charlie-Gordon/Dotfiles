@@ -11,8 +11,9 @@
 (use-package browse-url
   :ensure nil
   :custom
-  (browse-url-handlers '(("youtu\\.?be" . my/mpv-play-url)
-				 ("." . eww-browse-url)))
+  (browse-url-handlers `((,(rx "youtube.com/result" (* anything)) . ,browse-url-secondary-browser-function)
+                         (,(rx "youtu" (? ".") "be") . my/mpv-play-url)
+                         ("." . eww-browse-url)))
   (browse-url-secondary-browser-function 'browse-url-default-browser))
 
 (use-package shr
