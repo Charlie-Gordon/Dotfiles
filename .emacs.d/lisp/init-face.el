@@ -24,15 +24,21 @@
   (use-package pinentry :straight t)
   (use-package exwm-config
     :ensure nil
-    :custom
+    :config
+    (setq
      ;; Prefix keys to ignore
-    (exwm-input-prefix-keys `((kbd "C-x") (kbd "C-u")
-                              (kbd "C-h") (kbd "C-g")
-                              (kbd "M-x") (kbd "M-`")
-                              (kbd "M-&") (kbd "M-:")
-                              (kbd "C-'")))
-        ;; Line-editing keybindings for X windows
-    (exwm-input-simulation-keys '(;; Backward-char
+     exwm-input-prefix-keys '(?\C-x
+                              ?\C-u
+                              ?\C-h
+                              ?\C-g
+                              ?\C-'
+                              ?\C-,
+                              ?\M-x
+                              ?\M-`
+                              ?\M-&
+                              ?\M-:)
+     ;; Line-editing keybindings for X windows
+     exwm-input-simulation-keys '(;; Backward-char
 				  ([?\C-b] . [left])
 				  ;; Forward-char
 				  ([?\C-f] . [right])
@@ -59,30 +65,29 @@
 				  ;; Kill(Cut) the input line
 				  ([?\C-k] . [S-end C-x])
 				  ;; Yank(Paste)
-				  ([?\C-y] . [C-v])))
-  :config
-  (setq exwm-input-global-keys
-        `(;; 's-r': Reset (to line-mode).
-          ([?\s-r] . exwm-reset)
-          ;; 's-w': Switch workspace.
-          ([?\s-w] . exwm-workspace-switch)
-          ;; 's-&': Launch application.
-          ([?\s-&] . (lambda (command)
-                       (interactive (list (read-shell-command "$ ")))
-                       (start-process-shell-command command nil command)))
-          ;; 's-.': Reload init.el
-          ([?\s-.] . my/reload-emacs-configuration)
-          ([?\s-d] . modus-themes-toggle)
-          (,(kbd "<print>") . screenshot-svg)
-          ;; Eshell
-          (,(kbd "s-<return>") . eshell)
-          ;; 's-N': Switch to certain workspace.
-          ,@(mapcar (lambda (i)
-                      `(,(kbd (format "s-%d" i)) .
-                        (lambda ()
-                          (interactive)
-                          (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))))
+				  ([?\C-y] . [C-v]))
+     exwm-input-global-keys
+     `(;; 's-r': Reset (to line-mode).
+       ([?\s-r] . exwm-reset)
+       ;; 's-w': Switch workspace.
+       ([?\s-w] . exwm-workspace-switch)
+       ;; 's-&': Launch application.
+       ([?\s-&] . (lambda (command)
+                    (interactive (list (read-shell-command "$ ")))
+                    (start-process-shell-command command nil command)))
+       ;; 's-.': Reload init.el
+       ([?\s-.] . my/reload-emacs-configuration)
+       ([?\s-d] . modus-themes-toggle)
+       (,(kbd "<print>") . screenshot-svg)
+       ;; Eshell
+       (,(kbd "s-<return>") . eshell)
+       ;; 's-N': Switch to certain workspace.
+       ,@(mapcar (lambda (i)
+                   `(,(kbd (format "s-%d" i)) .
+                     (lambda ()
+                       (interactive)
+                       (exwm-workspace-switch-create ,i))))
+                 (number-sequence 0 9))))
   ;; Set the initial workspace number
   (setq exwm-workspace-number 4)
   ;; Proper modeline
@@ -95,7 +100,6 @@
   ;; Get encryption established
   (setf epg-pinentry-mode 'loopback)
   (pinentry-start)))
-
 
 (provide 'init-face)
 ;;; init-face.el ends here
