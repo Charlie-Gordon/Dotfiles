@@ -7,9 +7,6 @@
 ;;;; Grayscale theme for the night
 (use-package tao-theme
   :straight t)
-;;;; Diminish
-(use-package diminish
-  :straight t)
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile Oblique")

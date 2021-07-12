@@ -4,6 +4,9 @@
 
 (setq use-package-verbose t)
 
+(use-package diminish
+  :straight t)
+
 (add-to-list 'use-package-keywords :termux)  ; Create :termux keyword.
 ;; Empty functions
 (defun use-package-handler/:termux (name _keyword pred rest state)
