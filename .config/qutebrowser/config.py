@@ -368,8 +368,16 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
+config.set('content.mute', True, 'https://www.youtube.com/*
+')
 config.set('colors.webpage.darkmode.enabled', True)
 # config.set('content.user_stylesheets', '~/.config/qutebrowser/gruvbox-all-sites.css')
+
+config.set('hints.chars', 'qwfarstxcdv')
+
+config.bind('o', 'set-cmd-text -s :open --window')
+
+config.bind('O', 'set-cmd-text -s :open --window')
 
 c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
                        'wk': 'https://en.wikipedia.org/wiki/{}',
