@@ -80,7 +80,8 @@
   :config
   (straight-use-package 'yasnippet-snippets)
   (yas-load-directory (concat user-emacs-directory "snippets"))
-  (yas-global-mode))
+  (yas-global-mode)
+  :diminish)
 
 
 (use-package exwm-edit
