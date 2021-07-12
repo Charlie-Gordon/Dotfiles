@@ -3,21 +3,21 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;; Allow access to content from clipboard
+;; Allow access to content from clipboard
 (setq x-select-enable-clipboard t
       x-select-enable-primary t)
-;;;; Customize file
+;; Customize file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-;;;; Backup files
+;; Backup files
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-;;;; Autosave files
+;; Autosave files
 (setq delete-old-versions -1)
 (setq version-control t)
 (setq vc-make-backup-files t)
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
-;;;; Lazy yes or no
+;; Lazy yes or no
 (fset 'yes-or-no-p 'y-or-n-p)
-;;;; Set UTF-8 encoding
+;; Set UTF-8 encoding
 (setq locale-coding-system 'utf-8)
 (set-language-environment "UTF-8")
 (set-terminal-coding-system 'utf-8)
@@ -29,9 +29,13 @@
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-;;;; Enable disabled command
+;; Suppress warning when opening large files
+(setq large-file-warning-threshold nil)
+
+;; Compact modeline
+(setq mode-line-compact 'long)
+;; Enable disabled command
 (setq disabled-command-function nil)
-(start-process-shell-command "modmap" nil  "doas /usr/local/bin/xkeysnail --quiet ~/.config/xkeysnail/xkeysnail.py")
 
 (provide 'init-preload-local)
 ;;; init-preload-local.el ends here
