@@ -82,6 +82,7 @@
 (use-package init-paredit :ensure nil)
 (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
+(use-package init-uniquify :ensure nil)
 (use-package init-misc :ensure nil)
 (use-package init-notetake :ensure nil)
 (use-package init-editing-utils :ensure nil :termux)
