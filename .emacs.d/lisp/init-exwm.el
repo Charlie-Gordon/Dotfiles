@@ -2,11 +2,31 @@
 ;;; Commentary:
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun ambrevar/exwm-rename-buffer-to-title ()
+  "Rename EXWM buffer to its window title."
+  (exwm-workspace-rename-buffer exwm-title))
+
+(use-package pinentry
+  :straight t
+  :config
+  ;; Get encryption established
+  (setf epg-pinentry-mode 'loopback)
+  (pinentry-start))
+
+;; Support for encrytion (gpg)
+(defun pinentry-emacs (desc prompt ok error)
+  (let ((str (read-passwd
+              (concat
+               (replace-regexp-in-string "%22" "\""
+                                         (replace-regexp-in-string
+                                          "%0A" "\n" desc))
+               prompt ": "))))
+    str))
+
 (use-package exwm
   :straight t
   :when window-system
   :config
-  (use-package pinentry :straight t)
   (use-package exwm-config
     :ensure nil
     :config
@@ -80,12 +100,26 @@
   ;; Make class name the buffer name
   (add-hook 'exwm-update-class-hook #'(lambda ()
 					(exwm-workspace-rename-buffer exwm-class-name)))
+  ;; Default is save-buffers-kill-terminal, but that may kill daemon before its finished
+  (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
+  
+  (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
+  (add-hook 'after-init-hook 'my/xmodmap)
   ;; Enable EXWM
-  (exwm-enable)
-  ;; Get encryption established
-  (setf epg-pinentry-mode 'loopback)
-  (pinentry-start)))
+  (exwm-enable)))
 
+(use-package exwm-edit
+  :straight t
+  :bind
+  (:map exwm-mode-map
+        ("C-c '" . exwm-edit--compose))
+  :hook
+  (exwm-edit-compose . visual-line-mode))
+
+(defun my/xmodmap ()
+  "Execute xmodmap"
+  (start-process-shell-command "modmap" nil (concat (executable-find "xmodmap")
+                                                    " -verbose ~/.Xmodmap")))
 
 (provide 'init-exwm)
 ;;; init-exwm.el ends here

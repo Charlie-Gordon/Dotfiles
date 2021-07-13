@@ -83,15 +83,6 @@
   (yas-global-mode)
   :diminish)
 
-
-(use-package exwm-edit
-  :straight t
-  :bind
-  (:map exwm-mode-map
-        ("C-c '" . exwm-edit--compose))
-  :hook
-  (exwm-edit-compose . visual-line-mode))
-
 ;;; Quick navigation
 
 (use-package affe
@@ -108,7 +99,7 @@
   :termux
   :ensure nil
   :after consult affe
-  :bind-keymap ("C-' n" . navigation-map))
+  :bind-keymap* ("C-' n" . navigation-map))
 
 ;;; Writing
 (use-package typoel

@@ -42,16 +42,6 @@ Saves to a temp file and puts the filename in the kill ring."
     (kill-new filename)
     (message filename)))
 
-;;;; Support for encrytion (gpg)
-(defun pinentry-emacs (desc prompt ok error)
-  (let ((str (read-passwd
-              (concat
-               (replace-regexp-in-string "%22" "\""
-                                         (replace-regexp-in-string
-                                          "%0A" "\n" desc))
-               prompt ": "))))
-    str))
-
 ;;;; Occur
 ;;;###autoload
 (defun occur-list-urls (&optional to-buffer)
