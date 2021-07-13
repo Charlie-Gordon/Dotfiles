@@ -368,8 +368,7 @@ config.set('content.javascript.enabled', True, 'chrome://*/*')
 # Type: Bool
 config.set('content.javascript.enabled', True, 'qute://*/*')
 
-config.set('content.mute', True, 'https://www.youtube.com/*
-')
+config.set('content.mute', True, 'https://www.youtube.com/*')
 config.set('colors.webpage.darkmode.enabled', True)
 # config.set('content.user_stylesheets', '~/.config/qutebrowser/gruvbox-all-sites.css')
 
