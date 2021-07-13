@@ -36,6 +36,7 @@
 (use-package init-preload-local :ensure nil)
 ;;;;; Interface tweaks
 (use-package init-face :ensure nil)
+(use-package init-exwm :ensure nil)
 ;;;;; TeX
 (use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
@@ -83,6 +84,7 @@
 (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
 (use-package init-uniquify :ensure nil)
+(use-package init-window :ensure nil)
 (use-package init-misc :ensure nil)
 (use-package init-notetake :ensure nil)
 (use-package init-editing-utils :ensure nil :termux)
