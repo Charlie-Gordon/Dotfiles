@@ -237,6 +237,9 @@ Edna Syntax: org-anki-this!"
   (org-transclusion-add-all-on-activate nil)
   (org-transclusion-exclude-elements '()))
 
+(use-package interleave
+  :straight t)
+
 ;;;;; Org-noter
 (use-package org-noter
   :straight '(org-noter :type git :host github :repo "weirdNox/org-noter"
