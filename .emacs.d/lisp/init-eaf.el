@@ -4,10 +4,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package eaf
-  :straight '(emacs-application-framework :type git :host github
-                                          :repo "manateelazycat/emacs-application-framework"
-                                          :fork t)
-
+  :load-path "site-lisp/emacs-application-framework"
   :init
   (use-package epc :defer t :straight t)
   (use-package ctable :defer t :straight t)

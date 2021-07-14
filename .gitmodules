@@ -16,3 +16,6 @@
 [submodule ".emacs.d/site-lisp/org-noter-synoptic"]
 	path = .emacs.d/site-lisp/org-noter-synoptic
 	url = https://gitlab.com/Charlie-Gordon/org-noter-synoptic
+[submodule ".emacs.d/site-lisp/emacs-application-framework"]
+	path = .emacs.d/site-lisp/emacs-application-framework
+	url = https://github.com/c1-g/emacs-application-framework
