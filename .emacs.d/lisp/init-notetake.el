@@ -10,14 +10,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Calibre
 (use-package calibredb
-  :disabled
-  :ensure nil
+  :straight t
   :config
+  (setq calibredb-program (executable-find "calibredb"))
   (setq calibredb-root-dir *library-dir*)
-  (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
-  (setq calibredb-library-alist `((,calibredb-root-dir)))
-  (setq calibredb-ref-default-bibliography (concat (file-name-as-directory calibredb-root-dir) "muhbib.bib"))
-)
+  (setq calibredb-library-alist '(("/storage/library/")))
+  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib")))
 
 ;;;; Bibtex completion
 (use-package bibtex-completion
@@ -64,6 +62,9 @@
       (prot/pdf-tools-backdrop)))
   (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
   (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
+
+(use-package pymupdf-mode
+  :straight '(pymupdf-mode.el :type git :host github :repo "dalanicolai/pymupdf-mode.el"))
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package anki-editor
