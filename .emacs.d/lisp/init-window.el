@@ -17,7 +17,17 @@
   :custom
   (aw-keys '(?q ?w ?f ?a ?r ?s ?t ?x ?c ?d ?v))
   :config
-  (ace-window-display-mode t))
+  (ace-window-display-mode t)
+  (if ace-window-display-mode
+      (progn
+        (aw-update)
+        (set-default
+         'exwm-base-mode-line-format
+         `((ace-window-display-mode
+            (:eval (window-parameter (selected-window) 'ace-window-path)))
+           ,@(assq-delete-all
+              'ace-window-display-mode
+              (default-value 'exwm-base-mode-line-format)))))))
 
 ;; Configure ‘display-buffer’ behaviour for some special buffers
 (setq display-buffer-alist
@@ -64,10 +74,10 @@
          (window-width . 80)
          (side . right))
         (,(rx bos (* anything) "mpv")
-         (display-buffer-in-side-window)
-         (window-width . 0.4)
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (window-width . 0.3)
          (side . right)
-         (side . -1))
+         (side . 0))
         (,(rx bos "*Faces*")
          (display-buffer-in-side-window)
          (window-width . 0.25)
@@ -83,7 +93,6 @@
          (display-buffer-at-bottom))
         (,(rx bos "*" (or "Output" "Register Preview") (* anything)) 
          (display-buffer-at-bottom))
-        
         (,(rx bos "*" (or (and anything "shell")
                           (and anything "term")))
          (display-buffer-reuse-mode-window display-buffer-at-bottom)

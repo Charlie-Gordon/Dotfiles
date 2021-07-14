@@ -2,9 +2,17 @@
 ;;; Commentary:
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun ambrevar/exwm-rename-buffer-to-title ()
   "Rename EXWM buffer to its window title."
   (exwm-workspace-rename-buffer exwm-title))
+
+(defcustom exwm-base-mode-line-format '(" " "%b" "  " mode-line-modes)
+  "Mode line format for EXWM buffer.")
+
+(defun my/exwm-format-mode-line ()
+  (setq mode-line-format exwm-base-mode-line-format)
+  (force-mode-line-update))
 
 (use-package pinentry
   :straight t
@@ -104,6 +112,7 @@
   (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
   
   (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
+  (add-hook 'exwm-update-title-hook 'my/exwm-format-mode-line)
   (add-hook 'after-init-hook 'my/xmodmap)
   ;; Enable EXWM
   (exwm-enable)))
