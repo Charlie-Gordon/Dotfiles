@@ -3,6 +3,11 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun my/xmodmap ()
+  "Execute xmodmap"
+  (start-process-shell-command "modmap" nil (concat (executable-find "xmodmap")
+                                                    " -verbose ~/.Xmodmap")))
+
 (defun ambrevar/exwm-rename-buffer-to-title ()
   "Rename EXWM buffer to its window title."
   (exwm-workspace-rename-buffer exwm-title))
@@ -113,7 +118,6 @@
   
   (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
   (add-hook 'exwm-update-title-hook 'my/exwm-format-mode-line)
-  (add-hook 'after-init-hook 'my/xmodmap)
   ;; Enable EXWM
   (exwm-enable)))
 
@@ -124,11 +128,6 @@
         ("C-c '" . exwm-edit--compose))
   :hook
   (exwm-edit-compose . visual-line-mode))
-
-(defun my/xmodmap ()
-  "Execute xmodmap"
-  (start-process-shell-command "modmap" nil (concat (executable-find "xmodmap")
-                                                    " -verbose ~/.Xmodmap")))
 
 (provide 'init-exwm)
 ;;; init-exwm.el ends here
