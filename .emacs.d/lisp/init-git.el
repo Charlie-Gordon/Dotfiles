@@ -2,22 +2,23 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package tramp
+  :ensure nil)
+
 (use-package magit
   :straight t
+  :if (executable-find "git")
   :bind
-  (("<f12>" . magit-status)
-   :map ctl-x-map
-   ("g g" . magit-status)
-   ("g l" . magit-list-repositories)
+  (("C-x g g" . magit-status)
+   ("C-x g l" . magit-list-repositories)
    :map magit-status-mode-map
-   ("C-M-<up>" . magit-section-up))
+   ("C-M-<up>" . magit-section-up)
+   ("M-<return>" . magit-diff-visit-file-other-window))
   :custom
   (magit-diff-refine-hunk t)
   (magit-repository-directories `(("~/git/" . 2)
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
-  :init
-  (use-package tramp :ensure nil)
   (use-package vc
     :straight t)
   :config
