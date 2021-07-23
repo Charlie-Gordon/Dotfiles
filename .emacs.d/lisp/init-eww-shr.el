@@ -30,8 +30,26 @@
   (shr-width 70)
   (shr-cookie-policy nil))
 
+(use-package shrface
+  :straight t
+  :after shr
+  :config
+  (shrface-basic)
+  (shrface-trial)
+  (shrface-default-keybindings) ; setup default keybindings
+  (setq shrface-href-versatile t)
+  (setq shrface-bullets-bullet-list '("*" "**" "***" "****" "*****" "******")))
+
+(use-package shr-tag-pre-highlight
+  :straight t
+  :after shr
+  :config
+  (add-to-list 'shr-external-rendering-functions
+               '(pre . shrface-tag-pre-highlight)))
+
 (use-package eww
-  :ensure nil
+  :defer t
+  :after shr
   :bind
   (:map prot-eww-map
         ("b" . prot/eww-visit-bookmark)
@@ -66,7 +84,10 @@
         :map eww-bookmark-mode-map
         ("d" . eww-bookmark-kill))
   :bind-keymap ("C-' e" . prot-eww-map)
-  :init (define-prefix-command 'prot-eww-map) ;; Keymapping for Protesilaos's extensions
+  :init
+  (require 'shrface)
+  (define-prefix-command 'prot-eww-map) ;; Keymapping for Protesilaos's extensions
+  (add-hook 'eww-after-render-hook #'shrface-mode)
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
   (eww-download-directory (expand-file-name "~/Downloads/"))
@@ -404,6 +425,38 @@ trailing hyphen."
 (defun text-scale-mode-hook ()
   "Rerender content of EWW when uses text-scale mode."
   (eww-reload :local))
+
+;;;###autoload
+(defun shrface-tag-pre-highlight (pre)
+  "Highlighting code in PRE."
+  (let* ((shr-folding-mode 'none)
+         (shr-current-font 'default)
+         (code (with-temp-buffer
+                 (shr-generic pre)
+                 ;; (indent-rigidly (point-min) (point-max) 2)
+                 (buffer-string)))
+         (lang (or (shr-tag-pre-highlight-guess-language-attr pre)
+                   (let ((sym (language-detection-string code)))
+                     (and sym (symbol-name sym)))))
+         (mode (and lang
+                    (shr-tag-pre-highlight--get-lang-mode lang))))
+    (shr-ensure-newline)
+    (shr-ensure-newline)
+    (setq start (point))
+    (insert
+     (propertize (concat "#+BEGIN_SRC " lang "\n") 'face 'org-block-begin-line)
+     (or (and (fboundp mode)
+              (with-demoted-errors "Error while fontifying: %S"
+                (shr-tag-pre-highlight-fontify code mode)))
+         code)
+     (propertize "#+END_SRC" 'face 'org-block-end-line))
+    (shr-ensure-newline)
+    (setq end (point))
+    (if (eq (frame-parameter nil 'background-mode) 'light)
+        (add-face-text-property start end '(:background "#D8DEE9" :extend t))
+      (add-face-text-property start end '(:background "#292b2e" :extend t)))
+    (shr-ensure-newline)
+    (insert "\n")))
 
 (provide 'init-eww-shr)
 ;;; init-eww-shr.el ends here
