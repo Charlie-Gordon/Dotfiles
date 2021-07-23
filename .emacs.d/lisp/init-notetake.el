@@ -2,12 +2,20 @@
 ;;; Commentary:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; My current note taking system also, see more in the note-taking
-;; section in lisp/init-org.el
+;; My current note taking system
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Helm-bibtex
+(use-package helm-bibtex
+  :straight '(helm-bibtex :type git :host github
+                          :repo "tmalsburg/helm-bibtex"
+                          :fork t)
+  :config
+  (global-set-key (kbd "C-' b") #'helm-bibtex))
+
+
 ;;;; Note-taking with org
 ;;;;; Org-roam
 (use-package org-roam
@@ -26,14 +34,14 @@
   :custom
   (org-roam-db-update-method 'immediate)
   (org-roam-buffer-no-delete-other-windows t)
-  :hook (after-init . org-roam-mode)
+  (org-roam-v2-ack t)
+  :init
+  (defvar org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*))
   :config
   ;; Org-roam uses sqlite3
   (add-to-list 'exec-path (executable-find "sqlite3"))
-  (setq org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*)
-        org-roam-index-file "index.org"
+  (setq org-roam-index-file "index.org"
         org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*))
-  
   (setq org-roam-capture-templates
         '(("d" "default" plain
            #'org-roam-capture--get-point
@@ -49,6 +57,7 @@
             :file-name "%<%Y-%m-%d>"
             :head "#+TITLE: %<%Y-%m-%d>\n\n"
             :unnarrowed t)))
+  (org-roam-mode)
   :diminish)
 
 (defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
@@ -56,7 +65,6 @@
 
 (use-package org-roam-bibtex
   :straight t
-  :requires bibtex-completion
   :bind (:map org-roam-bibtex-mode-map
               (("C-c m f" . orb-find-non-ref-file))
               :map org-mode-map
@@ -94,6 +102,17 @@
   :hook (org-roam-mode . org-roam-bibtex-mode)
   :diminish)
 
+;;;;; Org-ref
+(use-package org-ref
+  :straight t
+  :after helm-bibtex
+  :custom
+  (reftex-default-bibliography `(,(expand-file-name "muhbib.bib" *library-dir*)))
+  (org-ref-bibliography-notes (expand-file-name "org/bib-notes.org" *journals-dir*))
+  (org-ref-notes-function #'orb-notes-fn)
+  (org-ref-pdf-directory *library-dir*)
+  (org-ref-default-bibliography reftex-default-bibliography)
+  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
 ;;;;; Org-transclusion
 (use-package org-transclusion
   :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion")
@@ -104,7 +123,10 @@
   (org-transclusion-exclude-elements '()))
 
 (use-package interleave
-  :straight t)
+  :straight t
+  :custom
+  (interleave--pdf-prop "NOTER_DOCUMENT")
+  (interleave--page-note-prop "NOTER_DOCUMENT_PAGE"))
 
 ;;;;; Org-noter
 (use-package org-noter
@@ -166,25 +188,7 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
-;;;; Calibre
-(use-package calibredb
-  :straight t
-  :config
-  (setq calibredb-program (executable-find "calibredb"))
-  (setq calibredb-root-dir *library-dir*)
-  (setq calibredb-library-alist '(("/storage/library/")))
-  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib")))
 
-;;;; Bibtex completion
-(use-package bibtex-completion
-  :straight t
-  :bind
-  ("C-' b" . helm-bibtex)
-  :custom
-  (bibtex-completion-bibliography reftex-default-bibliography)
-  (bibtex-completion-library-path org-ref-pdf-directory)
-  (bibtex-completion-notes-path (expand-file-name "refs/" org-roam-directory))
-  (bibtex-completion-pdf-field "file"))
 ;;;; EPUB(with nov.el)
 (use-package nov
   :straight t
@@ -193,20 +197,45 @@ With a prefix ARG, remove start location."
 	      ("C-S-p" . shr-previous-link))
   :mode (("\\.epub\\'" . nov-mode)))
 
+;;;; Calibre
+(use-package calibredb
+  :straight '(calibredb.el :type git :host github
+                           :repo "chenyanming/calibredb.el"
+                           :fork t)
+  :config
+  (setq calibredb-program (executable-find "calibredb"))
+  (setq calibredb-root-dir *library-dir*)
+  (setq calibredb-library-alist '(("/storage/library/")))
+  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
+  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
+  (setq calibredb-sort-by 'title)
+  (setq calibredb-sql-newline "\n")
+  (setq calibredb-sql-separator "|")
+  (setq calibredb-detailed-view nil))
+             
+;;;; Bibtex completion
+(use-package bibtex-completion
+  :ensure nil
+  :custom
+  (bibtex-completion-bibliography reftex-default-bibliography)
+  (bibtex-completion-library-path org-ref-pdf-directory)
+  (bibtex-completion-notes-path (expand-file-name "refs/" org-roam-directory))
+  (bibtex-completion-pdf-field "file")
+  (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
+  :config
+  (add-to-list 'bibtex-completion-additional-search-fields "file"))
+
 ;;;; PDF
 (use-package pdf-tools
-  :straight avy '(pdf-avy-highlight :type git :host github :repo "dalanicolai/dala-emacs-lisp"
-				    :files ("pdf-avy-highlight.el"))
-  :bind (:map pdf-view-mode-map
-	      ("a k" . pdf-keyboard-highlight))
-  :init
-  (pdf-loader-install)
+  :straight avy 
+  :mode "\\.pdf\\'"
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
   (pdf-view-resize-factor 1.1)
   :config
+  (pdf-loader-install)
   (defun prot/pdf-tools-backdrop ()
     (face-remap-add-relative
      'default
@@ -222,11 +251,71 @@ With a prefix ARG, remove start location."
   (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
 
 (use-package pymupdf-mode
-  :straight '(pymupdf-mode.el :type git :host github :repo "dalanicolai/pymupdf-mode.el"))
+  :straight '(pymupdf-mode :type git :host github :repo "dalainicolai/pymupdf-mode.el"))
 
 ;;;; Trying out SRS (space-repetition system)
+(use-package org-anki
+  :termux
+  :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
+                       :fork t)
+  :init
+  (use-package request :straight t)
+  :custom
+  (org-anki-default-deck "one-big-deck"))
+
+(use-package emacsql-sqlite :straight t)
+
+(use-package anki
+  :straight '(anki.el :type git :host github :repo "chenyanming/anki.el")
+  :init
+  (add-hook 'anki-mode-hook #'shrface-mode)
+  (add-hook 'anki-card-mode-hook #'shrface-mode)
+  (autoload 'anki "anki")
+  (autoload 'anki-browser "anki")
+  (autoload 'anki-list-decks "anki")
+  :config
+  ;; (require 'shrface) ; If you use shrface, require it here
+  (setq anki-shr-rendering-functions (append anki-shr-rendering-functions shr-external-rendering-functions))
+  ;; Set up the collection directory, which should contain a file - collection.anki2 and a folder - collection.media
+  ;; (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1")
+  )
+
 (use-package anki-editor
   :straight t)
+
+;;;###autoload
+(defun calibredb-query (sql-query)
+    "Query calibre database and return the result.
+Argument SQL-QUERY is the sqlite sql query string.
+
+The function works by sending SQL-QUERY to `sql-sqlite-program' for the
+database file defined by `calibredb-db-dir', dump the output to a hidden
+buffer called *calibredb-query-output*, then if the sqlite program
+terminates successfully, it will return the string of the output
+buffer. If the program fails, it will switch to the output buffer and
+tell user something’s wrong."
+    (interactive)
+    (let ((out-buf " *calibredb-query-output*")
+          (tmp (make-temp-file "*calibredb-query-string*" nil nil sql-query)))
+      (when (get-buffer out-buf)
+        (kill-buffer out-buf))
+      (if (not (file-exists-p calibredb-db-dir))
+          (message "calibredb-query: calibredb-db-dir is nil! calibredb-query won't work without it.")
+        (if (zerop (call-process-shell-command
+                    (format "%s -list -nullvalue '' -noheader %s -init %s"
+                            sql-sqlite-program
+                            (shell-quote-argument (expand-file-name calibredb-db-dir))
+                            tmp)
+                    nil (list out-buf t)))
+            ;; If this command terminates successfully (return 0)
+            ;; Return the output's string
+            (with-current-buffer out-buf
+              (delete-file tmp)
+              (buffer-string))
+          ;; If this command fails return 'error
+          (delete-file tmp)
+          (switch-to-buffer out-buf)
+          (error (format "calibredb-query: Can't query \"%s\". switching to its error buffer." (expand-file-name calibredb-db-dir)))))))
 
 (provide 'init-notetake)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

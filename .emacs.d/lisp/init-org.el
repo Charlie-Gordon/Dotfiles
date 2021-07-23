@@ -2,7 +2,6 @@
 ;;;; Org
 (use-package org
   :termux
-  :commands org-anki-sync-entry
   :straight t
   :bind (("C-c c" . org-capture)
 	 ("C-c a" . org-agenda)
@@ -29,7 +28,12 @@
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :hook
-  (org-mode . visual-line-mode))
+  (org-mode . visual-line-mode)
+  (org-mode . eaf-interleave-mode))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
 
 (use-package org-edna
   :termux
@@ -71,6 +75,21 @@ Edna Syntax: org-anki-this!"
            ((org-show-context-detail 'minimal)
             (org-agenda-prefix-format ""))))))
 
+;;;###autoload
+(defun org-maybe-go-to-quiz ()
+  "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
+  (cond ((derived-mode-p 'org-mode)
+         (goto-char
+          (or (car (org-map-entries
+	            (lambda nil (point-marker))
+                    "todo=\"QUIZ\"" 'file))
+	      (point-marker))))
+        ((and (derived-mode-p 'eaf-mode)
+              (string= eaf--buffer-app-name "pdf-viewer"))
+         (eaf-interleave-sync-current-note)
+         (select-window (get-buffer-window eaf-interleave-org-buffer))
+         (org-maybe-go-to-quiz))))
+
 (use-package org-capture
   :ensure nil
   :custom
@@ -81,55 +100,28 @@ Edna Syntax: org-anki-this!"
       "Anki flashcard."
       entry
       (file "/storage/journals/org/anki.org")
-      "* REVIEW Q:%?")
+      "* REVIEW %?")
      ("Qb"
       "Questions bank on this book."
       entry
-      (file buffer-file-name)
+      (function org-maybe-go-to-quiz)
       (file "~/.emacs.d/org-template/QUIZ-todo.txt"))
      ("Qq"
       "A question for this book."
       entry
-      (file+function buffer-file-name org-maybe-go-to-quiz)
-      "** REVIEW Q:%?")
+      (function org-maybe-go-to-quiz)
+      (file "~/.emacs.d/org-template/QUIZ-question.txt"))
      ("Q4"
       "Essential four questions for reading, from Adler's How to Read A Book"
       entry
       (file+function buffer-file-name org-maybe-go-to-quiz)
       ,(string-join
         (list
-         "** REVIEW Q:What is [[file:%F][%(file-name-sans-extension \"%f\")]] about as a whole?"
-         "** REVIEW Q:What [[file:%F][%(file-name-sans-extension \"%f\")]] said in detail, and how?"
-         "** REVIEW Q:Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?"
-         "** REVIEW Q:What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")
-        "\n"))))
-  :config
-  (defun org-maybe-go-to-quiz ()
-    "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
-    (goto-char
-     (or (car (org-map-entries
-	       (lambda nil (point-marker)) "todo=\"QUIZ\"" 'file))
-	 (point-marker)))))
-
-(use-package org-anki
-  :termux
-  :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
-                       :fork t)
-  :bind (:map org-mode-map
-              ("C-c C-'" . org-anki-cloze-dwim))
-  :custom
-  (org-anki-default-deck "one-big-deck"))
-
-(use-package org-ref
-  :straight t
-  :custom
-  (reftex-default-bibliography `(,(expand-file-name "muhbib.bib" *library-dir*)))
-  (org-ref-bibliography-notes (expand-file-name "org/bib-notes.org" *journals-dir*))
-  (org-ref-notes-function #'orb-notes-fn)
-  (org-ref-pdf-directory *library-dir*)
-  (org-ref-default-bibliography reftex-default-bibliography)
-  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
-
+         "** REVIEW What is [[file:%F][%(file-name-sans-extension \"%f\")]] about as a whole?"
+         "** REVIEW What [[file:%F][%(file-name-sans-extension \"%f\")]] said in detail, and how?"
+         "** REVIEW Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?"
+         "** REVIEW What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")
+        "\n")))))
 
 ;;;; Outshine
 (use-package outshine
