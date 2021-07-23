@@ -63,8 +63,11 @@
 
 (use-package avy
   :straight t
+  :preface
+  (global-set-key (kbd "C-z") nil)
   :bind
-  ("C-;" . avy-goto-char-timer))
+  ("C-z c" . avy-goto-char-timer)
+  ("C-z l" . avy-goto-line))
 
 (use-package which-key
   :straight t
@@ -77,8 +80,9 @@
 ;;; Snippets
 (use-package yasnippet
   :straight t
-  :config
+  :init
   (straight-use-package 'yasnippet-snippets)
+  :config
   (yas-load-directory (concat user-emacs-directory "snippets"))
   (yas-global-mode)
   :diminish yas-minor-mode)
