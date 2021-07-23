@@ -122,5 +122,19 @@
   (:map embark-symbol-map
 	("h" . helpful-at-point)))
 
+;;;; Company
+(use-package company
+  :straight t
+  :hook (after-init . global-company-mode)
+  :diminish)
+;;; Ivy
+(use-package swiper
+  :straight t
+  :config
+  (add-to-list 'load-path (locate-user-emacs-file "straight/repos/swiper/")))
+
+(use-package counsel :ensure nil)
+
+
 (provide 'init-completion)
 ;;; init-completion.el ends here
