@@ -8,14 +8,6 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst *journals-dir* (if *termux*
-			     "~/storage/shared/journals/"
-			   "/storage/journals/"))
-
-(defconst *library-dir* (if *termux*
-                            ""
-                          "/storage/library/"))
-
 ;; From Jordon Biondo at
 ;; https://emacs.stackexchange.com/questions/2286/what-can-i-do-to-speed-up-my-start-up
 (let ((file-name-handler-alist nil))
@@ -32,6 +24,8 @@
 (use-package init-site-lisp :ensure nil)
 ;;;;; Utilities functions
 (use-package init-utils :ensure nil)
+;;;;; Constant
+(use-package init-const :ensure nil)
 ;;;;; Early local configuration
 (use-package init-preload-local :ensure nil)
 ;;;;; Interface tweaks
@@ -41,7 +35,6 @@
 (use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
 (use-package init-org :ensure nil :termux)
-
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Individual configuration
@@ -59,7 +52,7 @@
              (require 'server)
              (unless (server-running-p)
                (server-start))))
-;;;;;; Load customize'd variables
+;;;;;; Load customized variables
 (when (file-exists-p custom-file)
   (load custom-file))
 ;;;;; Builtin packages
@@ -75,8 +68,6 @@
 (use-package init-completion :ensure nil :termux)
 ;;;;; Hyperbole
 (use-package init-hyperbole :ensure nil)
-;;;;; Emacs application framework
-(use-package init-eaf :ensure nil)
 ;;;;; Git
 (use-package init-git :ensure nil)
 ;;;;; Lisp
@@ -84,9 +75,10 @@
 (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
 (use-package init-uniquify :ensure nil)
-(use-package init-window :ensure nil)
 (use-package init-misc :ensure nil)
 (use-package init-notetake :ensure nil)
+(use-package init-eaf :ensure nil)
+(use-package init-window :ensure nil)
 (use-package init-editing-utils :ensure nil :termux)
 (use-package init-local :ensure nil))
 
