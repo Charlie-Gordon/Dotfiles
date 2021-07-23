@@ -3,31 +3,33 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun my/eaf-pdf-viewer-p (mode-symbol)
-  (lambda (buffer &rest optional)
-    (with-current-buffer buffer
-      (and (derived-mode-p mode-symbol)
-           ;; (string= eaf--buffer-app-name "pdf-viewer")
-           ))))
+(use-package winner
+  :ensure nil
+  :bind
+  ("s-<left>" . winner-undo)
+  ("s-<right>" . winner-redo)
+  :config
+  (winner-mode))
 
 (use-package ace-window
   :straight t
-  :bind*
-  ("C-x o" . ace-window)
   :custom
   (aw-keys '(?q ?w ?f ?a ?r ?s ?t ?x ?c ?d ?v))
+  (aw-background nil)
   :config
   (ace-window-display-mode t)
-  (if ace-window-display-mode
-      (progn
-        (aw-update)
-        (set-default
-         'exwm-base-mode-line-format
-         `((ace-window-display-mode
-            (:eval (window-parameter (selected-window) 'ace-window-path)))
-           ,@(assq-delete-all
-              'ace-window-display-mode
-              (default-value 'exwm-base-mode-line-format)))))))
+  (global-set-key (kbd "C-x o") #'ace-window)
+  (when ace-window-display-mode
+               (aw-update)   
+               (mapc #'(lambda (s)
+                         (set-default
+                          s
+                          `((ace-window-display-mode
+                             (:eval (window-parameter (selected-window) 'ace-window-path)))
+                            ,@(assq-delete-all
+                               'ace-window-display-mode
+                               (default-value s)))))
+                     '(exwm-base-mode-line-format eaf-pdf-viewer-mode-line-format))))
 
 ;; Configure ‘display-buffer’ behaviour for some special buffers
 (setq display-buffer-alist
@@ -69,6 +71,10 @@
          (side . top)
          (slot . 2)
          (window-parameters . ((no-other-window . t))))
+        (,eaf-pdf-outline-buffer-name
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (window-width . 80)
+         (side . right))
         (,(rx bos "*Help" (* anything) "*")
          (display-buffer-reuse-window display-buffer-in-side-window)
          (window-width . 80)
@@ -98,11 +104,11 @@
          (display-buffer-reuse-mode-window display-buffer-at-bottom)
          (window-height . 0.2))
         ;; Open PDFs in the right side window
-        (,(my/eaf-pdf-viewer-p 'eaf-mode)
-         (display-buffer-reuse-window display-buffer-in-side-window)
-         (side . right)
-         (window-width . 0.5)
-         (slot -1))
+        ;; (,(my/eaf-pdf-viewer-p 'eaf-mode)
+        ;;  (display-buffer-reuse-window display-buffer-in-side-window)
+        ;;  (side . right)
+        ;;  (window-width . 0.5)
+        ;;  (slot -1))
         ;; Let `display-buffer' reuse visible frames for all buffers. This must
         ;; be the last entry in `display-buffer-alist', because it overrides any
         ;; previous entry with more specific actions.
