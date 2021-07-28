@@ -45,7 +45,7 @@
 (setq straight-host-usernames
       '(;; (github . "Charlie-Gordon")
         (github . "c1-g")               ; Lost my old account.
-        (gitlab . "Charlie-Gordon")))
+        (gitlab . "c1-g")))
 
 (straight-use-package 'use-package)
 
