@@ -103,12 +103,6 @@
                           (and anything "term")))
          (display-buffer-reuse-mode-window display-buffer-at-bottom)
          (window-height . 0.2))
-        ;; Open PDFs in the right side window
-        ;; (,(my/eaf-pdf-viewer-p 'eaf-mode)
-        ;;  (display-buffer-reuse-window display-buffer-in-side-window)
-        ;;  (side . right)
-        ;;  (window-width . 0.5)
-        ;;  (slot -1))
         ;; Let `display-buffer' reuse visible frames for all buffers. This must
         ;; be the last entry in `display-buffer-alist', because it overrides any
         ;; previous entry with more specific actions.
