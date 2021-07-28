@@ -69,27 +69,6 @@ Saves to a temp file and puts the filename in the kill ring."
                (message "%s%s" "Playing " url))
       (message "No valid URL."))))
 
-;;;; Org-roam
-;;;###autoload
-(defun my/count-org-file-in-directory (directory)
-  "A wrapper for `file-expand-wildcards' with \"*.org\" as its pattern.
-
-Return 0 when `file-expand-wildcards' returns nil i.e. no files matched its pattern.
-If `file-expand-wildcards' returns non-nil then return the length of the list of files
-names that matches its pattern i.e. count them.
-
-Used to determines filename in `org-roam-capture-templates'."
-  (let ((org-files))
-    (if (directory-name-p directory)
-        nil
-      (message "%s is not a directory name using %s instead."
-               directory (directory-file-name directory))
-      (setq directory (directory-file-name directory)))
-    (setq org-files (file-expand-wildcards (concat directory "*.org")))
-    (if org-files
-        (length org-files)
-      0)))
-
 (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file "~/")))
 
 ;;;; Volume control

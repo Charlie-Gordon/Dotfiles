@@ -18,23 +18,45 @@
 
 ;;;; Note-taking with org
 ;;;;; Org-roam
+
+;;;###autoload
+(defun my/count-org-file-in-directory (directory)
+  "A wrapper for `file-expand-wildcards' with \"*.org\" as its pattern.
+
+Return 0 when `file-expand-wildcards' returns nil i.e. no files matched its pattern.
+If `file-expand-wildcards' returns non-nil then return the length of the list of files
+names that matches its pattern i.e. count them.
+
+Used to determines filename in `org-roam-capture-templates'."
+  (let ((org-files))
+    (if (directory-name-p directory)
+        nil
+      (message "%s is not a directory name using %s instead."
+               directory (directory-file-name directory))
+      (setq directory (directory-file-name directory)))
+    (setq org-files (file-expand-wildcards (concat directory "*.org")))
+    (if org-files
+        (length org-files)
+      0)))
+
+;;;###autoload
+(defun org-roam-slip-box-new-file ()
+  "Return a new file path when creating a new note."
+  (concat org-roam-directory (number-to-string (float (1+
+                                (my/count-org-file-in-directory org-roam-directory))))))
+
 (use-package org-roam
   :straight t
-  :bind (:map org-roam-mode-map
-              (("C-c m l" . org-roam)
-               ("C-c m F" . org-roam-find-file)
-               ("C-c m r" . org-roam-find-ref)
-               ("C-c m ." . org-roam-find-directory)
-               ("C-c m d" . org-roam-dailies-map)
-               ("C-c m j" . org-roam-jump-to-index)
-               ("C-c m b" . org-roam-switch-to-buffer)
-               ("C-c m g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c m i" . org-roam-insert)))
-  :custom
-  (org-roam-db-update-method 'immediate)
-  (org-roam-buffer-no-delete-other-windows t)
-  (org-roam-v2-ack t)
+  :bind (("C-c n l" . org-roam)
+         ("C-c n F" . org-roam-find-file)
+         ("C-c n r" . org-roam-find-ref)
+         ("C-c n ." . org-roam-find-directory)
+         ("C-c n j" . org-roam-jump-to-index)
+         ("C-c n b" . org-roam-switch-to-buffer)
+         ("C-c n g" . org-roam-graph)
+         :map org-mode-map
+         (("C-c n i" . org-roam-insert)))
+  :bind-keymap ("C-c n d" . org-roam-dailies-map)
   :init
   (defvar org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*))
   :config
@@ -42,22 +64,27 @@
   (add-to-list 'exec-path (executable-find "sqlite3"))
   (setq org-roam-index-file "index.org"
         org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*))
+  (setq org-roam-v2-ack t
+        org-roam-db-update-method 'immediate
+        org-roam-buffer-no-delete-other-windows t)
   (setq org-roam-capture-templates
         '(("d" "default" plain
-           #'org-roam-capture--get-point
            "%?"
-           :file-name
-           "/storage/journals/org/slip-box/%(number-to-string (float (1+ (my/count-org-file-in-directory org-roam-directory))))"
-           :head "#+title: ${title}\n"
+           :if-new
+           (file+head
+            "%(org-roam-slip-box-new-file)"
+            "#+title: ${title}\n")
            :unnarrowed t)))
   (setq org-roam-dailies-capture-templates
-        '(("d" "default" plain
-            #'org-roam-capture--get-point
-            "* %?"
-            :file-name "%<%Y-%m-%d>"
-            :head "#+TITLE: %<%Y-%m-%d>\n\n"
-            :unnarrowed t)))
-  (org-roam-mode)
+        `(("d" "default" plain
+           ,(string-join
+             '("* %?"
+               "%T")
+             "\n")
+           :if-new
+           (file+head "%<%Y-%m-%d>.org"
+                      "#+TITLE: %<%Y-%m-%d>\n\n")
+           :unnarrowed t)))
   :diminish)
 
 (defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
