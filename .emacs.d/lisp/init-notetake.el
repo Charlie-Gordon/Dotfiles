@@ -59,12 +59,12 @@ Used to determines filename in `org-roam-capture-templates'."
   :bind-keymap ("C-c n d" . org-roam-dailies-map)
   :init
   (defvar org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*))
+  (defvar org-roam-v2-ack t)
   :config
   ;; Org-roam uses sqlite3
   (add-to-list 'exec-path (executable-find "sqlite3"))
   (setq org-roam-index-file "index.org"
-        org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*))
-  (setq org-roam-v2-ack t
+        org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*)
         org-roam-db-update-method 'immediate
         org-roam-buffer-no-delete-other-windows t)
   (setq org-roam-capture-templates
@@ -229,6 +229,7 @@ With a prefix ARG, remove start location."
   :straight '(calibredb.el :type git :host github
                            :repo "chenyanming/calibredb.el"
                            :fork t)
+  :when (executable-find "calibredb")
   :config
   (setq calibredb-program (executable-find "calibredb"))
   (setq calibredb-root-dir *library-dir*)
@@ -251,6 +252,13 @@ With a prefix ARG, remove start location."
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
   :config
   (add-to-list 'bibtex-completion-additional-search-fields "file"))
+
+;;;; Djvu
+
+(use-package djvu3
+  :straight djvu '(djvu3 :type git :host github
+                         :repo "dalanicolai/djvu3"))
+
 
 ;;;; PDF
 (use-package pdf-tools
@@ -282,13 +290,27 @@ With a prefix ARG, remove start location."
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
-  :termux
   :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
                        :fork t)
+  :when (executable-find "anki")
   :init
   (use-package request :straight t)
   :custom
-  (org-anki-default-deck "one-big-deck"))
+  (org-anki-default-deck "one-big-deck")
+  :config
+  (add-hook 'org-anki-get-note-type-hook #'org-anki--check-muhbasic 1)
+  (add-to-list 'org-anki-get-fields-note '("MuhBasic" . org-anki--get-fields-MuhBasic-type))
+  ;;;###autoload
+  (defun org-anki--check-muhbasic (front back)
+    (when (org-entry-get-with-inheritance eaf-interleave--url-prop)
+      "MuhBasic"))
+  (defun org-anki--get-fields-MuhBasic-type (front back)
+    (list (cons "Front" front)
+          (cons "Back" back)
+          (cons "Context" (file-name-base
+                           (org-entry-get-with-inheritance eaf-interleave--url-prop))))))
+
+
 
 (use-package emacsql-sqlite :straight t)
 
@@ -306,9 +328,6 @@ With a prefix ARG, remove start location."
   ;; Set up the collection directory, which should contain a file - collection.anki2 and a folder - collection.media
   ;; (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1")
   )
-
-(use-package anki-editor
-  :straight t)
 
 ;;;###autoload
 (defun calibredb-query (sql-query)
