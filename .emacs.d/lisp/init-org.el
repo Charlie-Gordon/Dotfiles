@@ -33,7 +33,8 @@
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((python . t)))
+ '((python . t)
+   (C . t)))
 
 (use-package org-edna
   :termux
@@ -69,7 +70,7 @@ Edna Syntax: org-anki-this!"
     "Add org-agenda files from root DIR."
     (nconc org-agenda-files 
 	   (org-get-agenda-files-recursively dir)))
-  (org-set-agenda-files-recursively *journals-dir*)
+  (add-hook 'after-init-hook (lambda nil (org-set-agenda-files-recursively *journals-dir*)))
   (setq org-agenda-custom-commands
         '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
            ((org-show-context-detail 'minimal)
