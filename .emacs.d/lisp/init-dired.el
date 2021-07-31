@@ -36,7 +36,6 @@
 
 (use-package dired-x
   :ensure nil
-  :disabled
   :custom
   (dired-clean-up-buffers-too t)
   (dired-clean-confirm-killing-deleted-buffers t)
