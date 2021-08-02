@@ -1,0 +1,10 @@
+[Desktop Entry]
+Categories=Network;FileTransfer;P2P;
+Exec=transmission-remote --add %U
+Icon=transmission
+GenericName=BitTorrent Client
+Comment=Download and share files over Transmission daemon
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+Name=Transmission
+X-AppInstall-Keywords=torrent
+Keywords=bittorrent;torrent;magnet;download;p2p;
