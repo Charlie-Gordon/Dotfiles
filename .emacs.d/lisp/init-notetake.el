@@ -15,7 +15,6 @@
   :config
   (global-set-key (kbd "C-' b") #'helm-bibtex))
 
-
 ;;;; Note-taking with org
 ;;;;; Org-roam
 
@@ -47,22 +46,18 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package org-roam
   :straight t
-  :bind (("C-c n l" . org-roam)
-         ("C-c n F" . org-roam-find-file)
-         ("C-c n r" . org-roam-find-ref)
-         ("C-c n ." . org-roam-find-directory)
-         ("C-c n j" . org-roam-jump-to-index)
-         ("C-c n b" . org-roam-switch-to-buffer)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
-         :map org-mode-map
-         (("C-c n i" . org-roam-insert)))
-  :bind-keymap ("C-c n d" . org-roam-dailies-map)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
   :init
   (defvar org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*))
   (defvar org-roam-v2-ack t)
   :config
-  ;; Org-roam uses sqlite3
-  (add-to-list 'exec-path (executable-find "sqlite3"))
+  (org-roam-setup)
   (setq org-roam-index-file "index.org"
         org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*)
         org-roam-db-update-method 'immediate
@@ -86,6 +81,19 @@ Used to determines filename in `org-roam-capture-templates'."
                       "#+TITLE: %<%Y-%m-%d>\n\n")
            :unnarrowed t)))
   :diminish)
+
+;; (use-package org-roam
+;;   :straight t
+;;   :bind (("C-c n l" . org-roam)
+;;          ("C-c n F" . org-roam-find-file)
+;;          ("C-c n r" . org-roam-find-ref)
+;;          ("C-c n ." . org-roam-find-directory)
+;;          ("C-c n j" . org-roam-jump-to-index)
+;;          ("C-c n b" . org-roam-switch-to-buffer)
+;;          ("C-c n g" . org-roam-graph)
+;;          :map org-mode-map
+;;          (("C-c n i" . org-roam-insert)))
+;;   :bind-keymap ("C-c n d" . org-roam-dailies-map)
 
 (defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
   "Format of the title to use for `orb-templates'.")
@@ -250,6 +258,8 @@ With a prefix ARG, remove start location."
   (bibtex-completion-notes-path (expand-file-name "refs/" org-roam-directory))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
+  (bibtex-completion-pdf-symbol "📚")
+  (bibtex-completion-notes-symbol "🗎")
   :config
   (add-to-list 'bibtex-completion-additional-search-fields "file"))
 
@@ -262,7 +272,7 @@ With a prefix ARG, remove start location."
 
 ;;;; PDF
 (use-package pdf-tools
-  :straight avy 
+  :straight t
   :mode "\\.pdf\\'"
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
