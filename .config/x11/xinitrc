@@ -1,0 +1,26 @@
+#!/bin/sh
+# xinitrc runs automatically when you run startx.
+
+# There are some small but important commands that need to be run when we start
+# the graphical environment. There is a link to this file in ~/.xprofile
+# because that file is run automatically if someone uses a display manager
+# (login screen) and so they are needed there. To prevent doubling up commands,
+# I source them here with the line below.
+
+if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile" ]; then
+	. "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile"
+else
+	. "$HOME/.xprofile"
+fi
+
+# Thanks, https://github.com/johanwiden/exwm-setup#support-for-encryption-gpg
+# gpg has to be started here, if we want to have encryption in exwm
+gpg-connect-agent /bye
+SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+export SSH_AUTH_SOCK
+
+xhost +SI:localuser:$USER &
+xhost +SI:localuser:root &
+xset r rate 300 50 &
+redshift &
+exec emacs --maximized
