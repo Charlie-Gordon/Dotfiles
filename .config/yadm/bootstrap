@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+cd $HOME
+
+echo "Installing DreyMaR's colemak."
+
+git clone https://github.com/DreymaR/BigBagKbdTrixXKB.git &&
+
+cd BigBagKbdTrixXKB
+
+sed -i '' -e 's#/usr/share/X11#/usr/local/share/X11#g' install-dreymar-xmod.sh
+
+./install-dreymar-xmod.sh && "Successfully installed DreyMaR's colemak."
