@@ -1,13 +1,9 @@
 ;;; init-git.el --- Git SCM support -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
-
-(use-package tramp
-  :ensure nil)
-
 (use-package magit
-  :straight t
-  :if (executable-find "git")
+  :straight t vc tramp
+  :when (executable-find "git")
   :bind
   (("C-x g g" . magit-status)
    ("C-x g l" . magit-list-repositories)
@@ -19,11 +15,7 @@
   (magit-repository-directories `(("~/git/" . 2)
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
-  (use-package vc
-    :straight t)
   :config
-  ;; Thanks u/baltakatei on r/emacs subreddit for getting magit to work with yadm
-  ;; https://www.reddit.com/r/emacs/comments/gjukb3/yadm_magit/
   (unless (assoc-default "yadm" tramp-methods)
     (add-to-list 'tramp-methods
 		 '("yadm"
