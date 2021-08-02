@@ -28,8 +28,7 @@
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :hook
-  (org-mode . visual-line-mode)
-  (org-mode . eaf-interleave-mode))
+  (org-mode . visual-line-mode))
 
 (org-babel-do-load-languages
  'org-babel-load-languages

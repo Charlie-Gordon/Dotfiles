@@ -3,19 +3,22 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
 (use-package eaf
   :load-path "site-lisp/emacs-application-framework"
   :init
-  (use-package epc :defer t :straight t)
-  (use-package ctable :defer t :straight t)
-  (use-package deferred :defer t :straight t)
-  (use-package s :defer t :straight t)
+  (use-package epc :straight t)
+  (use-package ctable :straight t)
+  (use-package deferred :straight t)
+  (use-package s :straight t))
+
+(use-package eaf-browser
+  :ensure nil
   :custom
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-search-engines '(("searx" . "https://searx.bar")
                                 ("duckduckgo" . "https://duckduckgo.com/?q=%s")))
   (eaf-browser-default-search-engine "duckduckgo")
-  (eaf-pdf-outline-window-configuration t)
   :config
   (eaf-bind-key nil "M-q" eaf-browser-keybinding))
 
@@ -46,6 +49,7 @@
 (use-package eaf-interleave
   :ensure nil
   :after (bibtex-completion eaf-pdf-viewer)
+  :hook (org-mode . eaf-interleave-mode)
   :bind
   (:map eaf-interleave-mode-map
         ("M-." . eaf-interleave-sync-pdf-page-current)
