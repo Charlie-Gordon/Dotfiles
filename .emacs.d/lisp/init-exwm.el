@@ -6,35 +6,28 @@
 (defun my/xmodmap ()
   "Execute xmodmap"
   (start-process-shell-command "modmap" nil (concat (executable-find "xmodmap")
-                                                    " -verbose ~/.Xmodmap")))
+                                                    " -verbose "
+                                                    (getenv "USERMODMAP"))))
 
 (defun ambrevar/exwm-rename-buffer-to-title ()
   "Rename EXWM buffer to its window title."
   (exwm-workspace-rename-buffer exwm-title))
-
-(defcustom exwm-base-mode-line-format '(" " "%b" "  " mode-line-modes)
-  "Mode line format for EXWM buffer.")
-
-(defun my/exwm-format-mode-line ()
-  (setq mode-line-format exwm-base-mode-line-format)
-  (force-mode-line-update))
 
 (use-package pinentry
   :straight t
   :config
   ;; Get encryption established
   (setf epg-pinentry-mode 'loopback)
-  (pinentry-start))
-
-;; Support for encrytion (gpg)
-(defun pinentry-emacs (desc prompt ok error)
-  (let ((str (read-passwd
-              (concat
-               (replace-regexp-in-string "%22" "\""
-                                         (replace-regexp-in-string
-                                          "%0A" "\n" desc))
-               prompt ": "))))
-    str))
+  (pinentry-start)
+  ;; Support for encrytion (gpg)
+  (defun pinentry-emacs (desc prompt ok error)
+    (let ((str (read-passwd
+                (concat
+                 (replace-regexp-in-string "%22" "\""
+                                           (replace-regexp-in-string
+                                            "%0A" "\n" desc))
+                 prompt ": "))))
+      str)))
 
 (use-package exwm
   :straight t
@@ -117,7 +110,6 @@
   (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
   
   (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
-  (add-hook 'exwm-update-title-hook 'my/exwm-format-mode-line)
   ;; Enable EXWM
   (exwm-enable)))
 

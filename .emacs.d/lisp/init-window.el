@@ -16,20 +16,10 @@
   :custom
   (aw-keys '(?q ?w ?f ?a ?r ?s ?t ?x ?c ?d ?v))
   (aw-background nil)
+  (aw-display-mode-overlay nil)
   :config
   (ace-window-display-mode t)
-  (global-set-key (kbd "C-x o") #'ace-window)
-  (when ace-window-display-mode
-               (aw-update)   
-               (mapc #'(lambda (s)
-                         (set-default
-                          s
-                          `((ace-window-display-mode
-                             (:eval (window-parameter (selected-window) 'ace-window-path)))
-                            ,@(assq-delete-all
-                               'ace-window-display-mode
-                               (default-value s)))))
-                     '(exwm-base-mode-line-format eaf-pdf-viewer-mode-line-format))))
+  (global-set-key (kbd "C-x o") #'ace-window))
 
 ;; Configure ‘display-buffer’ behaviour for some special buffers
 (setq display-buffer-alist
@@ -71,7 +61,7 @@
          (side . top)
          (slot . 2)
          (window-parameters . ((no-other-window . t))))
-        (,eaf-pdf-outline-buffer-name
+        (,(rx bos "*Outline" (* anything) "*")
          (display-buffer-reuse-window display-buffer-in-side-window)
          (window-width . 80)
          (side . right))

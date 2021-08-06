@@ -32,13 +32,17 @@
 Saves to a temp file and puts the filename in the kill ring."
   (interactive)
   ;; Privacy
-  (make-variable-buffer-local 'display-time-mode)
-  (display-time-mode 0)
-  (force-mode-line-update)
-  (let* ((filename (make-temp-file "Emacs" nil ".svg"))
-         (data (x-export-frames nil 'svg)))
+  (let ((time display-time-mode)
+        (filename (make-temp-file "Emacs" nil ".svg"))
+        data)
+    (when time
+      (display-time-mode 0))
+    (force-mode-line-update)
     (with-temp-file filename
+      (setq data (x-export-frames nil 'svg))
       (insert data))
+    (when time
+      (display-time-mode 1))
     (kill-new filename)
     (message filename)))
 
@@ -47,11 +51,11 @@ Saves to a temp file and puts the filename in the kill ring."
 (defun occur-list-urls (&optional to-buffer)
   "Produce buttonised list of all URLs in the current buffer."
   (interactive)
+  (require 'browse-url)
   (let ((to-buffer (or to-buffer
                        (current-buffer))))
     (add-hook 'occur-hook #'goto-address-mode)
-    (occur-1 "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)\\(//[-a-z0-9_.]+:[0-9]*\\)?\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+([-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]*)\\(?:[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)?\\|[-a-z0-9_=#$@~%&*+\\/[:word:]!?:;.,]+[-a-z0-9_=#$@~%&*+\\/[:word:]]\\)\\)"
-  "\\&" (list (current-buffer)) (get-buffer-create " occur-output"))
+    (occur-1 browse-url-button-regexp "\\&" (list (current-buffer)) (get-buffer-create " occur-output"))
     (remove-hook 'occur-hook #'goto-address-mode)))
 
 ;;;; mpv-play-url
@@ -60,14 +64,12 @@ Saves to a temp file and puts the filename in the kill ring."
 (defun my/mpv-play-url (&optional url &rest args)
   "Start mpv for URL."
   (interactive"sURL: ")
-  (let ((url (or url
-                 (if (consp (eww-suggested-uris))
-                     (car (eww-suggested-uris))
-                   (eww-suggested-uris)))))
-    (if url
-        (progn (start-process "mpv"  nil "mpv" url)
-               (message "%s%s" "Playing " url))
-      (message "No valid URL."))))
+  (require 'eww)
+  (unless url (setq url
+                    (if (consp (eww-suggested-uris))
+                        (car (eww-suggested-uris))
+                      (eww-suggested-uris))))
+  (shell-command (concat (executable-find "mpv") " " (shell-quote-argument url)) "*Messages*"))
 
 (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file "~/")))
 
