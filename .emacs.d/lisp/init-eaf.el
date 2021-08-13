@@ -7,7 +7,6 @@
 (use-package eaf
   :load-path "site-lisp/emacs-application-framework"
   :init
-  (use-package epc :straight t)
   (use-package ctable :straight t)
   (use-package deferred :straight t)
   (use-package s :straight t))
@@ -27,11 +26,12 @@
   :custom
   (eaf-pdf-outline-window-configuration t)
   :config
+  (eaf-bind-key scroll-up "n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll-down "p" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down_page "<backspace>" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key quit-window "q" eaf-pdf-viewer-keybinding)
-  (add-hook 'eaf-pdf-viewer-hook #'eaf-interleave-app-mode))
+  (eaf-bind-key quit-window "q" eaf-pdf-viewer-keybinding))
 
 (use-package eaf-org
   :ensure nil
@@ -49,13 +49,16 @@
 (use-package eaf-interleave
   :ensure nil
   :after (bibtex-completion eaf-pdf-viewer)
-  :hook (org-mode . eaf-interleave-mode)
+  :hook
+  (org-mode . eaf-interleave-mode)
+  (eaf-pdf-viewer . eaf-interleave-app-mode)
   :bind
   (:map eaf-interleave-mode-map
         ("M-." . eaf-interleave-sync-pdf-page-current)
         ("M-n" . eaf-interleave-sync-pdf-page-next)
         ("M-p" . eaf-interleave-sync-pdf-page-previous))
   (:map eaf-interleave-app-mode-map
+        ("q" . eaf-interleave-quit)
         ("M-i" . eaf-interleave-add-note)
         ("M-." . eaf-interleave-sync-current-note)
         ("M-N" . eaf-interleave-sync-next-note)
