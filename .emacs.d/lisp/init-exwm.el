@@ -3,11 +3,21 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun my/xmodmap ()
-  "Execute xmodmap"
-  (start-process-shell-command "modmap" nil (concat (executable-find "xmodmap")
-                                                    " -verbose "
-                                                    (getenv "USERMODMAP"))))
+(defun my/kbd-setup ()
+  (interactive)
+  (shell-command-to-string (string-join 
+                            `(,(executable-find "setxkbmap")
+                              "-model pc104aw-zqu"
+                              "-layout us,us,th"
+                              "-variant cmk_ed_dh,,pat"
+                              "-option grp:alt_space_toggle")
+                            " "))
+  (shell-command-to-string (concat (executable-find "xmodmap") " -verbose "
+                                   (getenv "USERMODMAP"))))
+
+(add-hook 'after-init-hook #'my/kbd-setup)
+
+(global-set-key (kbd "<f8>") #'my/kbd-setup)
 
 (defun ambrevar/exwm-rename-buffer-to-title ()
   "Rename EXWM buffer to its window title."
@@ -99,19 +109,20 @@
                        (interactive)
                        (exwm-workspace-switch-create ,i))))
                  (number-sequence 0 9))))
-  ;; Set the initial workspace number
-  (setq exwm-workspace-number 4)
-  ;; Proper modeline
-  (add-hook 'exwm-input-input-mode-change-hook 'force-mode-line-update)
-  ;; Make class name the buffer name
-  (add-hook 'exwm-update-class-hook #'(lambda ()
-					(exwm-workspace-rename-buffer exwm-class-name)))
-  ;; Default is save-buffers-kill-terminal, but that may kill daemon before its finished
-  (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
-  
-  (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
-  ;; Enable EXWM
-  (exwm-enable)))
+    (setq exwm-manage-force-tiling t)
+    ;; Set the initial workspace number
+    (setq exwm-workspace-number 4)
+    ;; Proper modeline
+    (add-hook 'exwm-input-input-mode-change-hook 'force-mode-line-update)
+    ;; Make class name the buffer name
+    (add-hook 'exwm-update-class-hook #'(lambda ()
+					  (exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Default is save-buffers-kill-terminal, but that may kill daemon before its finished
+    (global-set-key (kbd "C-x C-c") 'save-buffers-kill-emacs)
+    
+    (add-hook 'exwm-update-title-hook 'ambrevar/exwm-rename-buffer-to-title)
+    ;; Enable EXWM
+    (exwm-enable)))
 
 (use-package exwm-edit
   :straight t
