@@ -158,17 +158,15 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-transclusion-exclude-elements '()))
 
 (use-package interleave
-  :straight t
-  :custom
-  (interleave--pdf-prop "NOTER_DOCUMENT")
-  (interleave--page-note-prop "NOTER_DOCUMENT_PAGE"))
+  :straight t)
 
 ;;;;; Org-noter
 (use-package org-noter
   :straight '(org-noter :type git :host github :repo "weirdNox/org-noter"
                         :fork t)
   :after org pdf-view
-  :custom       
+  :custom
+  (org-noter-property-doc-file "INTERLEAVE_URL")
   (org-noter-doc-split-fraction '(0.57 0.43))
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
@@ -267,7 +265,13 @@ With a prefix ARG, remove start location."
 
 (use-package djvu3
   :straight djvu '(djvu3 :type git :host github
-                         :repo "dalanicolai/djvu3"))
+                         :repo "dalanicolai/djvu3")
+  :when (executable-find "djvused")
+  :custom
+  (djvu-continuous t))
+
+(use-package toc-mode
+  :straight t)
 
 
 ;;;; PDF
@@ -294,9 +298,6 @@ With a prefix ARG, remove start location."
       (prot/pdf-tools-backdrop)))
   (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
   (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
-
-(use-package pymupdf-mode
-  :straight '(pymupdf-mode :type git :host github :repo "dalainicolai/pymupdf-mode.el"))
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
@@ -325,7 +326,8 @@ With a prefix ARG, remove start location."
 (use-package emacsql-sqlite :straight t)
 
 (use-package anki
-  :straight '(anki.el :type git :host github :repo "chenyanming/anki.el")
+  :straight '(anki :type git :host github :repo "chenyanming/anki.el")
+  :when (executable-find "anki")
   :init
   (add-hook 'anki-mode-hook #'shrface-mode)
   (add-hook 'anki-card-mode-hook #'shrface-mode)
