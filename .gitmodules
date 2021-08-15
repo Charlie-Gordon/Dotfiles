@@ -1,18 +1,3 @@
-[submodule ".emacs.d/lisp/parallel-mode"]
-	path = .emacs.d/lisp/parallel-mode
-	url = git@gitlab.com:Charlie-Gordon/parallel-mode.el.git
-[submodule "/home/i/.emacs.d/lisp/lbry-mode"]
-	path = .emacs.d/lisp/lbry-mode
-	url = git@gitlab.com:Charlie-Gordon/lbry-mode-el.git
-[submodule ".emacs.d/lisp/lbry-mode"]
-	path = .emacs.d/lisp/site-lisp/
-	url = git@gitlab.com:Charlie-Gordon/lbry-mode-el.git
-[submodule ".config/mpv/scripts/occivink"]
-	path = .config/mpv/scripts/occivink
-	url = https://github.com/occivink/mpv-scripts
-[submodule ".config/mpv/scripts/pedro"]
-	path = .config/mpv/scripts/pedro
-	url = https://github.com/pvpscript/mpv-video-splice
 [submodule ".emacs.d/site-lisp/emacs-application-framework"]
 	path = .emacs.d/site-lisp/emacs-application-framework
 	url = https://github.com/c1-g/emacs-application-framework
