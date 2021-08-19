@@ -228,7 +228,9 @@ With a prefix ARG, remove start location."
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
-  :mode (("\\.epub\\'" . nov-mode)))
+  :mode (("\\.epub\\'" . nov-mode))
+  :custom
+  (nov-variable-pitch nil))
 
 ;;;; Calibre
 (use-package calibredb
