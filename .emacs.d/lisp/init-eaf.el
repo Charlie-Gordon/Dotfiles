@@ -9,7 +9,14 @@
   :init
   (use-package ctable :straight t)
   (use-package deferred :straight t)
-  (use-package s :straight t))
+  (use-package s :straight t)
+  :config
+  (defun eaf-toggle ()
+    (interactive)
+    (if (advice-member-p 'eaf--find-file-advisor 'find-file)
+        (advice-remove 'find-file 'eaf--find-file-advisor)
+      (advice-add #'find-file :around #'eaf--find-file-advisor)))
+  (global-set-key (kbd "<f12>") #'eaf-toggle))
 
 (use-package eaf-browser
   :ensure nil
@@ -25,6 +32,7 @@
   :ensure nil
   :custom
   (eaf-pdf-outline-window-configuration t)
+  (eaf-pdf-dark-mode "ignore")
   :config
   (eaf-bind-key scroll-up "n" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll-down "p" eaf-pdf-viewer-keybinding)
@@ -33,12 +41,16 @@
   (eaf-bind-key scroll_down_page "<backspace>" eaf-pdf-viewer-keybinding)
   (eaf-bind-key quit-window "q" eaf-pdf-viewer-keybinding))
 
-(use-package eaf-org
+(use-package eaf-org-previewer
   :ensure nil
   :config
   (defun eaf-org-open-file (file &optional link)
     (eaf-open file))
   (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file)))
+
+(use-package eaf-markdown-previewer
+  :disabled
+  :ensure nil)
 
 ;;;###autoload
 (defun eaf-interleave--find-bibtex-note (filename)
