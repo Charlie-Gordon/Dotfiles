@@ -6,11 +6,12 @@
 
 ;;; Code:
 
-(require-package 'fullframe)
-(with-eval-after-load 'ibuffer
- (fullframe ibuffer ibuffer-quit))
+;; (require-package 'fullframe)
+;; (with-eval-after-load 'ibuffer
+;;  (fullframe ibuffer ibuffer-quit))
 
-(require-package 'ibuffer-vc)
+(use-package ibuffer-vc
+  :straight t)
 
 (defun ibuffer-set-up-preferred-filters ()
   (ibuffer-vc-set-filter-groups-by-vc-root)
@@ -21,38 +22,39 @@
 
 (setq-default ibuffer-show-empty-filter-groups nil)
 
-
-(with-eval-after-load 'ibuffer
+(use-package ibuffer
+  :ensure nil
+  :bind ("C-x C-b" . ibuffer)
+  :config
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
     (:name "Size" :inline t)
-    (file-size-human-readable (buffer-size))))
+    (file-size-human-readable (buffer-size)))
 
 
-;; Modify the default ibuffer-formats (toggle with `)
-(setq ibuffer-formats
-      '((mark modified read-only vc-status-mini " "
-              (name 22 22 :left :elide)
-              " "
-              (size-h 9 -1 :right)
-              " "
-              (mode 12 12 :left :elide)
-              " "
-              vc-relative-file)
-        (mark modified read-only vc-status-mini " "
-              (name 22 22 :left :elide)
-              " "
-              (size-h 9 -1 :right)
-              " "
-              (mode 14 14 :left :elide)
-              " "
-              (vc-status 12 12 :left)
-              " "
-              vc-relative-file)))
+  ;; Modify the default ibuffer-formats (toggle with `)
+  (setq ibuffer-formats
+        '((mark modified read-only vc-status-mini " "
+                (name 60 60 :left :elide)
+                " "
+                (size-h 9 -1 :right)
+                " "
+                (mode 12 12 :left :elide)
+                " "
+                vc-relative-file)
+          (mark modified read-only vc-status-mini " "
+                (name 22 22 :left :elide)
+                " "
+                (size-h 9 -1 :right)
+                " "
+                (mode 14 14 :left :elide)
+                " "
+                (vc-status 12 12 :left)
+                " "
+                vc-relative-file)))
 
-(setq ibuffer-filter-group-name-face 'font-lock-doc-face)
+  (setq ibuffer-filter-group-name-face 'font-lock-doc-face))
 
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (provide 'init-ibuffer)
 ;;; init-ibuffer.el ends here
