@@ -41,7 +41,7 @@ Saves to a temp file and puts the filename in the kill ring."
     (with-temp-file filename
       (setq data (x-export-frames nil 'svg))
       (insert data))
-    (when time
+    (unless time
       (display-time-mode 1))
     (kill-new filename)
     (message filename)))
@@ -69,7 +69,7 @@ Saves to a temp file and puts the filename in the kill ring."
                     (if (consp (eww-suggested-uris))
                         (car (eww-suggested-uris))
                       (eww-suggested-uris))))
-  (shell-command (concat (executable-find "mpv") " " (shell-quote-argument url)) "*Messages*"))
+  (start-process "mpv" nil (executable-find "mpv") url))
 
 (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file "~/")))
 
