@@ -54,12 +54,12 @@ Used to determines filename in `org-roam-capture-templates'."
          ;; Dailies
          ("C-c n j" . org-roam-dailies-capture-today))
   :init
-  (defvar org-roam-directory (expand-file-name "org/slip-box/" *journals-dir*))
+  (defvar org-roam-directory (expand-file-name "slip-box" *org-dir*))
   (defvar org-roam-v2-ack t)
   :config
   (org-roam-setup)
   (setq org-roam-index-file "index.org"
-        org-roam-dailies-directory (expand-file-name "org/daily/" *journals-dir*)
+        org-roam-dailies-directory (expand-file-name "daily" *org-dir*)
         org-roam-db-update-method 'immediate
         org-roam-buffer-no-delete-other-windows t)
   (setq org-roam-capture-templates
@@ -68,32 +68,17 @@ Used to determines filename in `org-roam-capture-templates'."
            :if-new
            (file+head
             "%(org-roam-slip-box-new-file)"
-            "#+title: ${title}\n")
-           :unnarrowed t)))
+            "#+title: ${title}\n#+created: %u\n#+last_modified: %U\n\n")
+           :unnarrowed t)
+          ))
   (setq org-roam-dailies-capture-templates
         `(("d" "default" plain
-           ,(string-join
-             '("* %?"
-               "%T")
-             "\n")
+           "* %?"
            :if-new
            (file+head "%<%Y-%m-%d>.org"
-                      "#+TITLE: %<%Y-%m-%d>\n\n")
+                      "#+title: %<%Y-%m-%d>\n#+created: %u\n\n")
            :unnarrowed t)))
   :diminish)
-
-;; (use-package org-roam
-;;   :straight t
-;;   :bind (("C-c n l" . org-roam)
-;;          ("C-c n F" . org-roam-find-file)
-;;          ("C-c n r" . org-roam-find-ref)
-;;          ("C-c n ." . org-roam-find-directory)
-;;          ("C-c n j" . org-roam-jump-to-index)
-;;          ("C-c n b" . org-roam-switch-to-buffer)
-;;          ("C-c n g" . org-roam-graph)
-;;          :map org-mode-map
-;;          (("C-c n i" . org-roam-insert)))
-;;   :bind-keymap ("C-c n d" . org-roam-dailies-map)
 
 (defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
   "Format of the title to use for `orb-templates'.")
@@ -105,36 +90,12 @@ Used to determines filename in `org-roam-capture-templates'."
               :map org-mode-map
               (("C-c m t" . orb-insert-non-ref)
                ("C-c m a" . orb-note-actions)))
+ 
   :custom
   (orb-autokey-format "%a%y")
   (orb-file-field-extensions '("pdf" "epub"))
-  (orb-templates
-        `(("r" "ref" plain
-           (function org-roam-capture--get-point)
-           ""
-           :file-name "refs/${citekey}"
-           :head ,(string-join
-                   (list
-                    (concat "#+TITLE: " orb-title-format)
-                    "#+ROAM_KEY: ${ref}"
-                    "")
-                   "\n")
-           :unnarrowed t)
-          ("n" "ref + noter" plain
-           (function org-roam-capture--get-point)
-           ""
-           :file-name "refs/${citekey}"
-           :head ,(string-join
-                   (list
-                    (concat "#+TITLE: " orb-title-format)
-                    "#+ROAM_KEY: ${ref}"
-                    ""
-                    "* ${title}"
-                    ":PROPERTIES:"
-                    ":NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
-                    ":END:")
-                   "\n"))))
-  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (org-roam-bibtex-mode)
   :diminish)
 
 ;;;;; Org-ref
@@ -143,7 +104,6 @@ Used to determines filename in `org-roam-capture-templates'."
   :after helm-bibtex
   :custom
   (reftex-default-bibliography `(,(expand-file-name "muhbib.bib" *library-dir*)))
-  (org-ref-bibliography-notes (expand-file-name "org/bib-notes.org" *journals-dir*))
   (org-ref-notes-function #'orb-notes-fn)
   (org-ref-pdf-directory *library-dir*)
   (org-ref-default-bibliography reftex-default-bibliography)
@@ -158,7 +118,9 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-transclusion-exclude-elements '()))
 
 (use-package interleave
-  :straight t)
+  :straight t
+  :custom
+  (interleave--pdf-prop "interleave_url"))
 
 ;;;;; Org-noter
 (use-package org-noter
@@ -166,15 +128,13 @@ Used to determines filename in `org-roam-capture-templates'."
                         :fork t)
   :after org pdf-view
   :custom
-  (org-noter-property-doc-file "INTERLEAVE_URL")
+  (org-noter-property-doc-file "interleave_url")
   (org-noter-doc-split-fraction '(0.57 0.43))
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other nil)
-  (org-noter-notes-search-path (list *journals-dir*
-                                     (expand-file-name "org/refs/" *journals-dir*))))
-
+  (org-noter-notes-search-path `(,(expand-file-name "lit" *org-dir*))))
 
 (use-package text-clone :ensure nil)
 
@@ -182,6 +142,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :after text-clone org-roam-bibtex org-noter
   :config
   (add-hook 'org-noter-notes-mode-hook 'org-noter-synoptic--find-companion)
+  :disabled
   :ensure nil)
 
 ;;;;; pdf-tools integration
@@ -241,7 +202,7 @@ With a prefix ARG, remove start location."
   :config
   (setq calibredb-program (executable-find "calibredb"))
   (setq calibredb-root-dir *library-dir*)
-  (setq calibredb-library-alist '(("/storage/library/")))
+  (setq calibredb-library-alist `((,*library-dir*)))
   (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
   (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
   (setq calibredb-sort-by 'title)
@@ -253,15 +214,26 @@ With a prefix ARG, remove start location."
 (use-package bibtex-completion
   :ensure nil
   :custom
+  (bibtex-align-at-equal-sign t)
+  (bibtex-autokey-name-year-separator "")
+  (bibtex-autokey-year-title-separator "")
+  (bibtex-autokey-year-length 4)
+  (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
+  (bibtex-autokey-titleword-length 20)
+  (bibtex-autokey-titlewords-stretch 0)
+  (bibtex-autokey-titlewords 0)
   (bibtex-completion-bibliography reftex-default-bibliography)
   (bibtex-completion-library-path org-ref-pdf-directory)
-  (bibtex-completion-notes-path (expand-file-name "refs/" org-roam-directory))
+  (bibtex-completion-notes-path (expand-file-name "lit/" *org-dir*))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
-  (bibtex-completion-pdf-symbol "📚")
-  (bibtex-completion-notes-symbol "🗎")
-  :config
-  (add-to-list 'bibtex-completion-additional-search-fields "file"))
+  (bibtex-completion-pdf-symbol "P")
+  (bibtex-completion-notes-symbol "N")
+  (bibtex-completion-notes-template-multiple-files
+   "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
+  (bibtex-user-optional-fields '(("file" "Path to file")))
+  (bibtex-completion-additional-search-fields '(file))
+  )
 
 ;;;; Djvu
 
@@ -278,15 +250,23 @@ With a prefix ARG, remove start location."
 
 ;;;; PDF
 (use-package pdf-tools
-  :straight t
+  :straight '(pdf-tools :type git :host github
+                        :repo "orgtre/pdf-tools"
+                        :fork t)
   :mode "\\.pdf\\'"
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
   (pdf-view-resize-factor 1.1)
+  (pdf-keynav-transient-mark-mode t)
   :config
   (pdf-loader-install)
+  (defun pdf-view-midnight-colors-theme ()
+    (cons (frame-parameter nil 'foreground-color)
+          (color-darken-name
+           (frame-parameter nil 'background-color) 5)))
+  (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
   (defun prot/pdf-tools-backdrop ()
     (face-remap-add-relative
      'default
@@ -355,7 +335,8 @@ terminates successfully, it will return the string of the output
 buffer. If the program fails, it will switch to the output buffer and
 tell user something’s wrong."
     (interactive)
-    (let ((out-buf " *calibredb-query-output*")
+    (let ((inhibit-message t)
+          (out-buf " *calibredb-query-output*")
           (tmp (make-temp-file "*calibredb-query-string*" nil nil sql-query)))
       (when (get-buffer out-buf)
         (kill-buffer out-buf))

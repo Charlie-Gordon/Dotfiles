@@ -69,7 +69,7 @@ Edna Syntax: org-anki-this!"
     "Add org-agenda files from root DIR."
     (nconc org-agenda-files 
 	   (org-get-agenda-files-recursively dir)))
-  (add-hook 'after-init-hook (lambda nil (org-set-agenda-files-recursively *journals-dir*)))
+  (add-hook 'after-init-hook (lambda nil (org-set-agenda-files-recursively *org-dir*)))
   (setq org-agenda-custom-commands
         '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
            ((org-show-context-detail 'minimal)
@@ -99,7 +99,7 @@ Edna Syntax: org-anki-this!"
      ("Qa"
       "Anki flashcard."
       entry
-      (file "/storage/journals/org/anki.org")
+      (file "/storage/org/anki.org")
       "* REVIEW %?")
      ("Qb"
       "Questions bank on this book."

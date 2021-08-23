@@ -8,5 +8,7 @@
 
 (defconst *library-dir* (if *termux* "" "/storage/library/"))
 
+(defconst *org-dir* (if *termux* "" "/storage/org/"))
+
 (provide 'init-const)
 ;;; init-const.el ends here
