@@ -31,22 +31,13 @@
 
 (defvar navigation-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "e" #'consult-find-emacs-dir)
     (define-key map "s" #'consult-find-site-lisp)
-    (define-key map "g" #'consult-find-git-dir)
     (define-key map "p" #'consult-grep-package)
-    (define-key map "j" #'consult-find-journals)
-    (define-key map "l" #'consult-find-library)
     (define-key map "o" #'affe-search-org)
     map)
   "Keymap for navigation")
 
 ;;;; Commands
-;;;###autoload
-(defun consult-find-emacs-dir (file-name)
-  (interactive"P")
-  (let ((consult-find-command "find . -ipath *ARG* OPTS"))
-    (consult-find user-emacs-directory file-name)))
 
 ;;;###autoload
 (defun consult-find-site-lisp (dir)
@@ -57,20 +48,8 @@
 ;;;###autoload
 (defun consult-grep-package (package-name)
   (interactive"P")
-  (consult-ripgrep user-emacs-directory
-		   (concat " ?\\(.*use-package #^lisp\\|^site-lisp\\|^init.*\\.el " package-name)))
-
-;;;###autoload
-(defun consult-find-journals (file-name)
-  (interactive"P")
-  (let ((consult-find-command "find . -ipath *ARG* OPTS"))
-    (consult-find *journals-dir* file-name)))
-
-;;;###autoload
-(defun consult-find-library (file-name)
-  (interactive"P")
-  (let ((consult-find-command "find . -ipath *ARG* OPTS"))
-    (consult-find *library-dir* file-name)))
+  (consult-ripgrep (expand-file-name "lisp/" user-emacs-directory)
+		   (concat "(use-package " package-name)))
 
 ;;;###autoload
 (defun affe-search-org()  
