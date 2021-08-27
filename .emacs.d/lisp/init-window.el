@@ -19,7 +19,7 @@
   (aw-display-mode-overlay nil)
   :config
   (ace-window-display-mode t)
-  (global-set-key (kbd "C-x o") #'ace-window))
+  (global-set-key (kbd "s-o") #'ace-window))
 
 ;; Configure ‘display-buffer’ behaviour for some special buffers
 (setq display-buffer-alist
@@ -61,7 +61,7 @@
          (side . top)
          (slot . 2)
          (window-parameters . ((no-other-window . t))))
-        (,(rx bos "*Outline" (* anything) "*")
+        (,(rx bos "*Outline" (* anything))
          (display-buffer-reuse-window display-buffer-in-side-window)
          (window-width . 80)
          (side . right))
