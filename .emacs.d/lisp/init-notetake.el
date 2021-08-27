@@ -7,11 +7,26 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; bibtex
+(use-package bibtex
+  :ensure nil
+  :bind (:map bibtex-mode-map
+              ("C-c C-e o" . bibtex-Online))
+  :config
+  (add-to-list 'bibtex-BibTeX-entry-alist
+               '("Online" "Website"
+                 (("author")
+                  ("title")
+                  ("url" "Website URL."))
+                 nil
+                 (("year")
+                  ("urldate" "The date when the website was last accessed.")))))
+
 ;;;; Helm-bibtex
 (use-package helm-bibtex
   :straight '(helm-bibtex :type git :host github
-                          :repo "tmalsburg/helm-bibtex"
-                          :fork t)
+                          :repo "c1-g/helm-bibtex")
   :config
   (global-set-key (kbd "C-' b") #'helm-bibtex))
 
@@ -70,6 +85,13 @@ Used to determines filename in `org-roam-capture-templates'."
             "%(org-roam-slip-box-new-file)"
             "#+title: ${title}\n#+created: %u\n#+last_modified: %U\n\n")
            :unnarrowed t)
+          ("n" "note" plain
+           (file "~/.emacs.d/org-template/ROAM-note.txt")
+           :if-new
+           (file+head
+            "%(expand-file-name \"lit\" *org-dir*)/${citekey}.org"
+            "#+title: ${citekey}.  ${title}.\n#+created: %U\n#+last_modified: %U\n\n")
+           :unarrowed t)
           ))
   (setq org-roam-dailies-capture-templates
         `(("d" "default" plain
@@ -79,9 +101,6 @@ Used to determines filename in `org-roam-capture-templates'."
                       "#+title: %<%Y-%m-%d>\n#+created: %u\n\n")
            :unnarrowed t)))
   :diminish)
-
-(defvar orb-title-format "${author-or-editor-abbrev}.  ${title}."
-  "Format of the title to use for `orb-templates'.")
 
 (use-package org-roam-bibtex
   :straight t
@@ -94,20 +113,36 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (orb-autokey-format "%a%y")
   (orb-file-field-extensions '("pdf" "epub"))
+  (bibtex-completion-edit-notes-function #'orb-edit-notes)
   :config
   (org-roam-bibtex-mode)
   :diminish)
+
+(use-package vulpea
+  :straight t
+  ;; hook into org-roam-db-autosync-mode you wish to enable
+  ;; persistence of meta values (see respective section in README to
+  ;; find out what meta means)
+  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
+
 
 ;;;;; Org-ref
 (use-package org-ref
   :straight t
   :after helm-bibtex
   :custom
-  (reftex-default-bibliography `(,(expand-file-name "muhbib.bib" *library-dir*)))
+  (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
   (org-ref-notes-function #'orb-notes-fn)
   (org-ref-pdf-directory *library-dir*)
   (org-ref-default-bibliography reftex-default-bibliography)
   (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
+;;;;; Media note
+(use-package org-media-note
+  :straight '(org-media-note :type git
+                             :host github
+                             :repo "yuchen-lea/org-media-note")
+  :hook (org-mode . org-media-note-mode)
+  :bind ("s-v" . org-media-note-hydra/body))
 ;;;;; Org-transclusion
 (use-package org-transclusion
   :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion")
@@ -120,7 +155,8 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package interleave
   :straight t
   :custom
-  (interleave--pdf-prop "interleave_url"))
+  (interleave--pdf-prop "INTERLEAVE_URL")
+  (interleave--page-note-prop "INTERLEAVE_PAGE_NOTE"))
 
 ;;;;; Org-noter
 (use-package org-noter
@@ -128,13 +164,21 @@ Used to determines filename in `org-roam-capture-templates'."
                         :fork t)
   :after org pdf-view
   :custom
-  (org-noter-property-doc-file "interleave_url")
+  (org-noter-property-doc-file (upcase interleave--pdf-prop))
   (org-noter-doc-split-fraction '(0.57 0.43))
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other nil)
-  (org-noter-notes-search-path `(,(expand-file-name "lit" *org-dir*))))
+  (org-noter-notes-search-path (list (expand-file-name "lit" *org-dir*)))
+  (org-noter-property-note-location (upcase interleave--page-note-prop))
+  (org-noter-find-note-function #'org-noter-find-note-from-doc))
+
+;;;###autoload
+(defun org-noter-find-note-from-doc (doc-file)
+  (mapcar (lambda (key)
+            (concat key ".org"))
+          (bibtex-completion-find-key-from-file doc-file)))
 
 (use-package text-clone :ensure nil)
 
@@ -145,7 +189,8 @@ Used to determines filename in `org-roam-capture-templates'."
   :disabled
   :ensure nil)
 
-;;;;; pdf-tools integration
+
+;;;;;; pdf-tools integration
 (use-package org-pdftools
   :hook (org-mode . org-pdftools-setup-link))
 
@@ -219,6 +264,7 @@ With a prefix ARG, remove start location."
   (bibtex-autokey-year-title-separator "")
   (bibtex-autokey-year-length 4)
   (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
+  (bibtex-completion-cite-default-command "cite")
   (bibtex-autokey-titleword-length 20)
   (bibtex-autokey-titlewords-stretch 0)
   (bibtex-autokey-titlewords 0)
@@ -251,8 +297,7 @@ With a prefix ARG, remove start location."
 ;;;; PDF
 (use-package pdf-tools
   :straight '(pdf-tools :type git :host github
-                        :repo "orgtre/pdf-tools"
-                        :fork t)
+                        :repo "c1-g/pdf-tools")
   :mode "\\.pdf\\'"
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
