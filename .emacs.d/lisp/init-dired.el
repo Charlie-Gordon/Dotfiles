@@ -6,10 +6,14 @@
 (let ((gnuls (executable-find "gnuls")))
   (when gnuls (setq insert-directory-program gnuls)))
 
+(defun dired-eww-open-file ()
+  (interactive)
+  (eww-open-file (dired-get-file-for-visit)))
+
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
-	      ("E" . eww-open-file))
+	      ("E" . dired-eww-open-file))
   :custom
   (dired-use-ls-dired nil)
   (dired-recursive-copies 'always)
