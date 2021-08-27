@@ -10,5 +10,7 @@
 
 (defconst *org-dir* (if *termux* "" "/storage/org/"))
 
+(defconst *bibliography-dir* (if *termux* "" "/storage/bib/"))
+
 (provide 'init-const)
 ;;; init-const.el ends here
