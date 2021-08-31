@@ -11,8 +11,6 @@
 ;;;; bibtex
 (use-package bibtex
   :ensure nil
-  :bind (:map bibtex-mode-map
-              ("C-c C-e o" . bibtex-Online))
   :config
   (add-to-list 'bibtex-BibTeX-entry-alist
                '("Online" "Website"
@@ -104,6 +102,7 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package org-roam-bibtex
   :straight t
+  :requires org-ref
   :bind (:map org-roam-bibtex-mode-map
               (("C-c m f" . orb-find-non-ref-file))
               :map org-mode-map
@@ -129,6 +128,7 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Org-ref
 (use-package org-ref
   :straight t
+  :when *bibliography-dir*
   :after helm-bibtex
   :custom
   (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
@@ -258,6 +258,7 @@ With a prefix ARG, remove start location."
 ;;;; Bibtex completion
 (use-package bibtex-completion
   :ensure nil
+  :requires org-ref
   :custom
   (bibtex-align-at-equal-sign t)
   (bibtex-autokey-name-year-separator "")
@@ -295,36 +296,35 @@ With a prefix ARG, remove start location."
 
 
 ;;;; PDF
-(use-package pdf-tools
-  :straight '(pdf-tools :type git :host github
-                        :repo "c1-g/pdf-tools")
-  :mode "\\.pdf\\'"
-  :custom
-  (pdf-annot-minor-mode-map-prefix "a")
-  (pdf-view-display-size 'fit-page)
-  (pdf-annot-activate-created-annotations t)
-  (pdf-view-resize-factor 1.1)
-  (pdf-keynav-transient-mark-mode t)
-  :config
-  (pdf-loader-install)
-  (defun pdf-view-midnight-colors-theme ()
-    (cons (frame-parameter nil 'foreground-color)
-          (color-darken-name
-           (frame-parameter nil 'background-color) 5)))
-  (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
-  (defun prot/pdf-tools-backdrop ()
-    (face-remap-add-relative
-     'default
-     `(:background ,(modus-themes-color 'bg-alt))))
-
-  (defun prot/pdf-tools-midnight-mode-toggle ()
-    (when (derived-mode-p 'pdf-view-mode)
-      (if (eq (car custom-enabled-themes) 'modus-vivendi)
-          (pdf-view-midnight-minor-mode 1)
-        (pdf-view-midnight-minor-mode -1))
-      (prot/pdf-tools-backdrop)))
-  (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
+;; (use-package pdf-tools
+;;   :straight '(pdf-tools :type git :host github
+;;                         :repo "orgtre/pdf-tools")
+;;   :mode "\\.pdf\\'"
+;;   :custom
+;;   (pdf-annot-minor-mode-map-prefix "a")
+;;   (pdf-view-display-size 'fit-page)
+;;   (pdf-annot-activate-created-annotations t)
+;;   (pdf-view-resize-factor 1.1)
+;;   (pdf-keynav-transient-mark-mode t)
+;;   :config
+;;   (pdf-loader-install)
+;;   (defun pdf-view-midnight-colors-theme ()
+;;     (cons (frame-parameter nil 'foreground-color)
+;;           (color-darken-name
+;;            (frame-parameter nil 'background-color) 5)))
+;;   (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
+;;   (defun prot/pdf-tools-backdrop ()
+;;     (face-remap-add-relative
+;;      'default
+;;      `(:background ,(modus-themes-color 'bg-alt))))
+;; (defun prot/pdf-tools-midnight-mode-toggle ()
+;;   (when (derived-mode-p 'pdf-view-mode)
+;;     (if (eq (car custom-enabled-themes) 'modus-vivendi)
+;;         (pdf-view-midnight-minor-mode 1)
+;;       (pdf-view-midnight-minor-mode -1))
+;;     (prot/pdf-tools-backdrop)))
+;; (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
+;; (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
