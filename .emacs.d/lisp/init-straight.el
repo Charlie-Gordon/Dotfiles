@@ -47,6 +47,8 @@
         (github . "c1-g")               ; Lost my old account.
         (gitlab . "c1-g")))
 
+(defvar use-package-enable-imenu-support t)
+
 (straight-use-package 'use-package)
 
 (provide 'init-straight)

@@ -22,7 +22,6 @@
                                                         (name args)
                                                         (not (plist-member args :termux)))))
 
-(setq use-package-enable-imenu-support t)
 (setq use-package-compute-statistics t)
 
 (provide 'init-use-package)
