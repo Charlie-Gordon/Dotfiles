@@ -1,8 +1,17 @@
 ;;; init-git.el --- Git SCM support -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
+
+(use-package tramp
+  :straight t
+  :custom
+  (tramp-terminal-type "tramp")
+  :config
+  (setenv "SHELL" (executable-find "bash")))
+
+
 (use-package magit
-  :straight t vc tramp
+  :straight t vc straight
   :when (executable-find "git")
   :bind
   (("C-x g g" . magit-status)

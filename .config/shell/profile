@@ -8,9 +8,25 @@
 # to clean up.
 
 # Adds `~/.local/bin` to $PATH
-export PATH="$PATH:${$(find ~/.local/bin -type d)%%:}"
 
-unsetopt PROMPT_SP
+# if [ $TERM = "tramp" ]; then
+#     unsetopt prompt_cr
+#     unsetopt prompt_subst
+#     if whence -w precmd >/dev/null; then
+#         unfunction precmd
+#     fi
+#     if whence -w preexec >/dev/null; then
+#         unfunction preexec
+#     fi
+#     unset RPROMPT
+#     unset RPS1
+#     unsetopt zle
+#     unsetopt rcs  # Inhibit loading of further config files
+#     unset zle_bracketed_paste
+#     PS1="$ "
+# fi
+
+export PATH="$PATH:${$(find ~/.local/bin -type d)%%:}"
 
 # Default programs:
 export EDITOR="emacs"
