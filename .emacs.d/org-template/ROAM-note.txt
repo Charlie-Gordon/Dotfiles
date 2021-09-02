@@ -1,0 +1,5 @@
+
+* On ${title}
+:PROPERTIES:
+:%(upcase (eval eaf-interleave--url-prop)): %^{file} %^{url}
+:END:

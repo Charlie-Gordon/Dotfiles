@@ -1,0 +1,7 @@
+** REVIEW %?
+  :PROPERTIES:
+  :%(eval eaf-interleave--url-prop): %(buffer-local-value 'eaf--buffer-url eaf-interleave-pdf-buffer)
+  :%(eval eaf-interleave--page-note-prop): %(eaf-call-sync "call_function" (buffer-local-value 'eaf--buffer-id eaf-interleave-pdf-buffer) "current_page")
+  :END:
+
+
