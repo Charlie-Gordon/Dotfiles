@@ -9,11 +9,10 @@
   (load-file (concat user-emacs-directory "init.el")))
 ;;;; Find-file with root permissions
 ;; From https://emacsredux.com/blog/2013/04/21/edit-files-as-root/
-;;;###autoload
-(defadvice find-file (after find-file-sudo activate)
+
+(defadvice find-file (after find-file-doas activate)
   "Find file as root if necessary."
-  (when (and (buffer-file-name)
-             (not (file-writable-p buffer-file-name)))
+  (unless (file-writable-p buffer-file-name)
     (find-alternate-file (concat "/doas::" buffer-file-name))))
 
 ;;;; Magit shortcuts
@@ -48,15 +47,16 @@ Saves to a temp file and puts the filename in the kill ring."
 
 ;;;; Occur
 ;;;###autoload
-(defun occur-list-urls (&optional to-buffer)
+
+(defun occur-list-urls ()
   "Produce buttonised list of all URLs in the current buffer."
   (interactive)
-  (require 'browse-url)
-  (let ((to-buffer (or to-buffer
-                       (current-buffer))))
-    (add-hook 'occur-hook #'goto-address-mode)
-    (occur-1 browse-url-button-regexp "\\&" (list (current-buffer)) (get-buffer-create " occur-output"))
-    (remove-hook 'occur-hook #'goto-address-mode)))
+  (require 'thingatpt)                  ; Thing-at-point library
+  (add-hook 'occur-hook #'goto-address-mode)
+  (setq goto-address-url-regexp thing-at-point-short-url-regexp)
+  (occur thing-at-point-short-url-regexp "\\&")
+  (remove-hook 'occur-hook #'goto-address-mode)
+  (run-with-idle-timer 1 nil (lambda nil (setq goto-address-url-regexp thing-at-point-short-url-regexp))))
 
 ;;;; mpv-play-url
 ;; https://gist.github.com/bsless/19ca4a37eee828b1b62c84971181f506#file-yt-mpv-el
