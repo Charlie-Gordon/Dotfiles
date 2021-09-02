@@ -66,7 +66,7 @@
         ("L" . eww-list-bookmarks)
         ("t" . eww-readable)
         ("n" . shr-next-link)
-        ("p" . shr-next-link)
+        ("p" . shr-previous-link)
         ("u" .  eww-back-url)
         ("B" . prot/eww-bookmark-page)
         ("D" . prot/eww-download-html)
