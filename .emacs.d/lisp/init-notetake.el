@@ -7,20 +7,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;; bibtex
-(use-package bibtex
-  :ensure nil
-  :config
-  (add-to-list 'bibtex-BibTeX-entry-alist
-               '("Online" "Website"
-                 (("author")
-                  ("title")
-                  ("url" "Website URL."))
-                 nil
-                 (("year")
-                  ("urldate" "The date when the website was last accessed.")))))
-
 ;;;; Helm-bibtex
 (use-package helm-bibtex
   :straight '(helm-bibtex :type git :host github
@@ -102,7 +88,6 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package org-roam-bibtex
   :straight t
-  :requires org-ref
   :bind (:map org-roam-bibtex-mode-map
               (("C-c m f" . orb-find-non-ref-file))
               :map org-mode-map
@@ -111,9 +96,10 @@ Used to determines filename in `org-roam-capture-templates'."
  
   :custom
   (orb-autokey-format "%a%y")
-  (orb-file-field-extensions '("pdf" "epub"))
+  (orb-file-field-extensions '("pdf" "epub" "djvu"))
   (bibtex-completion-edit-notes-function #'orb-edit-notes)
   :config
+  (add-to-list 'orb-preformat-keywords "url")
   (org-roam-bibtex-mode)
   :diminish)
 
@@ -135,7 +121,12 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-ref-notes-function #'orb-notes-fn)
   (org-ref-pdf-directory *library-dir*)
   (org-ref-default-bibliography reftex-default-bibliography)
-  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
+  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
+  :config
+  (defhydra+ org-ref-bibtex-new-entry (:color blue)
+    "New Bibtex entry:"
+    ("o" bibtex-Online "Online website")))
+
 ;;;;; Media note
 (use-package org-media-note
   :straight '(org-media-note :type git
@@ -278,7 +269,8 @@ With a prefix ARG, remove start location."
   (bibtex-completion-notes-symbol "N")
   (bibtex-completion-notes-template-multiple-files
    "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
-  (bibtex-user-optional-fields '(("file" "Path to file")))
+  (bibtex-user-optional-fields '(("file" "Path to file")
+                                 ("url")))
   (bibtex-completion-additional-search-fields '(file))
   )
 
@@ -402,6 +394,10 @@ tell user something’s wrong."
           (delete-file tmp)
           (switch-to-buffer out-buf)
           (error (format "calibredb-query: Can't query \"%s\". switching to its error buffer." (expand-file-name calibredb-db-dir)))))))
+
+;;;; eww-bibtex
+(use-package eww-bibtex
+  :ensure nil)
 
 (provide 'init-notetake)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
