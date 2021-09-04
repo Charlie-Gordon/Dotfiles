@@ -15,9 +15,9 @@
   (shell-command-to-string (concat (executable-find "xmodmap") " -verbose "
                                    (getenv "USERMODMAP"))))
 
-(add-hook 'after-init-hook #'my/kbd-setup)
-
 (global-set-key (kbd "<f8>") #'my/kbd-setup)
+
+(add-hook 'after-init-hook #'my/kbd-setup)
 
 (defun ambrevar/exwm-rename-buffer-to-title ()
   "Rename EXWM buffer to its window title."
@@ -57,7 +57,8 @@
                               ?\M-x
                               ?\M-`
                               ?\M-&
-                              ?\M-:)
+                              ?\M-:
+                              ?\s-o)
      ;; Line-editing keybindings for X windows
      exwm-input-simulation-keys '(;; Backward-char
 				  ([?\C-b] . [left])
