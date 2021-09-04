@@ -151,9 +151,7 @@ Used to determines filename in `org-roam-capture-templates'."
 
 ;;;;; Org-noter
 (use-package org-noter
-  :straight '(org-noter :type git :host github :repo "weirdNox/org-noter"
-                        :fork t)
-  :after org pdf-view
+  :load-path "site-lisp/org-noter-plus-djvu"
   :custom
   (org-noter-property-doc-file (upcase interleave--pdf-prop))
   (org-noter-doc-split-fraction '(0.57 0.43))
@@ -183,11 +181,13 @@ Used to determines filename in `org-roam-capture-templates'."
 
 ;;;;;; pdf-tools integration
 (use-package org-pdftools
+  :straight t
+  :requires (org-noter)
   :hook (org-mode . org-pdftools-setup-link))
 
 (use-package org-noter-pdftools
   :straight t
-  :after (org-noter org-pdftools)
+  :requires (org-noter org-pdftools)
   :config
   ;; Add a function to ensure precise note is inserted
   (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
@@ -288,41 +288,43 @@ With a prefix ARG, remove start location."
 
 
 ;;;; PDF
-;; (use-package pdf-tools
-;;   :straight '(pdf-tools :type git :host github
-;;                         :repo "orgtre/pdf-tools")
-;;   :mode "\\.pdf\\'"
-;;   :custom
-;;   (pdf-annot-minor-mode-map-prefix "a")
-;;   (pdf-view-display-size 'fit-page)
-;;   (pdf-annot-activate-created-annotations t)
-;;   (pdf-view-resize-factor 1.1)
-;;   (pdf-keynav-transient-mark-mode t)
-;;   :config
-;;   (pdf-loader-install)
-;;   (defun pdf-view-midnight-colors-theme ()
-;;     (cons (frame-parameter nil 'foreground-color)
-;;           (color-darken-name
-;;            (frame-parameter nil 'background-color) 5)))
-;;   (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
-;;   (defun prot/pdf-tools-backdrop ()
-;;     (face-remap-add-relative
-;;      'default
-;;      `(:background ,(modus-themes-color 'bg-alt))))
-;; (defun prot/pdf-tools-midnight-mode-toggle ()
-;;   (when (derived-mode-p 'pdf-view-mode)
-;;     (if (eq (car custom-enabled-themes) 'modus-vivendi)
-;;         (pdf-view-midnight-minor-mode 1)
-;;       (pdf-view-midnight-minor-mode -1))
-;;     (prot/pdf-tools-backdrop)))
-;; (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
-;; (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
+(use-package pdf-tools
+  :straight '(pdf-tools :type git :host github
+                        :repo "orgtre/pdf-tools")
+  :disabled
+  :mode "\\.pdf\\'"
+  :custom
+  (pdf-annot-minor-mode-map-prefix "a")
+  (pdf-view-display-size 'fit-page)
+  (pdf-annot-activate-created-annotations t)
+  (pdf-view-resize-factor 1.1)
+  (pdf-keynav-transient-mark-mode t)
+  :config
+  (pdf-loader-install)
+  (defun pdf-view-midnight-colors-theme ()
+    (cons (frame-parameter nil 'foreground-color)
+          (color-darken-name
+           (frame-parameter nil 'background-color) 5)))
+  (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
+  (defun prot/pdf-tools-backdrop ()
+    (face-remap-add-relative
+     'default
+     `(:background ,(modus-themes-color 'bg-alt))))
+  (defun prot/pdf-tools-midnight-mode-toggle ()
+    (when (derived-mode-p 'pdf-view-mode)
+      (if (eq (car custom-enabled-themes) 'modus-vivendi)
+          (pdf-view-midnight-minor-mode 1)
+        (pdf-view-midnight-minor-mode -1))
+      (prot/pdf-tools-backdrop)))
+  (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
   :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
                        :fork t)
   :when (executable-find "anki")
+  :disabled
   :init
   (use-package request :straight t)
   :custom
