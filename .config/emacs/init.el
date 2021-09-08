@@ -38,6 +38,9 @@
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Individual configuration
+;;;;;; Hyperbole
+(use-package hyperbole
+  :straight t)
 ;;;;;; Repeat mode
 (use-package repeat
   :ensure nil
@@ -66,8 +69,6 @@
 (use-package init-erc :ensure nil)
 ;;;;; Completions
 (use-package init-completion :ensure nil :termux)
-;;;;; Hyperbole
-(use-package init-hyperbole :ensure nil)
 ;;;;; Git
 (use-package init-git :ensure nil)
 ;;;;; Lisp
