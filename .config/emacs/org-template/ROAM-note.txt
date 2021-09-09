@@ -1,5 +1,5 @@
 
 * On ${title}
 :PROPERTIES:
-:%(upcase (eval eaf-interleave--url-prop)): %^{file} %^{url}
+:INTERLEAVE_URL: %^{file} %^{url}
 :END:

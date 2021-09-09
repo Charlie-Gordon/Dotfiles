@@ -153,15 +153,14 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package org-noter
   :load-path "site-lisp/org-noter-plus-djvu"
   :custom
-  (org-noter-property-doc-file (upcase interleave--pdf-prop))
+  (org-noter-property-doc-file "INTERLEAVE_URL")
+  (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE")
   (org-noter-doc-split-fraction '(0.57 0.43))
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other nil)
-  (org-noter-notes-search-path (list (expand-file-name "lit" *org-dir*)))
-  (org-noter-property-note-location (upcase interleave--page-note-prop))
-  (org-noter-find-note-function #'org-noter-find-note-from-doc))
+  (org-noter-notes-search-path (list (expand-file-name "lit" *org-dir*))))
 
 ;;;###autoload
 (defun org-noter-find-note-from-doc (doc-file)
