@@ -227,7 +227,12 @@ With a prefix ARG, remove start location."
 	      ("C-S-p" . shr-previous-link))
   :mode (("\\.epub\\'" . nov-mode))
   :custom
-  (nov-variable-pitch nil))
+  (nov-text-width fill-column)
+  (nov-variable-pitch nil)
+  :config
+  (add-hook 'nov-post-html-render-hook #'(lambda ()
+                                           (let ((fit-window-to-buffer-horizontally t))
+                                             (fit-window-to-buffer)))))
 
 ;;;; Calibre
 (use-package calibredb
