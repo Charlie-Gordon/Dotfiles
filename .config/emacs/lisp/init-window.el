@@ -93,6 +93,14 @@
         ;; previous entry with more specific actions.
         ("." nil (reusable-frames . visible))))
 
+(use-package golden-ratio
+  :straight t
+  :config
+  (customize-set-variable 'golden-ratio-extra-commands (append golden-ratio-extra-commands
+                                                               '(aw-switch-to-window ace-window)))
+
+  (golden-ratio-mode))
+
 (provide 'init-window)
 ;;; init-window.el ends here
 
