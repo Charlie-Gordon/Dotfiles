@@ -73,7 +73,7 @@ Used to determines filename in `org-roam-capture-templates'."
            (file ,(expand-file-name "org-template/ROAM-note.txt" user-emacs-directory))
            :if-new
            (file+head
-            "%(expand-file-name \"lit\" *org-dir*)/${citekey}.org"
+            "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
             "#+title: ${citekey}.  ${title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unarrowed t)
           ))
@@ -160,7 +160,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-always-create-frame t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other nil)
-  (org-noter-notes-search-path (list (expand-file-name "lit" *org-dir*))))
+  (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory))))
 
 ;;;###autoload
 (defun org-noter-find-note-from-doc (doc-file)
@@ -239,7 +239,7 @@ With a prefix ARG, remove start location."
   :straight t
   :config
   (use-package org-ebook :ensure nil)
-  (add-to-list 'ereader-annotation-files '("BOWLING ALONE" "/storage/org/lit/RobertD.Putnam2001-08-01.org")))
+  (add-to-list 'ereader-annotation-files '("BOWLING ALONE" "/storage/org/slip-box/lit/RobertD.Putnam2001-08-01.org")))
 
 >>>>>>> 459ceb3 (Change display format of helm-bibtex and cutomize ereader.)
 ;;;; Calibre
@@ -276,7 +276,7 @@ With a prefix ARG, remove start location."
   (bibtex-autokey-titlewords 0)
   (bibtex-completion-bibliography reftex-default-bibliography)
   (bibtex-completion-library-path org-ref-pdf-directory)
-  (bibtex-completion-notes-path (expand-file-name "lit/" *org-dir*))
+  (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
   (bibtex-completion-display-formats
