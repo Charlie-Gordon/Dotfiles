@@ -180,14 +180,13 @@ Used to determines filename in `org-roam-capture-templates'."
 
 
 ;;;;;; pdf-tools integration
+
 (use-package org-pdftools
   :straight t
-  :requires (org-noter)
   :hook (org-mode . org-pdftools-setup-link))
-
 (use-package org-noter-pdftools
   :straight t
-  :requires (org-noter org-pdftools)
+  :after (org-noter org-pdftools)
   :config
   ;; Add a function to ensure precise note is inserted
   (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
@@ -215,6 +214,7 @@ With a prefix ARG, remove start location."
               (org-entry-delete nil org-noter-property-note-location)
             (org-entry-put nil org-noter-property-note-location
                            (org-noter--pretty-print-location location))))))))
+  
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
@@ -289,9 +289,7 @@ With a prefix ARG, remove start location."
 
 ;;;; PDF
 (use-package pdf-tools
-  :straight '(pdf-tools :type git :host github
-                        :repo "orgtre/pdf-tools")
-  :disabled
+  :straight t
   :mode "\\.pdf\\'"
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
