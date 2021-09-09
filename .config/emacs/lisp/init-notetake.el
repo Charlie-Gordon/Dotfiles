@@ -233,8 +233,18 @@ With a prefix ARG, remove start location."
                                            (let ((fit-window-to-buffer-horizontally t))
                                              (fit-window-to-buffer)))))
 
+<<<<<<< HEAD
+=======
+(use-package ereader
+  :straight t
+  :config
+  (use-package org-ebook :ensure nil)
+  (add-to-list 'ereader-annotation-files '("BOWLING ALONE" "/storage/org/lit/RobertD.Putnam2001-08-01.org")))
+
+>>>>>>> 459ceb3 (Change display format of helm-bibtex and cutomize ereader.)
 ;;;; Calibre
 (use-package calibredb
+  :disabled
   :straight '(calibredb.el :type git :host github
                            :repo "chenyanming/calibredb.el"
                            :fork t)
@@ -269,14 +279,15 @@ With a prefix ARG, remove start location."
   (bibtex-completion-notes-path (expand-file-name "lit/" *org-dir*))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
+  (bibtex-completion-display-formats
+   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
+     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
   (bibtex-completion-pdf-symbol "P")
   (bibtex-completion-notes-symbol "N")
   (bibtex-completion-notes-template-multiple-files
    "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
-  (bibtex-user-optional-fields '(("file" "Path to file")
-                                 ("url")))
-  (bibtex-completion-additional-search-fields '(file))
-  )
+  (bibtex-user-optional-fields '(("file" "Path to file")))
+  (bibtex-completion-additional-search-fields '(file formats)))
 
 ;;;; Djvu
 
@@ -401,6 +412,7 @@ tell user something’s wrong."
 
 ;;;; eww-bibtex
 (use-package eww-bibtex
+  :disabled
   :ensure nil)
 
 (provide 'init-notetake)
