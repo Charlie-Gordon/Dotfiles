@@ -62,7 +62,7 @@ Used to determines filename in `org-roam-capture-templates'."
         org-roam-db-update-method 'immediate
         org-roam-buffer-no-delete-other-windows t)
   (setq org-roam-capture-templates
-        '(("d" "default" plain
+        `(("d" "default" plain
            "%?"
            :if-new
            (file+head
@@ -70,7 +70,7 @@ Used to determines filename in `org-roam-capture-templates'."
             "#+title: ${title}\n#+created: %u\n#+last_modified: %U\n\n")
            :unnarrowed t)
           ("n" "note" plain
-           (file "~/.emacs.d/org-template/ROAM-note.txt")
+           (file ,(expand-file-name "org-template/ROAM-note.txt" user-emacs-directory))
            :if-new
            (file+head
             "%(expand-file-name \"lit\" *org-dir*)/${citekey}.org"
