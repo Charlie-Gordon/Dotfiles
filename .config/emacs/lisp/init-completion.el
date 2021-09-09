@@ -116,11 +116,21 @@
   :straight t
   :bind
   ("C-." . embark-act)
+  ("M-." . embark-dwim)
   (:map embark-url-map
 	("s" . browse-url-xdg-open)
 	("m" . my/mpv-play-url))
   (:map embark-symbol-map
-	("h" . helpful-at-point)))
+	("h" . helpful-at-point))
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
 
 ;;;; Company
 (use-package company
