@@ -69,6 +69,10 @@
   ("C-z c" . avy-goto-char-timer)
   ("C-z l" . avy-goto-line))
 
+(use-package ace-link
+  :straight t) 
+
+
 (use-package which-key
   :straight t
   :custom
