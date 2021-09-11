@@ -47,6 +47,9 @@ Edna Syntax: org-anki-this!"
     (org-anki-sync-entry))
   :diminish)
 
+(use-package org-make-toc
+  :straight t)
+
 (use-package org-fragtog
   :straight t
   :hook
