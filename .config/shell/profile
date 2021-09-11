@@ -7,25 +7,25 @@
 # If you don't plan on reverting to bash, you can remove the link in ~/.profile
 # to clean up.
 
+# For dumb terminal,
+if [ $TERM = "dumb" ]; then
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    if whence -w precmd >/dev/null; then
+        unfunction precmd
+    fi
+    if whence -w preexec >/dev/null; then
+        unfunction preexec
+    fi
+    unset RPROMPT
+    unset RPS1
+    unsetopt zle
+    unsetopt rcs  # Inhibit loading of further config files
+    unset zle_bracketed_paste
+    PS1="$ "
+fi
+
 # Adds `~/.local/bin` to $PATH
-
-# if [ $TERM = "tramp" ]; then
-#     unsetopt prompt_cr
-#     unsetopt prompt_subst
-#     if whence -w precmd >/dev/null; then
-#         unfunction precmd
-#     fi
-#     if whence -w preexec >/dev/null; then
-#         unfunction preexec
-#     fi
-#     unset RPROMPT
-#     unset RPS1
-#     unsetopt zle
-#     unsetopt rcs  # Inhibit loading of further config files
-#     unset zle_bracketed_paste
-#     PS1="$ "
-# fi
-
 export PATH="$PATH:${$(find ~/.local/bin -type d)%%:}"
 
 # Default programs:
