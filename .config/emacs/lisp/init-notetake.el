@@ -14,6 +14,113 @@
   :config
   (global-set-key (kbd "C-' b") #'helm-bibtex))
 
+;;;; EPUB(with nov.el)
+(use-package nov
+  :straight t
+  :bind (:map nov-mode-map
+	      ("C-S-n" . shr-next-link)
+	      ("C-S-p" . shr-previous-link))
+  :mode (("\\.epub\\'" . nov-mode))
+  :custom
+  (nov-text-width fill-column)
+  (nov-variable-pitch nil)
+  :config
+  (add-hook 'nov-post-html-render-hook #'(lambda ()
+                                           (let ((fit-window-to-buffer-horizontally t))
+                                             (fit-window-to-buffer)
+                                             (setq-local mode-name (format "EPUB/P%d" nov-documents-index))))))
+;;;; Calibre
+(use-package calibredb
+  :straight '(calibredb.el :type git :host github
+                           :repo "chenyanming/calibredb.el"
+                           :fork t)
+  :when (executable-find "calibredb")
+  :config
+  (setq calibredb-program (executable-find "calibredb"))
+  (setq calibredb-root-dir *library-dir*)
+  (setq calibredb-library-alist `((,*library-dir*)))
+  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
+  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
+  (setq calibredb-sort-by 'title)
+  (setq calibredb-sql-newline "\n")
+  (setq calibredb-sql-separator "|")
+  (setq calibredb-detailed-view nil))
+             
+;;;; Bibtex completion
+(use-package bibtex-completion
+  :ensure nil
+  :requires org-ref
+  :custom
+  (bibtex-align-at-equal-sign t)
+  (bibtex-autokey-name-year-separator "")
+  (bibtex-autokey-year-title-separator "")
+  (bibtex-autokey-year-length 4)
+  (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
+  (bibtex-completion-cite-default-command "cite")
+  (bibtex-autokey-titleword-length 20)
+  (bibtex-autokey-titlewords-stretch 0)
+  (bibtex-autokey-titlewords 0)
+  (bibtex-completion-bibliography reftex-default-bibliography)
+  (bibtex-completion-library-path org-ref-pdf-directory)
+  (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
+  (bibtex-completion-pdf-field "file")
+  (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
+  (bibtex-completion-display-formats
+   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
+     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
+  (bibtex-completion-pdf-symbol "P")
+  (bibtex-completion-notes-symbol "N")
+  (bibtex-completion-notes-template-multiple-files
+   "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
+  (bibtex-user-optional-fields '(("file" "Path to file")))
+  (bibtex-completion-additional-search-fields '(file formats)))
+
+;;;; Djvu
+
+(use-package djvu3
+  :straight djvu '(djvu3 :type git :host github
+                         :repo "dalanicolai/djvu3")
+  :when (executable-find "djvused")
+  :custom
+  (djvu-continuous t))
+
+(use-package toc-mode
+  :straight t)
+
+
+;;;; PDF
+(use-package pdf-tools
+  :load-path "site-lisp/pdf-tools"
+  :mode "\\.pdf\\'"
+  :custom
+  (pdf-annot-minor-mode-map-prefix "a")
+  (pdf-view-display-size 'fit-page)
+  (pdf-annot-activate-created-annotations t)
+  (pdf-view-resize-factor 1.1)
+  (pdf-keynav-transient-mark-mode t)
+  :config
+  (pdf-loader-install)
+  (defun pdf-view-midnight-colors-theme ()
+    (cons (frame-parameter nil 'foreground-color)
+          (color-darken-name
+           (frame-parameter nil 'background-color) 5)))
+  
+  (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
+  
+  (defun prot/pdf-tools-backdrop ()
+    (face-remap-add-relative
+     'default
+     `(:background ,(modus-themes-color 'bg-alt))))
+  (defun prot/pdf-tools-midnight-mode-toggle ()
+    (when (derived-mode-p 'pdf-view-mode)
+      (if (eq (car custom-enabled-themes) 'modus-vivendi)
+          (pdf-view-midnight-minor-mode 1)
+        (pdf-view-midnight-minor-mode -1))
+      (prot/pdf-tools-backdrop)))
+  
+  (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
+
 ;;;; Note-taking with org
 ;;;;; Org-roam
 
@@ -129,11 +236,13 @@ Used to determines filename in `org-roam-capture-templates'."
 
 ;;;;; Media note
 (use-package org-media-note
+  :init (setq org-media-note-use-org-ref t)
   :straight '(org-media-note :type git
                              :host github
                              :repo "yuchen-lea/org-media-note")
   :hook (org-mode . org-media-note-mode)
   :bind ("s-v" . org-media-note-hydra/body))
+
 ;;;;; Org-transclusion
 (use-package org-transclusion
   :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion")
@@ -145,6 +254,7 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package interleave
   :straight t
+  :disabled
   :custom
   (interleave--pdf-prop "INTERLEAVE_URL")
   (interleave--page-note-prop "INTERLEAVE_PAGE_NOTE"))
@@ -162,6 +272,12 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory))))
 
+(use-package org-noter-media
+  :ensure nil)
+
+(use-package org-noter-nov-overlay
+  :ensure nil)
+
 ;;;###autoload
 (defun org-noter-find-note-from-doc (doc-file)
   (mapcar (lambda (key)
@@ -177,185 +293,13 @@ Used to determines filename in `org-roam-capture-templates'."
   :disabled
   :ensure nil)
 
-
-;;;;;; pdf-tools integration
-
-(use-package org-pdftools
-  :straight t
-  :hook (org-mode . org-pdftools-setup-link))
-(use-package org-noter-pdftools
-  :straight t
-  :after (org-noter org-pdftools)
-  :config
-  ;; Add a function to ensure precise note is inserted
-  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
-                                                   (not org-noter-insert-note-no-questions)
-                                                 org-noter-insert-note-no-questions))
-           (org-pdftools-use-isearch-link t)
-           (org-pdftools-use-freestyle-annot t))
-       (org-noter-insert-note (org-noter--get-precise-info)))))
-  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
-  (defun org-noter-set-start-location (&optional arg)
-    "When opening a session with this document, go to the current location.
-With a prefix ARG, remove start location."
-    (interactive "P")
-    (org-noter--with-valid-session
-     (let ((inhibit-read-only t)
-           (ast (org-noter--parse-root))
-           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
-       (with-current-buffer (org-noter--session-notes-buffer session)
-         (org-with-wide-buffer
-          (goto-char (org-element-property :begin ast))
-          (if arg
-              (org-entry-delete nil org-noter-property-note-location)
-            (org-entry-put nil org-noter-property-note-location
-                           (org-noter--pretty-print-location location))))))))
-  
-  (with-eval-after-load 'pdf-annot
-    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
-
-
-;;;; EPUB(with nov.el)
-(use-package nov
-  :straight t
-  :bind (:map nov-mode-map
-	      ("C-S-n" . shr-next-link)
-	      ("C-S-p" . shr-previous-link))
-  :mode (("\\.epub\\'" . nov-mode))
-  :custom
-  (nov-text-width fill-column)
-  (nov-variable-pitch nil)
-  :config
-  (add-hook 'nov-post-html-render-hook #'(lambda ()
-                                           (let ((fit-window-to-buffer-horizontally t))
-                                             (fit-window-to-buffer)))))
-
-<<<<<<< HEAD
-=======
-(use-package ereader
-  :straight t
-  :config
-  (use-package org-ebook :ensure nil)
-  (add-to-list 'ereader-annotation-files '("BOWLING ALONE" "/storage/org/slip-box/lit/RobertD.Putnam2001-08-01.org")))
-
->>>>>>> 459ceb3 (Change display format of helm-bibtex and cutomize ereader.)
-;;;; Calibre
-(use-package calibredb
-  :disabled
-  :straight '(calibredb.el :type git :host github
-                           :repo "chenyanming/calibredb.el"
-                           :fork t)
-  :when (executable-find "calibredb")
-  :config
-  (setq calibredb-program (executable-find "calibredb"))
-  (setq calibredb-root-dir *library-dir*)
-  (setq calibredb-library-alist `((,*library-dir*)))
-  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
-  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
-  (setq calibredb-sort-by 'title)
-  (setq calibredb-sql-newline "\n")
-  (setq calibredb-sql-separator "|")
-  (setq calibredb-detailed-view nil))
-             
-;;;; Bibtex completion
-(use-package bibtex-completion
-  :ensure nil
-  :requires org-ref
-  :custom
-  (bibtex-align-at-equal-sign t)
-  (bibtex-autokey-name-year-separator "")
-  (bibtex-autokey-year-title-separator "")
-  (bibtex-autokey-year-length 4)
-  (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
-  (bibtex-completion-cite-default-command "cite")
-  (bibtex-autokey-titleword-length 20)
-  (bibtex-autokey-titlewords-stretch 0)
-  (bibtex-autokey-titlewords 0)
-  (bibtex-completion-bibliography reftex-default-bibliography)
-  (bibtex-completion-library-path org-ref-pdf-directory)
-  (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
-  (bibtex-completion-pdf-field "file")
-  (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
-  (bibtex-completion-display-formats
-   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
-     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
-  (bibtex-completion-pdf-symbol "P")
-  (bibtex-completion-notes-symbol "N")
-  (bibtex-completion-notes-template-multiple-files
-   "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
-  (bibtex-user-optional-fields '(("file" "Path to file")))
-  (bibtex-completion-additional-search-fields '(file formats)))
-
-;;;; Djvu
-
-(use-package djvu3
-  :straight djvu '(djvu3 :type git :host github
-                         :repo "dalanicolai/djvu3")
-  :when (executable-find "djvused")
-  :custom
-  (djvu-continuous t))
-
-(use-package toc-mode
-  :straight t)
-
-
-;;;; PDF
-(use-package pdf-tools
-  :straight t
-  :mode "\\.pdf\\'"
-  :custom
-  (pdf-annot-minor-mode-map-prefix "a")
-  (pdf-view-display-size 'fit-page)
-  (pdf-annot-activate-created-annotations t)
-  (pdf-view-resize-factor 1.1)
-  (pdf-keynav-transient-mark-mode t)
-  :config
-  (pdf-loader-install)
-  (defun pdf-view-midnight-colors-theme ()
-    (cons (frame-parameter nil 'foreground-color)
-          (color-darken-name
-           (frame-parameter nil 'background-color) 5)))
-  (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
-  (defun prot/pdf-tools-backdrop ()
-    (face-remap-add-relative
-     'default
-     `(:background ,(modus-themes-color 'bg-alt))))
-  (defun prot/pdf-tools-midnight-mode-toggle ()
-    (when (derived-mode-p 'pdf-view-mode)
-      (if (eq (car custom-enabled-themes) 'modus-vivendi)
-          (pdf-view-midnight-minor-mode 1)
-        (pdf-view-midnight-minor-mode -1))
-      (prot/pdf-tools-backdrop)))
-  (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
-
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
-  :straight '(org-anki :type git :host github :repo "eyeinsky/org-anki"
-                       :fork t)
+  :straight promise request '(org-anki :type git :host github :repo "eyeinsky/org-anki")
   :when (executable-find "anki")
-  :disabled
   :init
-  (use-package request :straight t)
   :custom
-  (org-anki-default-deck "one-big-deck")
-  :config
-  (add-hook 'org-anki-get-note-type-hook #'org-anki--check-muhbasic 1)
-  (add-to-list 'org-anki-get-fields-note '("MuhBasic" . org-anki--get-fields-MuhBasic-type))
-  ;;;###autoload
-  (defun org-anki--check-muhbasic (front back)
-    (when (org-entry-get-with-inheritance eaf-interleave--url-prop)
-      "MuhBasic"))
-  (defun org-anki--get-fields-MuhBasic-type (front back)
-    (list (cons "Front" front)
-          (cons "Back" back)
-          (cons "Context" (file-name-base
-                           (org-entry-get-with-inheritance eaf-interleave--url-prop))))))
-
-
+  (org-anki-default-deck "one-big-deck"))
 
 (use-package emacsql-sqlite :straight t)
 
