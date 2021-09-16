@@ -22,15 +22,6 @@
                                            (let ((fit-window-to-buffer-horizontally t))
                                              (fit-window-to-buffer)
                                              (setq-local mode-name (format "EPUB/P%d" nov-documents-index))))))
-;;;; Djvu
-
-(use-package djvu3
-  :straight djvu '(djvu3 :type git :host github
-                         :repo "dalanicolai/djvu3")
-  :when (executable-find "djvused")
-  :custom
-  (djvu-continuous t))
-
 ;;;; PDF
 (use-package pdf-tools
   :straight '(pdf-tools :type git :host github
@@ -68,6 +59,15 @@
 
 (use-package toc-mode
   :straight t)
+
+;;;; Djvu
+
+(use-package djvu3
+  :straight djvu '(djvu3 :type git :host github
+                         :repo "dalanicolai/djvu3")
+  :when (executable-find "djvused")
+  :custom
+  (djvu-continuous t))
 
 ;;;; Helm-bibtex
 (use-package helm-bibtex
