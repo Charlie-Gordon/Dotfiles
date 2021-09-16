@@ -61,6 +61,12 @@
   (setq-default display-fill-column-indicator-character ?\u254e)
   (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode))
 
+(use-package rainbow-delimiters
+  :straight t
+  :hook
+  (progn-mode . rainbow-delimiters-mode))
+
+
 (use-package avy
   :straight t
   :preface
