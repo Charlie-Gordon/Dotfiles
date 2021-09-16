@@ -7,13 +7,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Helm-bibtex
-(use-package helm-bibtex
-  :straight '(helm-bibtex :type git :host github
-                          :repo "c1-g/helm-bibtex")
-  :config
-  (global-set-key (kbd "C-' b") #'helm-bibtex))
-
 ;;;; EPUB(with nov.el)
 (use-package nov
   :straight t
@@ -29,52 +22,6 @@
                                            (let ((fit-window-to-buffer-horizontally t))
                                              (fit-window-to-buffer)
                                              (setq-local mode-name (format "EPUB/P%d" nov-documents-index))))))
-;;;; Calibre
-(use-package calibredb
-  :straight '(calibredb.el :type git :host github
-                           :repo "chenyanming/calibredb.el"
-                           :fork t)
-  :when (executable-find "calibredb")
-  :config
-  (setq calibredb-program (executable-find "calibredb"))
-  (setq calibredb-root-dir *library-dir*)
-  (setq calibredb-library-alist `((,*library-dir*)))
-  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
-  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
-  (setq calibredb-sort-by 'title)
-  (setq calibredb-sql-newline "\n")
-  (setq calibredb-sql-separator "|")
-  (setq calibredb-detailed-view nil))
-             
-;;;; Bibtex completion
-(use-package bibtex-completion
-  :ensure nil
-  :requires org-ref
-  :custom
-  (bibtex-align-at-equal-sign t)
-  (bibtex-autokey-name-year-separator "")
-  (bibtex-autokey-year-title-separator "")
-  (bibtex-autokey-year-length 4)
-  (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
-  (bibtex-completion-cite-default-command "cite")
-  (bibtex-autokey-titleword-length 20)
-  (bibtex-autokey-titlewords-stretch 0)
-  (bibtex-autokey-titlewords 0)
-  (bibtex-completion-bibliography reftex-default-bibliography)
-  (bibtex-completion-library-path org-ref-pdf-directory)
-  (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
-  (bibtex-completion-pdf-field "file")
-  (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
-  (bibtex-completion-display-formats
-   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
-     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
-  (bibtex-completion-pdf-symbol "P")
-  (bibtex-completion-notes-symbol "N")
-  (bibtex-completion-notes-template-multiple-files
-   "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
-  (bibtex-user-optional-fields '(("file" "Path to file")))
-  (bibtex-completion-additional-search-fields '(file formats)))
-
 ;;;; Djvu
 
 (use-package djvu3
@@ -84,13 +31,11 @@
   :custom
   (djvu-continuous t))
 
-(use-package toc-mode
-  :straight t)
-
-
 ;;;; PDF
 (use-package pdf-tools
-  :load-path "site-lisp/pdf-tools"
+  :straight '(pdf-tools :type git :host github
+                        :repo "vedang/pdf-tools"
+                        :fork "orgtre/pdf-tools")
   :mode "\\.pdf\\'"
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
@@ -120,6 +65,61 @@
   
   (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
   (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
+
+(use-package toc-mode
+  :straight t)
+
+;;;; Helm-bibtex
+(use-package helm-bibtex
+  :straight '(helm-bibtex :type git :host github
+                          :repo "c1-g/helm-bibtex")
+  :config
+  (global-set-key (kbd "C-' b") #'helm-bibtex))
+
+;;;; Calibre
+(use-package calibredb
+  :straight '(calibredb.el :type git :host github
+                           :repo "chenyanming/calibredb.el"
+                           :fork t)
+  :when (executable-find "calibredb")
+  :config
+  (setq calibredb-program (executable-find "calibredb"))
+  (setq calibredb-root-dir *library-dir*)
+  (setq calibredb-library-alist `((,*library-dir*)))
+  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
+  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
+  (setq calibredb-sort-by 'title)
+  (setq calibredb-sql-newline "\n")
+  (setq calibredb-sql-separator "|")
+  (setq calibredb-detailed-view nil))
+             
+;;;; Bibtex completion
+(use-package bibtex-completion
+  :ensure nil
+  :custom
+  (bibtex-align-at-equal-sign t)
+  (bibtex-autokey-name-year-separator "")
+  (bibtex-autokey-year-title-separator "")
+  (bibtex-autokey-year-length 4)
+  (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
+  (bibtex-completion-cite-default-command "cite")
+  (bibtex-autokey-titleword-length 20)
+  (bibtex-autokey-titlewords-stretch 0)
+  (bibtex-autokey-titlewords 0)
+  (bibtex-completion-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
+  (bibtex-completion-library-path org-ref-pdf-directory)
+  (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
+  (bibtex-completion-pdf-field "file")
+  (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
+  (bibtex-completion-display-formats
+   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
+     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
+  (bibtex-completion-pdf-symbol "P")
+  (bibtex-completion-notes-symbol "N")
+  (bibtex-completion-notes-template-multiple-files
+   "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
+  (bibtex-user-optional-fields '(("file" "Path to file")))
+  (bibtex-completion-additional-search-fields '(file formats)))
 
 ;;;; Note-taking with org
 ;;;;; Org-roam
@@ -182,8 +182,7 @@ Used to determines filename in `org-roam-capture-templates'."
            (file+head
             "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
             "#+title: ${citekey}.  ${title}.\n#+created: %U\n#+last_modified: %U\n\n")
-           :unarrowed t)
-          ))
+           :unarrowed t)))
   (setq org-roam-dailies-capture-templates
         `(("d" "default" plain
            "* %?"
@@ -222,17 +221,13 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package org-ref
   :straight t
   :when *bibliography-dir*
-  :after helm-bibtex
+  :after (helm-bibtex pdf-tools)
   :custom
   (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
   (org-ref-notes-function #'orb-notes-fn)
   (org-ref-pdf-directory *library-dir*)
   (org-ref-default-bibliography reftex-default-bibliography)
-  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex)
-  :config
-  (defhydra+ org-ref-bibtex-new-entry (:color blue)
-    "New Bibtex entry:"
-    ("o" bibtex-Online "Online website")))
+  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
 
 ;;;;; Media note
 (use-package org-media-note
@@ -241,7 +236,9 @@ Used to determines filename in `org-roam-capture-templates'."
                              :host github
                              :repo "yuchen-lea/org-media-note")
   :hook (org-mode . org-media-note-mode)
-  :bind ("s-v" . org-media-note-hydra/body))
+  :bind ("s-v" . org-media-note-hydra/body)
+  :config
+  (use-package org-media-note-org-ref :ensure nil))
 
 ;;;;; Org-transclusion
 (use-package org-transclusion
@@ -272,11 +269,16 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory))))
 
-(use-package org-noter-media
-  :ensure nil)
+(use-package mpv
+  :straight t)
+
 
 (use-package org-noter-nov-overlay
   :ensure nil)
+
+(use-package org-noter-media
+  :ensure nil)
+
 
 ;;;###autoload
 (defun org-noter-find-note-from-doc (doc-file)
@@ -300,9 +302,9 @@ Used to determines filename in `org-roam-capture-templates'."
   :init
   :custom
   (org-anki-default-deck "one-big-deck"))
-
+(use-package org-drill
+  :straight t)
 (use-package emacsql-sqlite :straight t)
-
 (use-package anki
   :straight '(anki :type git :host github :repo "chenyanming/anki.el")
   :when (executable-find "anki")
@@ -317,8 +319,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (setq anki-shr-rendering-functions (append anki-shr-rendering-functions shr-external-rendering-functions))
   ;; Set up the collection directory, which should contain a file - collection.anki2 and a folder - collection.media
   ;; (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1")
-  )
-
+)
 ;;;###autoload
 (defun calibredb-query (sql-query)
     "Query calibre database and return the result.
@@ -331,9 +332,9 @@ terminates successfully, it will return the string of the output
 buffer. If the program fails, it will switch to the output buffer and
 tell user something’s wrong."
     (interactive)
-    (let ((inhibit-message t)
-          (out-buf " *calibredb-query-output*")
-          (tmp (make-temp-file "*calibredb-query-string*" nil nil sql-query)))
+    (let* ((inhibit-message t)
+             (out-buf " *calibredb-query-output*")
+             (tmp (make-temp-file "*calibredb-query-string*" nil nil sql-query)))
       (when (get-buffer out-buf)
         (kill-buffer out-buf))
       (if (not (file-exists-p calibredb-db-dir))
