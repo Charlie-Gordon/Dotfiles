@@ -51,5 +51,14 @@
 
 (straight-use-package 'use-package)
 
+(defun straight-remove-package (&optional force)
+  (interactive "P")
+  (let ((repo (completing-read "Delete repository: "
+                               (straight--directory-files
+                                (straight--repos-dir) nil nil 'sort))))
+    (when (or force (y-or-n-p (format "Delete repository %S? " repo)))
+      (delete-directory (straight--repos-dir repo) 'recursive 'trash)
+      (message "Deleted %s" repo))))
+
 (provide 'init-straight)
 ;;; init-straight.el ends here
