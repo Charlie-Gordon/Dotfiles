@@ -203,7 +203,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (orb-autokey-format "%a%y")
   (orb-file-field-extensions '("pdf" "epub" "djvu"))
-  (bibtex-completion-edit-notes-function #'orb-edit-notes)
+  (bibtex-completion-edit-notes-function #'orb-bibtex-completion-edit-note)
   :config
   (add-to-list 'orb-preformat-keywords "url")
   (org-roam-bibtex-mode)
