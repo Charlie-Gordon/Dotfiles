@@ -10,10 +10,19 @@
 ;;;; Find-file with root permissions
 ;; From https://emacsredux.com/blog/2013/04/21/edit-files-as-root/
 
-(defadvice find-file (after find-file-doas activate)
-  "Find file as root if necessary."
-  (unless (file-writable-p buffer-file-name)
+(defun doas-edit (&optional arg)
+  "Edit currently visited file as root.
+
+With a prefix ARG prompt for a file to visit.
+Will also prompt for a file to visit if current
+buffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/doas::"
+                         (read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/doas::" buffer-file-name))))
+
+(global-set-key [remap find-file-read-only] #'doas-edit)
 
 ;;;; Magit shortcuts
 ;;;###autoload
