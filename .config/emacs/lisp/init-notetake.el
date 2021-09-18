@@ -9,7 +9,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; EPUB(with nov.el)
 (use-package nov
-  :straight t
+  :straight '(nov :type git
+                  :repo "https://depp.brause.cc/nov.el.git"
+                  :fork "git@notabug.org:c1-g/nov.el.git")
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
@@ -20,8 +22,7 @@
   :config
   (add-hook 'nov-post-html-render-hook #'(lambda ()
                                            (let ((fit-window-to-buffer-horizontally t))
-                                             (fit-window-to-buffer)
-                                             (setq-local mode-name (format "EPUB/P%d" nov-documents-index))))))
+                                             (fit-window-to-buffer)))))
 ;;;; PDF
 (use-package pdf-tools
   :straight '(pdf-tools :type git :host github
@@ -232,6 +233,7 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Media note
 (use-package org-media-note
   :init (setq org-media-note-use-org-ref t)
+  :disabled
   :straight '(org-media-note :type git
                              :host github
                              :repo "yuchen-lea/org-media-note")
@@ -258,7 +260,8 @@ Used to determines filename in `org-roam-capture-templates'."
 
 ;;;;; Org-noter
 (use-package org-noter
-  :load-path "site-lisp/org-noter-plus-djvu"
+  :straight '(org-noter-plus-djvu :type git
+                                  :repo "https://notabug.org/c1-g/org-noter-plus-djvu.git")
   :custom
   (org-noter-property-doc-file "INTERLEAVE_URL")
   (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE")
