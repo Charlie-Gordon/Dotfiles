@@ -261,7 +261,8 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Org-noter
 (use-package org-noter
   :straight '(org-noter-plus-djvu :type git
-                                  :repo "https://notabug.org/c1-g/org-noter-plus-djvu.git")
+                                  :repo "https://notabug.org/c1-g/org-noter-plus-djvu.git"
+                                  :file ("other" "*.el" "other/*.el"))
   :custom
   (org-noter-property-doc-file "INTERLEAVE_URL")
   (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE")
@@ -270,33 +271,9 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-always-create-frame t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other nil)
-  (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory))))
-
-(use-package mpv
-  :straight t)
-
-
-(use-package org-noter-nov-overlay
-  :ensure nil)
-
-(use-package org-noter-media
-  :ensure nil)
-
-
-;;;###autoload
-(defun org-noter-find-note-from-doc (doc-file)
-  (mapcar (lambda (key)
-            (concat key ".org"))
-          (bibtex-completion-find-key-from-file doc-file)))
-
-(use-package text-clone :ensure nil)
-
-(use-package org-noter-synoptic
-  :after text-clone org-roam-bibtex org-noter
+  (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
-  (add-hook 'org-noter-notes-mode-hook 'org-noter-synoptic--find-companion)
-  :disabled
-  :ensure nil)
+  (use-package org-noter-nov-overlay :ensure nil))
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
