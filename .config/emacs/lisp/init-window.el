@@ -11,16 +11,14 @@
   :config
   (winner-mode))
 
-(use-package switch-window
+(use-package ace-window
   :straight t
+  :custom
+  (aw-keys '(?q ?w ?f ?a ?r ?s ?t ?x ?c ?d ?v))
+  (aw-background nil)
+  (aw-display-mode-overlay nil)
   :config
-  (setq switch-window-input-style 'minibuffer)
-  (setq switch-window-increase 4)
-  (setq switch-window-threshold 2)
-  (setq switch-window-qwerty-shortcuts
-	  '("q" "w" "f" "a" "r" "s" "t" "x" "c" "d" "v"))
-  :bind
-  ([remap other-window] . switch-window))
+  (ace-window-display-mode t))
 
 ;; Configure ‘display-buffer’ behaviour for some special buffers
 (setq display-buffer-alist
