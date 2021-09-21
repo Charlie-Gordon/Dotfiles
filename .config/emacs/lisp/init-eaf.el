@@ -5,7 +5,10 @@
 
 
 (use-package eaf
-  :load-path "site-lisp/emacs-application-framework"
+  :straight '(emacs-application-framework
+              :type git
+              :host github
+              :repo "emacs-eaf/emacs-application-framework")
   :config
   (global-set-key (kbd "<f12>") #'eaf-toggle)
   (defun eaf-toggle ()
