@@ -91,10 +91,10 @@
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
   (eww-download-directory (expand-file-name "~/Downloads/"))
-  (eww-bookmarks-directory (if (file-accessible-directory-p  (locate-user-emacs-file "eww-bookmarks/"))
-                               (locate-user-emacs-file "eww-bookmarks/")
+  (eww-bookmarks-directory (if (file-accessible-directory-p  (expand-file-name "eww-bookmarks/" user-emacs-directory))
+                               (expand-file-name "eww-bookmarks/" user-emacs-directory)
                              (make-directory "eww-bookmarks" user-emacs-directory)
-                             (locate-user-emacs-file "eww-bookmarks/")))
+                             (expand-file-name "eww-bookmarks/" user-emacs-directory)))
   (eww-header-line-format nil)
   (eww-restore-desktop t)
   (eww-desktop-remove-duplicates t)
