@@ -94,34 +94,6 @@
   (setq calibredb-sql-separator "|")
   (setq calibredb-detailed-view nil))
              
-;;;; Bibtex completion
-(use-package bibtex-completion
-  :ensure nil
-  :custom
-  (bibtex-align-at-equal-sign t)
-  (bibtex-autokey-name-year-separator "")
-  (bibtex-autokey-year-title-separator "")
-  (bibtex-autokey-year-length 4)
-  (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
-  (bibtex-completion-cite-default-command "cite")
-  (bibtex-autokey-titleword-length 20)
-  (bibtex-autokey-titlewords-stretch 0)
-  (bibtex-autokey-titlewords 0)
-  (bibtex-completion-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
-  (bibtex-completion-library-path org-ref-pdf-directory)
-  (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
-  (bibtex-completion-pdf-field "file")
-  (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
-  (bibtex-completion-display-formats
-   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
-     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
-  (bibtex-completion-pdf-symbol "P")
-  (bibtex-completion-notes-symbol "N")
-  (bibtex-completion-notes-template-multiple-files
-   "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
-  (bibtex-user-optional-fields '(("file" "Path to file")))
-  (bibtex-completion-additional-search-fields '(file formats)))
-
 ;;;; Note-taking with org
 ;;;;; Org-roam
 
@@ -273,7 +245,36 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
-  (use-package org-noter-nov-overlay :ensure nil))
+  (use-package org-noter-nov-overlay :ensure nil :disabled))
+
+;;;; Bibtex completion
+(use-package bibtex-completion
+  :ensure nil
+  :custom
+  (bibtex-align-at-equal-sign t)
+  (bibtex-autokey-name-year-separator "")
+  (bibtex-autokey-year-title-separator "")
+  (bibtex-autokey-year-length 4)
+  (bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an"))
+  (bibtex-completion-cite-default-command "cite")
+  (bibtex-autokey-titleword-length 20)
+  (bibtex-autokey-titlewords-stretch 0)
+  (bibtex-autokey-titlewords 0)
+  (bibtex-completion-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
+  (bibtex-completion-library-path org-ref-pdf-directory)
+  (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
+  (bibtex-completion-pdf-field "file")
+  (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
+  (bibtex-completion-display-formats
+   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
+     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
+  (bibtex-completion-pdf-symbol "P")
+  (bibtex-completion-notes-symbol "N")
+  (bibtex-completion-notes-template-multiple-files
+   "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
+  (bibtex-user-optional-fields '(("file" "Path to file")))
+  (bibtex-completion-additional-search-fields '(file formats)))
+
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
