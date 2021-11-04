@@ -26,7 +26,7 @@ if [ $TERM = "dumb" ]; then
 fi
 
 # Adds `~/.local/bin` to $PATH
-export PATH="$PATH:${$(find ~/.local/bin -type d)%%:}"
+export PATH="$PATH:$HOME/.local/bin"
 
 # Default programs:
 export EDITOR="emacs"
