@@ -18,16 +18,16 @@
   :mode (("\\.epub\\'" . nov-mode))
   :custom
   (nov-text-width fill-column)
-  (nov-variable-pitch nil)
-  :config
-  (add-hook 'nov-post-html-render-hook #'(lambda ()
-                                           (let ((fit-window-to-buffer-horizontally t))
-                                             (fit-window-to-buffer)))))
+  (nov-variable-pitch nil))
+
 ;;;; PDF
 (use-package pdf-tools
   :straight '(pdf-tools :type git :host github
                         :repo "vedang/pdf-tools"
                         :fork "orgtre/pdf-tools")
+  :bind (:map pdf-view-mode-map
+               ("j" . pdf-view-next-line-or-next-page)
+               ("k" . pdf-view-previous-line-or-previous-page))
   :mode "\\.pdf\\'"
   :custom
   (pdf-annot-minor-mode-map-prefix "a")
@@ -106,13 +106,7 @@ If `file-expand-wildcards' returns non-nil then return the length of the list of
 names that matches its pattern i.e. count them.
 
 Used to determines filename in `org-roam-capture-templates'."
-  (let ((org-files))
-    (if (directory-name-p directory)
-        nil
-      (message "%s is not a directory name using %s instead."
-               directory (directory-file-name directory))
-      (setq directory (directory-file-name directory)))
-    (setq org-files (file-expand-wildcards (concat directory "*.org")))
+  (let ((org-files (file-expand-wildcards (concat directory "*.org"))))
     (if org-files
         (length org-files)
       0)))
@@ -121,7 +115,8 @@ Used to determines filename in `org-roam-capture-templates'."
 (defun org-roam-slip-box-new-file ()
   "Return a new file path when creating a new note."
   (concat org-roam-directory (number-to-string (float (1+
-                                (my/count-org-file-in-directory org-roam-directory))))))
+                                                       (my/count-org-file-in-directory org-roam-directory))))
+          ".org"))
 
 (use-package org-roam
   :straight t
@@ -133,7 +128,7 @@ Used to determines filename in `org-roam-capture-templates'."
          ;; Dailies
          ("C-c n j" . org-roam-dailies-capture-today))
   :init
-  (defvar org-roam-directory (expand-file-name "slip-box" *org-dir*))
+  (defvar org-roam-directory (expand-file-name "slip-box/" *org-dir*))
   (defvar org-roam-v2-ack t)
   :config
   (org-roam-setup)
@@ -247,6 +242,42 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (use-package org-noter-nov-overlay :ensure nil :disabled))
 
+(use-package org-noter-pdftools
+  :after org-noter
+  :straight t
+  :hook (org-mode . org-pdftools-setup-link)
+  :config
+  ;; Add a function to ensure precise note is inserted
+  (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                   (not org-noter-insert-note-no-questions)
+                                                 org-noter-insert-note-no-questions))
+           (org-pdftools-use-isearch-link t)
+           (org-pdftools-use-freestyle-annot t))
+       (org-noter-insert-note (org-noter--get-precise-info)))))
+
+  ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
+  (defun org-noter-set-start-location (&optional arg)
+    "When opening a session with this document, go to the current location.
+With a prefix ARG, remove start location."
+    (interactive "P")
+    (org-noter--with-valid-session
+     (let ((inhibit-read-only t)
+           (ast (org-noter--parse-root))
+           (location (org-noter--doc-approx-location (when (called-interactively-p 'any) 'interactive))))
+       (with-current-buffer (org-noter--session-notes-buffer session)
+         (org-with-wide-buffer
+          (goto-char (org-element-property :begin ast))
+          (if arg
+              (org-entry-delete nil org-noter-property-note-location)
+            (org-entry-put nil org-noter-property-note-location
+                           (org-noter--pretty-print-location location))))))))
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
+
 ;;;; Bibtex completion
 (use-package bibtex-completion
   :ensure nil
@@ -283,24 +314,12 @@ Used to determines filename in `org-roam-capture-templates'."
   :init
   :custom
   (org-anki-default-deck "one-big-deck"))
+
 (use-package org-drill
   :straight t)
+
 (use-package emacsql-sqlite :straight t)
-(use-package anki
-  :straight '(anki :type git :host github :repo "chenyanming/anki.el")
-  :when (executable-find "anki")
-  :init
-  (add-hook 'anki-mode-hook #'shrface-mode)
-  (add-hook 'anki-card-mode-hook #'shrface-mode)
-  (autoload 'anki "anki")
-  (autoload 'anki-browser "anki")
-  (autoload 'anki-list-decks "anki")
-  :config
-  ;; (require 'shrface) ; If you use shrface, require it here
-  (setq anki-shr-rendering-functions (append anki-shr-rendering-functions shr-external-rendering-functions))
-  ;; Set up the collection directory, which should contain a file - collection.anki2 and a folder - collection.media
-  ;; (setq anki-collection-dir "/Users/chandamon/Library/Application Support/Anki2/User 1")
-)
+
 ;;;###autoload
 (defun calibredb-query (sql-query)
     "Query calibre database and return the result.
@@ -338,7 +357,6 @@ tell user something’s wrong."
 
 ;;;; eww-bibtex
 (use-package eww-bibtex
-  :disabled
   :ensure nil)
 
 (provide 'init-notetake)
