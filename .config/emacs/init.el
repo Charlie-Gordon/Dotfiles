@@ -40,7 +40,8 @@
 ;;;;; Individual configuration
 ;;;;;; Hyperbole
 (use-package hyperbole
-  :straight t)
+  :straight t
+  :disabled)
 ;;;;;; Repeat mode
 (use-package repeat
   :ensure nil
@@ -48,10 +49,10 @@
   (repeat-mode 1))
 ;;;;;; Eldoc
 (when (fboundp 'global-eldoc-mode)
-  (add-hook 'after-init-hook 'global-eldoc-mode))
+  (add-hook 'after-init-hook #'global-eldoc-mode))
 ;;;;;; Emacsclient
 (add-hook 'after-init-hook
-          '(lambda ()
+          #'(lambda ()
              (require 'server)
              (unless (server-running-p)
                (server-start))))
