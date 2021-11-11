@@ -1,5 +1,5 @@
 
-* On ${title}
+* ${title}
 :PROPERTIES:
 :INTERLEAVE_URL: %^{file} %^{url}
 :END:
