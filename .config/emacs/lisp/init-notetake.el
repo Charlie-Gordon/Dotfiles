@@ -128,12 +128,12 @@ Used to determines filename in `org-roam-capture-templates'."
          ;; Dailies
          ("C-c n j" . org-roam-dailies-capture-today))
   :init
-  (defvar org-roam-directory (expand-file-name "slip-box/" *org-dir*))
+  (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
   (defvar org-roam-v2-ack t)
   :config
   (org-roam-setup)
   (setq org-roam-index-file "index.org"
-        org-roam-dailies-directory (expand-file-name "daily" *org-dir*)
+        org-roam-dailies-directory (expand-file-name "daily" org-directory)
         org-roam-db-update-method 'immediate
         org-roam-buffer-no-delete-other-windows t)
   (setq org-roam-capture-templates
@@ -200,7 +200,6 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Media note
 (use-package org-media-note
   :init (setq org-media-note-use-org-ref t)
-  :disabled
   :straight '(org-media-note :type git
                              :host github
                              :repo "yuchen-lea/org-media-note")
@@ -227,9 +226,10 @@ Used to determines filename in `org-roam-capture-templates'."
 
 ;;;;; Org-noter
 (use-package org-noter
-  :straight '(org-noter-plus-djvu :type git
-                                  :repo "https://notabug.org/c1-g/org-noter-plus-djvu.git"
-                                  :file ("other" "*.el" "other/*.el"))
+  :straight '(org-noter :type git
+                        :host gitlab
+                        :repo "c1-g/org-noter-plus-djvu"
+                        :files ("other" "*.el"))
   :custom
   (org-noter-property-doc-file "INTERLEAVE_URL")
   (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE")
@@ -240,7 +240,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
-  (use-package org-noter-nov-overlay :ensure nil :disabled))
+  (use-package org-noter-nov-overlay :load-path "straight/build/org-noter/other"))
 
 (use-package org-noter-pdftools
   :after org-noter
@@ -317,6 +317,17 @@ With a prefix ARG, remove start location."
 
 (use-package org-drill
   :straight t)
+
+(use-package org-fc
+  :straight '(org-fc :type git
+                     :host github
+                     :repo "l3kn/org-fc"
+                     :files ("awk" "*.org" "*.sh" "*.el")))
+
+
+(use-package bir
+  :ensure nil)
+
 
 (use-package emacsql-sqlite :straight t)
 
