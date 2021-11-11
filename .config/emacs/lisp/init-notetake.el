@@ -304,7 +304,17 @@ With a prefix ARG, remove start location."
   :straight '(helm-bibtex :type git :host github
                           :repo "c1-g/helm-bibtex")
   :config
-  (global-set-key (kbd "C-' b") #'helm-bibtex))
+  (global-set-key (kbd "C-' b") #'helm-bibtex)
+  
+  (defun my/bibtex-completion-open-org-noter (keys)
+    (with-temp-buffer
+      (bibtex-completion-edit-notes keys)
+      (org-noter)))
+
+  (helm-bibtex-helmify-action charlie/bibtex-completion-open-org-noter helm-bibtex-open-org-noter)
+
+  (helm-add-action-to-source "Open in org-noter" #'helm-bibtex-open-org-noter helm-source-bibtex))
+
 
 
 
