@@ -8,7 +8,8 @@
   :straight '(emacs-application-framework
               :type git
               :host github
-              :repo "emacs-eaf/emacs-application-framework")
+              :repo "emacs-eaf/emacs-application-framework"
+              :files ("core" "app" "*.el" "*.py"))
   :config
   (global-set-key (kbd "<f12>") #'eaf-toggle)
   (defun eaf-toggle ()
@@ -30,6 +31,7 @@
 
 (use-package eaf-pdf-viewer
   :ensure nil
+  :disabled
   :custom
   (eaf-pdf-outline-window-configuration t)
   (eaf-pdf-dark-mode "ignore")
@@ -41,7 +43,8 @@
   (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down_page "<backspace>" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key quit-window "q" eaf-pdf-viewer-keybinding))
+  (eaf-bind-key quit-window "q" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key jump_to_page "M-g l" eaf-pdf-viewer-keybinding))
 
 (use-package eaf-org-previewer
   :ensure nil
@@ -49,9 +52,6 @@
   (defun eaf-org-open-file (file &optional link)
     (eaf-open file))
   (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file)))
-
-(use-package eaf-markdown-previewer
-  :ensure nil)
 
 ;;;###autoload
 (defun eaf-interleave--find-bibtex-note (filename)
