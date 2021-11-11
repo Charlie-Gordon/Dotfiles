@@ -31,7 +31,15 @@ buffer is not visiting a file."
   "Open magit in dotfiles repository."
   (magit-status "/yadm::"))
 
-(global-set-key (kbd "C-c d") 'my/magit-status-dotfiles)
+;;;###autoload
+(defun  my/go-to-dotfiles ()
+  (interactive)
+  (find-file user-emacs-directory))
+
+(global-set-key (kbd "C-c d") 'my/go-to-dotfiles)
+
+(global-set-key (kbd "C-c s") 'my/magit-status-dotfiles)
+
 ;;;; Screenshot
 ;; https://www.reddit.com/r/emacs/comments/idz35e/emacs_27_can_take_svg_screenshots_of_itself/
 ;;;###autoload
