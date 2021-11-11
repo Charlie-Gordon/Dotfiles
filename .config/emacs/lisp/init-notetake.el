@@ -182,7 +182,6 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package org-ref
   :straight t
   :when *bibliography-dir*
-  :after (helm-bibtex pdf-tools)
   :custom
   (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
   (org-ref-notes-function #'orb-notes-fn)
@@ -302,7 +301,7 @@ With a prefix ARG, remove start location."
 ;;;; Helm-bibtex
 (use-package helm-bibtex
   :straight '(helm-bibtex :type git :host github
-                          :repo "c1-g/helm-bibtex")
+                          :repo "tmalsburg/helm-bibtex")
   :config
   (global-set-key (kbd "C-' b") #'helm-bibtex)
   
