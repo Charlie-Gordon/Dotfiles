@@ -76,7 +76,9 @@
   ("C-z l" . avy-goto-line))
 
 (use-package ace-link
-  :straight t) 
+  :straight t
+  :config
+  (ace-link-setup-default)) 
 
 
 (use-package which-key
