@@ -73,8 +73,7 @@
 ;;;; Calibre
 (use-package calibredb
   :straight '(calibredb.el :type git :host github
-                           :repo "chenyanming/calibredb.el"
-                           :fork t)
+                           :repo "chenyanming/calibredb.el")
   :when (executable-find "calibredb")
   :config
   (setq calibredb-program (executable-find "calibredb"))
@@ -164,7 +163,6 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (orb-autokey-format "%a%y")
   (orb-file-field-extensions '("pdf" "epub" "djvu"))
-  (bibtex-completion-edit-notes-function #'orb-bibtex-completion-edit-note)
   :config
   (add-to-list 'orb-preformat-keywords "url")
   (org-roam-bibtex-mode)
@@ -274,6 +272,7 @@ With a prefix ARG, remove start location."
 (use-package bibtex-completion
   :ensure nil
   :custom
+  (bibtex-completion-edit-notes-function #'orb-bibtex-completion-edit-note)
   (bibtex-align-at-equal-sign t)
   (bibtex-autokey-name-year-separator "")
   (bibtex-autokey-year-title-separator "")
