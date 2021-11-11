@@ -70,13 +70,6 @@
   :custom
   (djvu-continuous t))
 
-;;;; Helm-bibtex
-(use-package helm-bibtex
-  :straight '(helm-bibtex :type git :host github
-                          :repo "c1-g/helm-bibtex")
-  :config
-  (global-set-key (kbd "C-' b") #'helm-bibtex))
-
 ;;;; Calibre
 (use-package calibredb
   :straight '(calibredb.el :type git :host github
@@ -305,6 +298,14 @@ With a prefix ARG, remove start location."
    "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
   (bibtex-user-optional-fields '(("file" "Path to file")))
   (bibtex-completion-additional-search-fields '(file formats)))
+
+;;;; Helm-bibtex
+(use-package helm-bibtex
+  :straight '(helm-bibtex :type git :host github
+                          :repo "c1-g/helm-bibtex")
+  :config
+  (global-set-key (kbd "C-' b") #'helm-bibtex))
+
 
 
 ;;;; Trying out SRS (space-repetition system)
