@@ -131,7 +131,8 @@
   (:map exwm-mode-map
         ("C-c '" . exwm-edit--compose))
   :hook
-  (exwm-edit-compose . visual-line-mode))
+  (exwm-edit-compose . visual-line-mode)
+  (exwm-edit-compose . text-mode))
 
 (provide 'init-exwm)
 ;;; init-exwm.el ends here
