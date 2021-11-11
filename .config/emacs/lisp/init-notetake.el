@@ -311,7 +311,7 @@ With a prefix ARG, remove start location."
       (bibtex-completion-edit-notes keys)
       (org-noter)))
 
-  (helm-bibtex-helmify-action charlie/bibtex-completion-open-org-noter helm-bibtex-open-org-noter)
+  (helm-bibtex-helmify-action my/bibtex-completion-open-org-noter helm-bibtex-open-org-noter)
 
   (helm-add-action-to-source "Open in org-noter" #'helm-bibtex-open-org-noter helm-source-bibtex))
 
