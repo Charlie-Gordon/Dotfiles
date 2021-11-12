@@ -112,7 +112,6 @@
   (consult-customize affe-grep :preview-key (kbd "M-.")))
 
 (use-package navigation
-  :termux
   :ensure nil
   :after consult affe
   :bind-keymap* ("C-' n" . navigation-map))

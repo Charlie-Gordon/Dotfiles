@@ -3,7 +3,6 @@
 ;;; Code:
 ;;;; Selectrum
 (use-package selectrum
-  :termux
   :straight t
   :bind (:map ctl-x-map
               ("C-z" . selectrum-repeat))
@@ -16,7 +15,6 @@
 
 ;;;; Orderless
 (use-package orderless
-  :termux
   :straight t
   :after selectrum
   :custom
@@ -32,7 +30,6 @@
 
 ;;;; Consult
 (use-package consult
-  :termux
   :straight t
 ;;  Replacing functions with their consult counterparts
   :bind (;; C-c bindings (mode-specific-map)

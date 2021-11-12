@@ -37,7 +37,6 @@
    (C . t)))
 
 (use-package org-edna
-  :termux
   :straight t
   :hook
   (org-mode . org-edna-mode)
@@ -57,7 +56,6 @@ Edna Syntax: org-anki-this!"
   (org-mode . org-fragtog-mode))
 
 (use-package org-agenda
-  :termux
   :ensure nil
   :config
   ;; Daniel Patru's answer at
