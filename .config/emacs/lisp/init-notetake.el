@@ -11,7 +11,7 @@
 (use-package nov
   :straight '(nov :type git
                   :repo "https://depp.brause.cc/nov.el.git"
-                  :fork "git@notabug.org:c1-g/nov.el.git")
+                  :fork "https://notabug.org/c1-g/nov.el.git")
   :bind (:map nov-mode-map
 	      ("C-S-n" . shr-next-link)
 	      ("C-S-p" . shr-previous-link))
@@ -19,6 +19,11 @@
   :custom
   (nov-text-width fill-column)
   (nov-variable-pitch nil))
+
+(use-package ereader
+  :straight t
+  :mode (("\\.epub\\'" . ereader-mode)))
+
 
 ;;;; PDF
 (use-package pdf-tools
@@ -30,6 +35,7 @@
                ("k" . pdf-view-previous-line-or-previous-page))
   :mode "\\.pdf\\'"
   :custom
+  (pdf-keynav-copy-region-blink-delay 2)
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
   (pdf-annot-activate-created-annotations t)
@@ -190,6 +196,7 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Media note
 (use-package org-media-note
   :init (setq org-media-note-use-org-ref t)
+  :disabled
   :straight '(org-media-note :type git
                              :host github
                              :repo "yuchen-lea/org-media-note")
@@ -283,7 +290,7 @@ With a prefix ARG, remove start location."
   (bibtex-autokey-titlewords-stretch 0)
   (bibtex-autokey-titlewords 0)
   (bibtex-completion-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
-  (bibtex-completion-library-path org-ref-pdf-directory)
+  ;; (bibtex-completion-library-path org-ref-pdf-directory)
   (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
@@ -318,7 +325,11 @@ With a prefix ARG, remove start location."
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
-  :straight promise request '(org-anki :type git :host github :repo "eyeinsky/org-anki")
+  :straight promise request '(org-anki
+                              :type git
+                              :host github
+                              :repo "eyeinsky/org-anki")
+  
   :when (executable-find "anki")
   :init
   :custom
@@ -333,9 +344,10 @@ With a prefix ARG, remove start location."
                      :repo "l3kn/org-fc"
                      :files ("awk" "*.org" "*.sh" "*.el")))
 
-
 (use-package bir
-  :ensure nil)
+  :straight '(bir.el :type git
+                     :repo "https://notabug.org/c1-g/bir.el.git"
+                     :files ("icons" "*.el")))
 
 
 (use-package emacsql-sqlite :straight t)
