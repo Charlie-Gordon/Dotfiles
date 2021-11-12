@@ -78,7 +78,7 @@ Edna Syntax: org-anki-this!"
   (setq org-agenda-custom-commands
         '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
            ((org-show-context-detail 'minimal)
-            (org-agenda-prefix-format ""))))))))))
+            (org-agenda-prefix-format ""))))))
 ;;;###autoload
 (defun org-maybe-go-to-quiz ()
   "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
