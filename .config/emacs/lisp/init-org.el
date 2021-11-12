@@ -8,6 +8,7 @@
 	 :map org-mode-map
 	 ("C-'" . nil))
   :custom
+  (org-directory *org-dir*)
   (org-export-coding-system 'utf-8)
   (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
   (org-todo-keywords
@@ -73,11 +74,11 @@ Edna Syntax: org-anki-this!"
     (nconc org-agenda-files 
 	   (org-get-agenda-files-recursively dir)))
   (add-hook 'after-init-hook (lambda nil (org-set-agenda-files-recursively *org-dir*)))
+  
   (setq org-agenda-custom-commands
         '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
            ((org-show-context-detail 'minimal)
-            (org-agenda-prefix-format ""))))))
-
+            (org-agenda-prefix-format ""))))))))))
 ;;;###autoload
 (defun org-maybe-go-to-quiz ()
   "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
@@ -92,6 +93,11 @@ Edna Syntax: org-anki-this!"
          (eaf-interleave-sync-current-note)
          (select-window (get-buffer-window eaf-interleave-org-buffer))
          (org-maybe-go-to-quiz))))
+
+(use-package org-super-agenda
+  :straight t
+  :hook (org-agenda-mode . org-super-agenda-mode))
+
 
 (use-package org-capture
   :ensure nil
@@ -126,6 +132,12 @@ Edna Syntax: org-anki-this!"
          "** REVIEW What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")
         "\n")))))
 
+(use-package edraw-org
+  :ensure nil
+  :mode
+  ("\\.edraw\\.svg$" . edraw-mode))
+
+
 ;;;; Recur
 
 (use-package org-recur
@@ -141,6 +153,10 @@ Edna Syntax: org-anki-this!"
 
   (setq org-recur-finish-done t
         org-recur-finish-archive t))
+
+
+(use-package org-ql
+  :straight t)
 
 ;;;; Outshine
 (use-package outshine
