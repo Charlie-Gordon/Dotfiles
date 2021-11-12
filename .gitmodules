@@ -1,3 +1,6 @@
 [submodule ".emacs.d/site-lisp/emacs-application-framework"]
 	path = .config/emacs/site-lisp/emacs-application-framework
 	url = https://github.com/emacs-eaf/emacs-application-framework
+[submodule ".config/emacs/site-lisp/el-easydraw"]
+	path = .config/emacs/site-lisp/el-easydraw
+	url = https://github.com/misohena/el-easydraw
