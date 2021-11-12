@@ -63,8 +63,8 @@
 (use-package init-dired :ensure nil)
 ;;;;;; Outline
 (use-package init-outline :ensure nil)
-;;;;;; EWW & SHR
-(use-package init-eww-shr :ensure nil)
+;;;;;; Browser
+(use-package init-browser :ensure nil)
 ;;;;;; ERC
 (use-package init-erc :ensure nil)
 ;;;;; Completions
