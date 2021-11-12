@@ -336,6 +336,7 @@ With a prefix ARG, remove start location."
   (org-anki-default-deck "one-big-deck"))
 
 (use-package org-drill
+  :termux
   :straight t)
 
 (use-package org-fc
