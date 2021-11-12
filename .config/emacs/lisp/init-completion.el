@@ -120,8 +120,6 @@
   (:map embark-url-map
 	("s" . browse-url-xdg-open)
 	("m" . my/mpv-play-url))
-  (:map embark-symbol-map
-	("h" . helpful-at-point))
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
