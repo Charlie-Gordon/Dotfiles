@@ -1,4 +1,4 @@
-;;; init-eww-shr.el --- Extensions for EWW                 -*- lexical-binding: t; -*-
+;;; init-browser.el --- Extensions for EWW                 -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;
 ;; Extensions for the eww, intended for my Emacs setup.
@@ -8,6 +8,11 @@
 ;; that I adapted to fit my setup.
 
 ;;; Code:
+
+(use-package org-web-tools
+  :straight t)
+
+
 (use-package browse-url
   :ensure nil
   :custom
@@ -46,6 +51,10 @@
   :config
   (add-to-list 'shr-external-rendering-functions
                '(pre . shrface-tag-pre-highlight)))
+
+(use-package w3m
+  :straight t)
+
 
 (use-package eww
   :defer t
@@ -457,7 +466,7 @@ trailing hyphen."
     (shr-ensure-newline)
     (insert "\n")))
 
-(provide 'init-eww-shr)
-;;; init-eww-shr.el ends here
+(provide 'init-browser)
+;;; init-browser.el ends here
 
 
