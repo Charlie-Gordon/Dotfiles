@@ -13,6 +13,7 @@
 
 (use-package ace-window
   :straight t
+  :bind ("s-o" . ace-window)
   :custom
   (aw-keys '(?q ?w ?f ?a ?r ?s ?t ?x ?c ?d ?v))
   (aw-background nil)
