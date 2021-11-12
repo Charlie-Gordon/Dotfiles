@@ -40,11 +40,10 @@
 ;;;;; Individual configuration
 ;;;;;; Hyperbole
 (use-package hyperbole
-  :straight t
-  :disabled)
+  :straight t)
 ;;;;;; Repeat mode
 (use-package repeat
-  :ensure nil
+  :when (>= (string-to-number emacs-version) 28)
   :config
   (repeat-mode 1))
 ;;;;;; Eldoc
