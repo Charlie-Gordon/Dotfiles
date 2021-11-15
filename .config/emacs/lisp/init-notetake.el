@@ -349,9 +349,6 @@ With a prefix ARG, remove start location."
                      :repo "https://notabug.org/c1-g/bir.el.git"
                      :files ("icons" "*.el")))
 
-
-(use-package emacsql-sqlite :straight t)
-
 ;;;; eww-bibtex
 (use-package eww-bibtex
   :straight (:type git
