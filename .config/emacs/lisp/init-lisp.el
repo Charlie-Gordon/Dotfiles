@@ -39,5 +39,16 @@
   (slime-setup '(slime-fancy)))
 
 
+(use-package lispy
+  :straight t
+  :hook
+  (emacs-lisp-mode . lispy-mode)
+  (eval-expression-minibuffer-setup . lispy-mode)
+  (ielm-mode . lispy-mode)
+  (lisp-mode . lispy-mode)
+  (lisp-interaction-mode . lispy-mode)
+  (scheme-mode . lispy-mode))
+
+
 (provide 'init-lisp)
 ;;; init-lisp.el ends here
