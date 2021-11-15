@@ -20,9 +20,9 @@
   (nov-text-width fill-column)
   (nov-variable-pitch nil))
 
-(use-package ereader
-  :straight t
-  :mode (("\\.epub\\'" . ereader-mode)))
+;; (use-package ereader
+;;   :straight t
+;;   :mode (("\\.epub\\'" . ereader-mode)))
 
 
 ;;;; PDF
