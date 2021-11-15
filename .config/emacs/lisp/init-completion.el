@@ -116,7 +116,7 @@
   ("M-." . embark-dwim)
   (:map embark-url-map
 	("s" . browse-url-xdg-open)
-	("m" . my/mpv-play-url))
+	("m" . c1/mpv-play-url))
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)

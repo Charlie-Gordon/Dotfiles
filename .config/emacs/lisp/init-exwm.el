@@ -3,7 +3,7 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun my/kbd-setup ()
+(defun c1/kbd-setup ()
   (interactive)
   (shell-command-to-string (string-join 
                             `(,(executable-find "setxkbmap")
@@ -15,9 +15,9 @@
   (shell-command-to-string (concat (executable-find "xmodmap") " -verbose "
                                    (getenv "USERMODMAP"))))
 
-(global-set-key (kbd "<f8>") #'my/kbd-setup)
+(global-set-key (kbd "<f8>") #'c1/kbd-setup)
 
-(add-hook 'after-init-hook #'my/kbd-setup)
+(add-hook 'after-init-hook #'c1/kbd-setup)
 
 (defun ambrevar/exwm-rename-buffer-to-title ()
   "Rename EXWM buffer to its window title."
@@ -98,7 +98,7 @@
                     (interactive (list (read-shell-command "$ ")))
                     (start-process-shell-command command nil command)))
        ;; 's-.': Reload init.el
-       ([?\s-.] . my/reload-emacs-configuration)
+       ([?\s-.] . c1/reload-emacs-configuration)
        ([?\s-d] . modus-themes-toggle)
        (,(kbd "<print>") . screenshot-svg)
        ;; Eshell

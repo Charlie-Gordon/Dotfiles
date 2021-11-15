@@ -19,7 +19,7 @@
   (browse-url-new-window-flag t)
   (browse-url-handlers
    `((,(rx "youtube.com/result" (* anything)) . ,browse-url-secondary-browser-function)
-     (,(rx "youtu" (? ".") "be") . my/mpv-play-url)
+     (,(rx "youtu" (? ".") "be") . c1/mpv-play-url)
      ("." . eww-browse-url)))
   (browse-url-secondary-browser-function
    'browse-url-default-browser))
@@ -71,7 +71,7 @@
         ("l" . eww-list-bookmarks)
         :map eww-mode-map
         ("<return>" . eww-follow-link)
-        ("W" . my/mpv-play-url)
+        ("W" . c1/mpv-play-url)
         ("L" . eww-list-bookmarks)
         ("t" . eww-readable)
         ("n" . shr-next-link)
@@ -259,7 +259,7 @@ new EWW buffer."
     (Wikipedia . prot/eww-search-wikipedia)
     (ArchWiki . prot/eww-search-arch-wiki)
     (AUR . prot/eww-search-arch-aur)
-    (Github . my/eww-search-github))
+    (Github . c1/eww-search-github))
   "Alist of web search commands.
 The car of each cons cell is an arbitrary string that describes
 the function it is associated with.")
@@ -347,22 +347,22 @@ new EWW buffer."
    (if arg 4 nil))
   (add-to-history 'prot/eww--arch-aur-hist string))
 
-(defvar my/eww--github-hist '()
-  "Input history for `my/eww-search-github'.")
+(defvar c1/eww--github-hist '()
+  "Input history for `c1/eww-search-github'.")
 
 ;;;###autoload
-(defun my/eww-search-github (string &optional arg)
+(defun c1/eww-search-github (string &optional arg)
   "Search Github repository matching STRING.
 
 With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
   (interactive
-   (list (read-string "Search Github Repository: " nil 'my/eww--github-hist)
+   (list (read-string "Search Github Repository: " nil 'c1/eww--github-hist)
          current-prefix-arg))
   (eww
    (format "https://github.com/search?q=%s" (string-replace " " "+" string))
    (if arg 4 nil))
-  (add-to-history 'my/eww--github-hist string))
+  (add-to-history 'c1/eww--github-hist string))
 
 ;;;###autoload
 (defun prot/eww-open-in-other-window ()
