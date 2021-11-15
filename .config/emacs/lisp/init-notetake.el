@@ -96,7 +96,7 @@
 ;;;;; Org-roam
 
 ;;;###autoload
-(defun my/count-org-file-in-directory (directory)
+(defun c1/count-org-file-in-directory (directory)
   "A wrapper for `file-expand-wildcards' with \"*.org\" as its pattern.
 
 Return 0 when `file-expand-wildcards' returns nil i.e. no files matched its pattern.
@@ -113,7 +113,7 @@ Used to determines filename in `org-roam-capture-templates'."
 (defun org-roam-slip-box-new-file ()
   "Return a new file path when creating a new note."
   (concat org-roam-directory (number-to-string (float (1+
-                                                       (my/count-org-file-in-directory org-roam-directory))))
+                                                       (c1/count-org-file-in-directory org-roam-directory))))
           ".org"))
 
 (use-package org-roam
@@ -310,12 +310,12 @@ With a prefix ARG, remove start location."
   :config
   (global-set-key (kbd "C-' b") #'helm-bibtex)
   
-  (defun my/bibtex-completion-open-org-noter (keys)
+  (defun c1/bibtex-completion-open-org-noter (keys)
     (with-temp-buffer
       (bibtex-completion-edit-notes keys)
       (org-noter)))
 
-  (helm-bibtex-helmify-action my/bibtex-completion-open-org-noter helm-bibtex-open-org-noter)
+  (helm-bibtex-helmify-action c1/bibtex-completion-open-org-noter helm-bibtex-open-org-noter)
 
   (helm-add-action-to-source "Open in org-noter" #'helm-bibtex-open-org-noter helm-source-bibtex))
 
@@ -348,6 +348,7 @@ With a prefix ARG, remove start location."
   :straight '(bir.el :type git
                      :repo "https://notabug.org/c1-g/bir.el.git"
                      :files ("icons" "*.el")))
+
 
 ;;;; eww-bibtex
 (use-package eww-bibtex

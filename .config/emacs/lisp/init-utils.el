@@ -3,7 +3,7 @@
 ;;; Code:
 ;;;; Reload configuration
 ;;;###autoload
-(defun my/reload-emacs-configuration ()
+(defun c1/reload-emacs-configuration ()
   "Reload emacs' init.el file."
   (interactive)
   (load-file (concat user-emacs-directory "init.el")))
@@ -26,19 +26,19 @@ buffer is not visiting a file."
 
 ;;;; Magit shortcuts
 ;;;###autoload
-(defun my/magit-status-dotfiles ()
+(defun c1/magit-status-dotfiles ()
   (interactive)
   "Open magit in dotfiles repository."
   (magit-status "/yadm::"))
 
 ;;;###autoload
-(defun  my/go-to-dotfiles ()
+(defun  c1/go-to-dotfiles ()
   (interactive)
   (find-file user-emacs-directory))
 
-(global-set-key (kbd "C-c d") 'my/go-to-dotfiles)
+(global-set-key (kbd "C-c d") 'c1/go-to-dotfiles)
 
-(global-set-key (kbd "C-c s") 'my/magit-status-dotfiles)
+(global-set-key (kbd "C-c s") 'c1/magit-status-dotfiles)
 
 ;;;; Screenshot
 ;; https://www.reddit.com/r/emacs/comments/idz35e/emacs_27_can_take_svg_screenshots_of_itself/
@@ -78,7 +78,7 @@ Saves to a temp file and puts the filename in the kill ring."
 ;;;; mpv-play-url
 ;; https://gist.github.com/bsless/19ca4a37eee828b1b62c84971181f506#file-yt-mpv-el
 ;;;###autoload
-(defun my/mpv-play-url (&optional url &rest args)
+(defun c1/mpv-play-url (&optional url &rest args)
   "Start mpv for URL."
   (interactive"sURL: ")
   (require 'eww)
