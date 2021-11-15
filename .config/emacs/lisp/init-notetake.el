@@ -354,7 +354,8 @@ With a prefix ARG, remove start location."
 
 ;;;; eww-bibtex
 (use-package eww-bibtex
-  :ensure nil)
+  :straight (:type git
+             :repo "https://notabug.org/c1-g/eww-bibtex.git"))
 
 (provide 'init-notetake)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
