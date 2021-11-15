@@ -251,8 +251,7 @@ Used to determines filename in `org-roam-capture-templates'."
      (let ((org-noter-insert-note-no-questions (if toggle-no-questions
                                                    (not org-noter-insert-note-no-questions)
                                                  org-noter-insert-note-no-questions))
-           (org-pdftools-use-isearch-link t)
-           (org-pdftools-use-freestyle-annot t))
+           (org-pdftools-use-isearch-link t))
        (org-noter-insert-note (org-noter--get-precise-info)))))
 
   ;; fix https://github.com/weirdNox/org-noter/pull/93/commits/f8349ae7575e599f375de1be6be2d0d5de4e6cbf
