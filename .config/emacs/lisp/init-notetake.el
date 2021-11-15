@@ -174,12 +174,12 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-roam-bibtex-mode)
   :diminish)
 
-(use-package vulpea
-  :straight t
-  ;; hook into org-roam-db-autosync-mode you wish to enable
-  ;; persistence of meta values (see respective section in README to
-  ;; find out what meta means)
-  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
+;; (use-package vulpea
+;;   :straight t
+;;   ;; hook into org-roam-db-autosync-mode you wish to enable
+;;   ;; persistence of meta values (see respective section in README to
+;;   ;; find out what meta means)
+;;   :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
 
 
 ;;;;; Org-ref
