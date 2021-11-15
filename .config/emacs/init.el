@@ -72,7 +72,6 @@
 ;;;;; Git
 (use-package init-git :ensure nil)
 ;;;;; Lisp
-(use-package init-paredit :ensure nil)
 (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
 (use-package init-uniquify :ensure nil)
