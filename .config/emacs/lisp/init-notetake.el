@@ -77,20 +77,20 @@
   (djvu-continuous t))
 
 ;;;; Calibre
-(use-package calibredb
-  :straight '(calibredb.el :type git :host github
-                           :repo "chenyanming/calibredb.el")
-  :when (executable-find "calibredb")
-  :config
-  (setq calibredb-program (executable-find "calibredb"))
-  (setq calibredb-root-dir *library-dir*)
-  (setq calibredb-library-alist `((,*library-dir*)))
-  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
-  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
-  (setq calibredb-sort-by 'title)
-  (setq calibredb-sql-newline "\n")
-  (setq calibredb-sql-separator "|")
-  (setq calibredb-detailed-view nil))
+;; (use-package calibredb
+;;   :straight '(calibredb.el :type git :host github
+;;                            :repo "chenyanming/calibredb.el")
+;;   :when (executable-find "calibredb")
+;;   :config
+;;   (setq calibredb-program (executable-find "calibredb"))
+;;   (setq calibredb-root-dir *library-dir*)
+;;   (setq calibredb-library-alist `((,*library-dir*)))
+;;   (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
+;;   (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
+;;   (setq calibredb-sort-by 'title)
+;;   (setq calibredb-sql-newline "\n")
+;;   (setq calibredb-sql-separator "|")
+;;   (setq calibredb-detailed-view nil))
              
 ;;;; Note-taking with org
 ;;;;; Org-roam
@@ -352,41 +352,6 @@ With a prefix ARG, remove start location."
 
 
 (use-package emacsql-sqlite :straight t)
-
-;;;###autoload
-(defun calibredb-query (sql-query)
-    "Query calibre database and return the result.
-Argument SQL-QUERY is the sqlite sql query string.
-
-The function works by sending SQL-QUERY to `sql-sqlite-program' for the
-database file defined by `calibredb-db-dir', dump the output to a hidden
-buffer called *calibredb-query-output*, then if the sqlite program
-terminates successfully, it will return the string of the output
-buffer. If the program fails, it will switch to the output buffer and
-tell user something’s wrong."
-    (interactive)
-    (let* ((inhibit-message t)
-             (out-buf " *calibredb-query-output*")
-             (tmp (make-temp-file "*calibredb-query-string*" nil nil sql-query)))
-      (when (get-buffer out-buf)
-        (kill-buffer out-buf))
-      (if (not (file-exists-p calibredb-db-dir))
-          (message "calibredb-query: calibredb-db-dir is nil! calibredb-query won't work without it.")
-        (if (zerop (call-process-shell-command
-                    (format "%s -list -nullvalue '' -noheader %s -init %s"
-                            sql-sqlite-program
-                            (shell-quote-argument (expand-file-name calibredb-db-dir))
-                            tmp)
-                    nil (list out-buf t)))
-            ;; If this command terminates successfully (return 0)
-            ;; Return the output's string
-            (with-current-buffer out-buf
-              (delete-file tmp)
-              (buffer-string))
-          ;; If this command fails return 'error
-          (delete-file tmp)
-          (switch-to-buffer out-buf)
-          (error (format "calibredb-query: Can't query \"%s\". switching to its error buffer." (expand-file-name calibredb-db-dir)))))))
 
 ;;;; eww-bibtex
 (use-package eww-bibtex
