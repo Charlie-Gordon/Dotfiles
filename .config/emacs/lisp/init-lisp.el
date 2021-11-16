@@ -38,9 +38,9 @@
   (use-package slime-autoloads :ensure nil)
   (slime-setup '(slime-fancy)))
 
-
 (use-package lispy
   :straight t
+  :diminish
   :hook
   (emacs-lisp-mode . lispy-mode)
   (eval-expression-minibuffer-setup . lispy-mode)
@@ -48,6 +48,13 @@
   (lisp-mode . lispy-mode)
   (lisp-interaction-mode . lispy-mode)
   (scheme-mode . lispy-mode))
+
+(use-package rainbow-delimiters
+  :straight t
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
+
+
 
 
 (provide 'init-lisp)
