@@ -9,12 +9,12 @@
 ;; Customize file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 ;; Backup files
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
 ;; Autosave files
 (setq delete-old-versions -1)
 (setq version-control t)
 (setq vc-make-backup-files t)
-(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+(setq auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-save-list/" user-emacs-directory) t)))
 ;; Lazy yes or no
 (fset 'yes-or-no-p 'y-or-n-p)
 ;; Set UTF-8 encoding
