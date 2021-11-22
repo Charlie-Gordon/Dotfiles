@@ -294,8 +294,8 @@ With a prefix ARG, remove start location."
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
   (bibtex-completion-display-formats
-   '((Book . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
-     (t . "${author:36} ${title:*} ${year:4} ${=has-note=:1} ${=type=:7}")))
+   '((Misc . "${author:36} ${title:*} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")
+     (t . "${author:36} ${title:*} ${year:4} ${formats:18} ${=has-pdf=:1}${=has-note=:1} ${=type=:7}")))
   (bibtex-completion-pdf-symbol "P")
   (bibtex-completion-notes-symbol "N")
   (bibtex-completion-notes-template-multiple-files
