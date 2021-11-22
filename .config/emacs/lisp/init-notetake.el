@@ -187,11 +187,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :straight t
   :when *bibliography-dir*
   :custom
-  (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
-  (org-ref-notes-function #'orb-notes-fn)
-  (org-ref-pdf-directory *library-dir*)
-  (org-ref-default-bibliography reftex-default-bibliography)
-  (org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex))
+  (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp)))
 
 ;;;;; Media note
 (use-package org-media-note
@@ -289,7 +285,6 @@ With a prefix ARG, remove start location."
   (bibtex-autokey-titlewords-stretch 0)
   (bibtex-autokey-titlewords 0)
   (bibtex-completion-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
-  ;; (bibtex-completion-library-path org-ref-pdf-directory)
   (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
@@ -342,7 +337,10 @@ With a prefix ARG, remove start location."
   :straight '(org-fc :type git
                      :host github
                      :repo "l3kn/org-fc"
-                     :files ("awk" "*.org" "*.sh" "*.el")))
+                     :fork t
+                     :files ("awk" "*.org" "*.sh" "*.el"))
+  :custom
+  (org-fc-directories `(,*org-dir*)))
 
 (use-package bir
   :straight '(bir.el :type git
