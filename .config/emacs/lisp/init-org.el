@@ -10,6 +10,7 @@
   :custom
   (org-directory *org-dir*)
   (org-export-coding-system 'utf-8)
+  (org-use-speed-commands t)
   (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
   (org-todo-keywords
    '((sequence "TODO(t)" "|" "DONE(d)")
