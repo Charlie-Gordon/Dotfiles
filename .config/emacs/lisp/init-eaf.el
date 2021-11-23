@@ -18,17 +18,6 @@
       (advice-remove 'find-file 'eaf--find-file-advisor)
     (advice-add #'find-file :around #'eaf--find-file-advisor))))
 
-(use-package eaf-browser
-  :ensure nil
-  :custom
-  (eaf-browser-continue-where-left-off t)
-  (eaf-browser-search-engines '(("searx" . "https://searx.bar")
-                                ("duckduckgo" . "https://duckduckgo.com/?q=%s")))
-  (eaf-browser-default-search-engine "duckduckgo")
-  (browse-url-secondary-browser-function #'eaf-open-browser)
-  :config
-  (eaf-bind-key nil "M-q" eaf-browser-keybinding))
-
 (use-package eaf-pdf-viewer
   :ensure nil
   :disabled
