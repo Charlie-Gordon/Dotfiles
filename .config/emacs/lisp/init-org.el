@@ -36,6 +36,10 @@
  '((python . t)
    (C . t)))
 
+(use-package worf
+  :straight t)
+
+
 (use-package org-edna
   :straight t
   :hook
