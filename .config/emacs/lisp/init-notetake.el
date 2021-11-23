@@ -140,14 +140,14 @@ Used to determines filename in `org-roam-capture-templates'."
            :if-new
            (file+head
             "%(org-roam-slip-box-new-file)"
-            "#+title: ${title}\n#+created: %u\n#+last_modified: %U\n\n")
+            "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
            :unnarrowed t)
           ("n" "note" plain
            (file ,(expand-file-name "org-template/ROAM-note.txt" user-emacs-directory))
            :if-new
            (file+head
             "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
-            "#+title: ${citekey}.  ${title}.\n#+created: %U\n#+last_modified: %U\n\n")
+            "#+TITLE: ${citekey}.  ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
            :unarrowed t)))
   (setq org-roam-dailies-capture-templates
         `(("d" "default" plain
@@ -224,9 +224,9 @@ Used to determines filename in `org-roam-capture-templates'."
                         :repo "c1-g/org-noter-plus-djvu"
                         :files ("other" "*.el"))
   :custom
-  (org-noter-property-doc-file "INTERLEAVE_URL")
-  (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE")
-  (org-noter-doc-split-fraction '(0.57 0.43))
+  (org-noter-property-doc-file "DOCUMENT_SOURCE")
+  (org-noter-property-note-location "DOCUMENT_PAGE")
+  (org-noter-doc-split-fraction '(0.6 0.4))
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
   (org-noter-separate-notes-from-heading t)
@@ -270,7 +270,22 @@ With a prefix ARG, remove start location."
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
 
+;;;;; Deft
+(use-package deft
+  :straight t
+  :custom
+  (deft-directory org-roam-directory)
+  (deft-recursive t)
+  (deft-extension '("org" "md")))
+
+
 ;;;; Bibtex completion
+(use-package bibtex
+  :straight t
+  :custom
+  (bibtex-files `(,*bibliography-dir*)))
+
+
 (use-package bibtex-completion
   :ensure nil
   :custom
@@ -284,7 +299,7 @@ With a prefix ARG, remove start location."
   (bibtex-autokey-titleword-length 20)
   (bibtex-autokey-titlewords-stretch 0)
   (bibtex-autokey-titlewords 0)
-  (bibtex-completion-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp))
+  (bibtex-completion-bibliography (directory-files *bibliography-dir* t ".bib"))
   (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
@@ -351,7 +366,7 @@ With a prefix ARG, remove start location."
 ;;;; eww-bibtex
 (use-package eww-bibtex
   :straight (:type git
-             :repo "https://notabug.org/c1-g/eww-bibtex.git"))
+                   :repo "https://notabug.org/c1-g/eww-bibtex.git"))
 
 (provide 'init-notetake)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
