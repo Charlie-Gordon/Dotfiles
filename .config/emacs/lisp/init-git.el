@@ -7,7 +7,15 @@
   :custom
   (tramp-terminal-type "tramp")
   :config
-  (setenv "SHELL" (executable-find "bash")))
+  (setenv "SHELL" (executable-find "bash"))
+  (unless (assoc-default "yadm" tramp-methods)
+    (add-to-list 'tramp-methods
+		 '("yadm"
+		   (tramp-login-program "yadm")
+		   (tramp-login-args (("enter")))
+		   (tramp-login-env (("SHELL") ("/bin/sh")))
+		   (tramp-remote-shell "/bin/sh")
+		   (tramp-remote-shell-args ("-c"))))))
 
 
 (use-package magit
@@ -23,16 +31,7 @@
   (magit-diff-refine-hunk t)
   (magit-repository-directories `(("~/git/" . 2)
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
-                                  (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
-  :config
-  (unless (assoc-default "yadm" tramp-methods)
-    (add-to-list 'tramp-methods
-		 '("yadm"
-		   (tramp-login-program "yadm")
-		   (tramp-login-args (("enter")))
-		   (tramp-login-env (("SHELL") ("/bin/sh")))
-		   (tramp-remote-shell "/bin/sh")
-		   (tramp-remote-shell-args ("-c"))))))
+                                  (,(expand-file-name "site-lisp/" user-emacs-directory) . 2))))
 
 (use-package git-commit
   :straight t
