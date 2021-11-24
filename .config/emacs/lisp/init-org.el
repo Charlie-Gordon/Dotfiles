@@ -10,7 +10,7 @@
   :custom
   (org-directory *org-dir*)
   (org-export-coding-system 'utf-8)
-  (org-use-speed-commands t)
+  (org-use-speed-commands nil)
   (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
   (org-todo-keywords
    '((sequence "TODO(t)" "|" "DONE(d)")
@@ -82,58 +82,10 @@ Edna Syntax: org-anki-this!"
         '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
            ((org-show-context-detail 'minimal)
             (org-agenda-prefix-format ""))))))
-;;;###autoload
-(defun org-maybe-go-to-quiz ()
-  "Go to the first todo element with \"QUIZ\" keyword in current file, do nothing if not found."
-  (cond ((derived-mode-p 'org-mode)
-         (goto-char
-          (or (car (org-map-entries
-	            (lambda nil (point-marker))
-                    "todo=\"QUIZ\"" 'file))
-	      (point-marker))))
-        ((and (derived-mode-p 'eaf-mode)
-              (string= eaf--buffer-app-name "pdf-viewer"))
-         (eaf-interleave-sync-current-note)
-         (select-window (get-buffer-window eaf-interleave-org-buffer))
-         (org-maybe-go-to-quiz))))
 
 (use-package org-super-agenda
   :straight t
   :hook (org-agenda-mode . org-super-agenda-mode))
-
-
-(use-package org-capture
-  :ensure nil
-  :custom
-  (org-capture-templates
-   `(("Q"
-      "Questions for this book.")
-     ("Qa"
-      "Anki flashcard."
-      entry
-      (file "/storage/org/anki.org")
-      "* REVIEW %?")
-     ("Qb"
-      "Questions bank on this book."
-      entry
-      (function org-maybe-go-to-quiz)
-      (file "~/.emacs.d/org-template/QUIZ-todo.txt"))
-     ("Qq"
-      "A question for this book."
-      entry
-      (function org-maybe-go-to-quiz)
-      (file "~/.emacs.d/org-template/QUIZ-question.txt"))
-     ("Q4"
-      "Essential four questions for reading, from Adler's How to Read A Book"
-      entry
-      (file+function buffer-file-name org-maybe-go-to-quiz)
-      ,(string-join
-        (list
-         "** REVIEW What is [[file:%F][%(file-name-sans-extension \"%f\")]] about as a whole?"
-         "** REVIEW What [[file:%F][%(file-name-sans-extension \"%f\")]] said in detail, and how?"
-         "** REVIEW Is [[file:%F][%(file-name-sans-extension \"%f\")]] true, in whole or part?"
-         "** REVIEW What of [[file:%F][%(file-name-sans-extension \"%f\")]]?")
-        "\n")))))
 
 (use-package edraw-org
   :ensure nil

@@ -1,7 +1,0 @@
-* QUIZ On %a [/]
-  :PROPERTIES:
-  :%(eval org-anki-prop-deck): %(eval org-anki-default-deck)
-  :BLOCKER: descendants !done?
-  :TRIGGER: match("TODO=\"ANKIFIED\"" tree) org-anki-this!
-  :END:
-  %?
