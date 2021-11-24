@@ -130,11 +130,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (defvar org-roam-v2-ack t)
   :config
   (org-roam-setup)
-  (setq org-roam-index-file "index.org"
-        org-roam-dailies-directory (expand-file-name "daily" org-directory)
-        org-roam-db-update-method 'immediate
-        org-roam-buffer-no-delete-other-windows t)
-
+  (setq org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (setq org-roam-extract-new-file-path "%(org-roam-slip-box-new-file)")
   (setq org-roam-capture-templates
         `(("d" "default" plain
@@ -150,13 +146,21 @@ Used to determines filename in `org-roam-capture-templates'."
            (file+head
             "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
             "#+TITLE: ${citekey}.  ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
-           :unarrowed t)))
+           :unnarrowed t)
+
+          ("a" "article" plain
+           "%(org-web-tools--url-as-readable-org \"%^{url}\")"
+           :if-new
+           (file+head
+            "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
+            "#+TITLE: ${title}\n#+DOCUMENT_SOURCE: %(org-web-tools--org-link-for-url \"${url}\")\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
+           :unnarrowed t)))
   (setq org-roam-dailies-capture-templates
         `(("d" "default" plain
            "* %?"
            :if-new
            (file+head "%<%Y-%m-%d>.org"
-                      "#+title: %<%Y-%m-%d>\n#+created: %u\n\n")
+                      "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
            :unnarrowed t)))
   :diminish)
 
@@ -175,6 +179,17 @@ Used to determines filename in `org-roam-capture-templates'."
   (add-to-list 'orb-preformat-keywords "url")
   (org-roam-bibtex-mode)
   :diminish)
+
+
+(use-package org-roam-ui
+  :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 ;; (use-package vulpea
 ;;   :straight t
@@ -366,6 +381,7 @@ With a prefix ARG, remove start location."
 
 ;;;; eww-bibtex
 (use-package eww-bibtex
+  :disabled
   :straight (:type git
                    :repo "https://notabug.org/c1-g/eww-bibtex.git"))
 
