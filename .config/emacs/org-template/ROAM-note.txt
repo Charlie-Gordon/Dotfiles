@@ -1,5 +1,5 @@
 
 * ${title}
 :PROPERTIES:
-:INTERLEAVE_URL: %^{file} %^{url}
+:DOCUMENT_SOURCE: %^{file} %^{url}
 :END:
