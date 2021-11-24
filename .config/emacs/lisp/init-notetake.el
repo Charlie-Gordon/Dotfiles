@@ -134,6 +134,8 @@ Used to determines filename in `org-roam-capture-templates'."
         org-roam-dailies-directory (expand-file-name "daily" org-directory)
         org-roam-db-update-method 'immediate
         org-roam-buffer-no-delete-other-windows t)
+
+  (setq org-roam-extract-new-file-path "%(org-roam-slip-box-new-file)")
   (setq org-roam-capture-templates
         `(("d" "default" plain
            "%?"
@@ -192,7 +194,6 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Media note
 (use-package org-media-note
   :init (setq org-media-note-use-org-ref t)
-  :disabled
   :straight '(org-media-note :type git
                              :host github
                              :repo "yuchen-lea/org-media-note")
