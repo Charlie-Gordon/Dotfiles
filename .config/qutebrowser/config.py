@@ -343,6 +343,7 @@ c.fonts.statusbar = '12pt "Iosevka Aile"'
 # Bindings for normal mode
 config.bind('xD', 'hint links spawn --detach mpv {hint-url}')
 config.bind('xd', 'hint links spawn --detach mpv --ytdl-format="bestvideo[height<360]+bestaudio" {hint-url}')
+config.bind('xa', 'hint links spawn --detach mpv -no-video {hint-url}')
 
 # Load images automatically in web pages.
 # Type: Bool
