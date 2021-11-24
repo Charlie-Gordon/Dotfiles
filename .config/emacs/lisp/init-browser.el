@@ -37,16 +37,18 @@
 
 (use-package shrface
   :straight t
+  :disabled
   :after shr
   :config
   (shrface-basic)
   (shrface-trial)
-  (shrface-default-keybindings) ; setup default keybindings
+  (shrface-default-keybindings)         ; setup default keybindings
   (setq shrface-href-versatile t)
   (setq shrface-bullets-bullet-list '("*" "**" "***" "****" "*****" "******")))
 
 (use-package shr-tag-pre-highlight
   :straight t
+  :disabled
   :after shr
   :config
   (add-to-list 'shr-external-rendering-functions
@@ -93,13 +95,11 @@
         ("d" . eww-bookmark-kill))
   :bind-keymap ("C-' e" . prot-eww-map)
   :init
-  (require 'shrface)
   (define-prefix-command 'prot-eww-map) ;; Keymapping for Protesilaos's extensions
-  (add-hook 'eww-after-render-hook #'shrface-mode)
   :custom
   (eww-use-external-browser-for-content-type "\\`\\(video/\\|audio\\)")
   (eww-download-directory (expand-file-name "~/Downloads/"))
-  (eww-bookmarks-directory (expand-file-name "eww-bookmarks/" user-emacs-directory))
+  (eww-bookmarks-directory (expand-file-name "bookmarks/"  user-emacs-directory))
   (eww-header-line-format nil)
   (eww-restore-desktop t)
   (eww-desktop-remove-duplicates t)
