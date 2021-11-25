@@ -38,9 +38,6 @@
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Individual configuration
-;;;;;; Hyperbole
-  (use-package hyperbole
-    :straight t)
 ;;;;;; Repeat mode
   (use-package repeat
     :when (>= (string-to-number emacs-version) 28)
