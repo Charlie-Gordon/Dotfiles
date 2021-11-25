@@ -149,11 +149,11 @@ Used to determines filename in `org-roam-capture-templates'."
            :unnarrowed t)
 
           ("a" "article" plain
-           "%(org-web-tools--url-as-readable-org \"%^{url}\")"
+           "%(bir-import \"%^{url}\")"
            :if-new
            (file+head
             "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
-            "#+TITLE: ${title}\n#+DOCUMENT_SOURCE: %(org-web-tools--org-link-for-url \"${url}\")\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
+            "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
            :unnarrowed t)))
   (setq org-roam-dailies-capture-templates
         `(("d" "default" plain
@@ -161,8 +161,7 @@ Used to determines filename in `org-roam-capture-templates'."
            :if-new
            (file+head "%<%Y-%m-%d>.org"
                       "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
-           :unnarrowed t)))
-  :diminish)
+           :unnarrowed t))))
 
 (use-package org-roam-bibtex
   :straight t
@@ -236,7 +235,7 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Org-noter
 (use-package org-noter
   :straight '(org-noter :type git
-                        :host gitlab
+                        :host github
                         :repo "c1-g/org-noter-plus-djvu"
                         :files ("other" "*.el"))
   :custom
@@ -292,8 +291,34 @@ With a prefix ARG, remove start location."
   :custom
   (deft-directory org-roam-directory)
   (deft-recursive t)
-  (deft-extension '("org" "md")))
+  (deft-extension '("org" "md"))
+  (deft-strip-summary-regexp (concat "\\(?:"
+                                     "^%+" ; line beg with %
+                                     "\\|" org-property-re
+                                     "\\|" "\n"
+                                     "\\|:\\S-+:"
+                                     "\\|" org-heading-regexp
+                                     "\\|" ":[[:alnum:]_@#%]+:"
+                                     "\\|" org-link-bracket-re
+                                     "\\|" org-keyword-regexp
+                                     "\\|" org-element--timestamp-regexp
+                                     "\\|^[#* ]+" ; line beg with #, * and/or space
+                                     "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
+                                     "\\|^Title:[\t ]*" ; MultiMarkdown metadata
+                                     "\\|#+" ; line with just # chars
+                                     "$\\)")))
 
+(defun deft-parse-title (file contents)
+  "Parse the given FILE and CONTENTS and determine the title.
+If `deft-use-filename-as-title' is nil, the title is taken to
+be the first non-empty line of the FILE.  Else the base name of the FILE is
+used as title."
+  (if deft-use-filename-as-title
+      (deft-base-filename file)
+    (let ((begin (string-match "^[ 	]*#\\+\\(\\S-+?\\):[ 	]*\\(.*\\)" contents)))
+      (if begin
+          (funcall deft-parse-title-function
+                   (substring contents begin (match-end 0)))))))
 
 ;;;; Bibtex completion
 (use-package bibtex
@@ -381,9 +406,9 @@ With a prefix ARG, remove start location."
 
 ;;;; eww-bibtex
 (use-package eww-bibtex
-  :disabled
-  :straight (:type git
-                   :repo "https://notabug.org/c1-g/eww-bibtex.git"))
+  :straight '(eww-bibtex :type git
+                         :host gitlab
+                         :repo "c1-g/eww-bibtex"))
 
 (provide 'init-notetake)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
