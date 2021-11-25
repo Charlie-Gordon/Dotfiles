@@ -55,7 +55,7 @@
 (defun affe-search-org()  
     (interactive)
     (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
-      (affe-grep *journals-dir*)))
+      (affe-grep *org-dir*)))
 
 (provide 'navigation)
 ;;; navigation.el ends here
