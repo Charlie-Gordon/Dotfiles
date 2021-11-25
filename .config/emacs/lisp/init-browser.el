@@ -10,7 +10,10 @@
 ;;; Code:
 
 (use-package org-web-tools
-  :straight t)
+  :straight '(org-web-tools :type git
+                            :host github
+                            :repo "alphapapa/org-web-tools"
+                            :fork t))
 
 
 (use-package browse-url
