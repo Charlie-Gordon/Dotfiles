@@ -112,8 +112,8 @@
 (use-package embark
   :straight t
   :bind
-  ("C-." . embark-act)
-  ("M-." . embark-dwim)
+  ("s-'" . embark-act)
+  ("s-\"" . embark-dwim)
   (:map embark-url-map
 	("s" . browse-url-xdg-open)
 	("m" . c1/mpv-play-url))
