@@ -178,15 +178,5 @@ Edna Syntax: org-anki-this!"
 (use-package org-ql
   :straight t)
 
-(use-package outshine
-  :straight t
-  :after outline
-  :config
-  ;; Required for outshine
-  (add-hook 'outline-minor-mode-hook 'outshine-mode)
-  ;; Enables outline-minor-mode for *ALL* programming buffers
-  (add-hook 'prog-mode-hook 'outshine-mode)
-  :diminish)
-
 (provide 'init-org)
 ;;; init-org.el ends here
