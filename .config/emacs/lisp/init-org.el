@@ -54,17 +54,6 @@ it can be passed in POS."
   (when (derived-mode-p 'org-mode)
     (zp/org-set-time-file-property "LAST_MODIFIED")))
 
-(defun +org-auto-id-add-to-headlines-in-file ()
-  "Add ID property to the current file and all its headlines."
-  (when (and (or (eq major-mode 'org-mode)
-                 (eq major-mode 'org-journal-mode))
-             (eq buffer-read-only nil))
-    (save-excursion
-      (widen)
-      (goto-char (point-min))
-      (org-id-get-create)
-      (org-map-entries #'org-id-get-create))))
-
 (use-package org
   :termux
   :straight t
@@ -76,34 +65,6 @@ it can be passed in POS."
   (org-id-link-to-org-use-id t)
   (org-directory *org-dir*)
   (org-export-coding-system 'utf-8)
-  (org-preview-latex-process-alist
-   '((dvipng :programs
-             ("pdflatex" "dvipng")
-             :description "dvi > png" :message "you need to install the programs: latex and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
-             (1.0 . 1.0)
-             :latex-compiler
-             ("pdflatex -interaction nonstopmode -output-directory %o %f")
-             :image-converter
-             ("dvipng -D %D -T tight -o %O %f")
-             :transparent-image-converter
-             ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
-     (dvisvgm :programs
-              ("pdflatex" "dvisvgm")
-              :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
-              (1.7 . 1.5)
-              :latex-compiler
-              ("pdflatex -interaction nonstopmode -output-directory %o %f")
-              :image-converter
-              ("dvisvgm %f -n -b min -c %S -o %O"))
-     (imagemagick :programs
-                  ("pdflatex" "convert")
-                  :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
-                  (1.0 . 1.0)
-                  :latex-compiler
-                  ("pdflatex -interaction nonstopmode -output-directory %o %f")
-                  :image-converter
-                  ("convert -density %D -trim -antialias %f -quality 100 %O"))))
-  
   (org-use-speed-commands nil)
   (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
   (org-todo-keywords
@@ -125,8 +86,7 @@ it can be passed in POS."
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :config
   (add-hook 'org-mode-hook #'(lambda nil
-                               (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)
-                               (add-hook 'before-save-hook #'+org-auto-id-add-to-headlines-in-file t)))
+                               (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
   :hook
   (org-mode . visual-line-mode))
 
@@ -136,6 +96,9 @@ it can be passed in POS."
  'org-babel-load-languages
  '((python . t)
    (C . t)))
+
+(use-package deferred
+  :straight t)
 
 (use-package worf
   :straight t
