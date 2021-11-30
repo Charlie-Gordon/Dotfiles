@@ -33,6 +33,12 @@
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2))))
 
+(use-package magit-todos
+  :straight t
+  :hook
+  (magit-mode . magit-todos-mode))
+
+
 (use-package git-commit
   :straight t
   :hook
