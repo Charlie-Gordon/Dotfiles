@@ -112,8 +112,7 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;###autoload
 (defun org-roam-slip-box-new-file ()
   "Return a new file path when creating a new note."
-  (concat org-roam-directory (number-to-string (float (1+
-                                                       (c1/count-org-file-in-directory org-roam-directory))))
+  (concat org-roam-directory (number-to-string (1+ (c1/count-org-file-in-directory org-roam-directory)))
           ".org"))
 
 (use-package org-roam
@@ -129,7 +128,6 @@ Used to determines filename in `org-roam-capture-templates'."
   (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
   (defvar org-roam-v2-ack t)
   :config
-  (org-roam-setup)
   (setq org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (setq org-roam-extract-new-file-path "%(org-roam-slip-box-new-file)")
   (setq org-roam-capture-templates
@@ -148,8 +146,18 @@ Used to determines filename in `org-roam-capture-templates'."
             "#+TITLE: ${citekey}.  ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
            :unnarrowed t)
 
-          ("a" "article" plain
+          ("a" "article")
+
+          ("au" "article from url" plain
            "%(bir-import \"%^{url}\")"
+           :if-new
+           (file+head
+            "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
+            "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
+           :unnarrowed t)
+
+          ("af" "article from file" plain
+           "%(bir-import-file \"%^{file}\")"
            :if-new
            (file+head
             "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
@@ -176,6 +184,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (orb-file-field-extensions '("pdf" "epub" "djvu"))
   :config
   (add-to-list 'orb-preformat-keywords "url")
+  (add-to-list 'orb-preformat-keywords "file")
   (org-roam-bibtex-mode)
   :diminish)
 
@@ -204,6 +213,25 @@ Used to determines filename in `org-roam-capture-templates'."
   :when *bibliography-dir*
   :custom
   (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp)))
+
+(use-package citar
+  :straight t
+  :bind (("C-c b" . citar-insert-citation)
+         :map minibuffer-local-map
+         ("M-b" . citar-insert-preset)
+         :map org-mode-map :package org
+         ("C-c b" . #'org-cite-insert))
+  :custom
+  (citar-bibliography (directory-files *bibliography-dir* t ".bib"))
+  (org-cite-global-bibliography '("~/bib/references.bib"))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-at-point-function 'embark-act)
+  (citar-open-note-function 'orb-citar-edit-note)
+  :config
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
+
 
 ;;;;; Media note
 (use-package org-media-note
@@ -284,6 +312,10 @@ With a prefix ARG, remove start location."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
+
+;;;;; Org-download
+(use-package org-download
+  :straight t)
 
 ;;;;; Deft
 (use-package deft
@@ -396,7 +428,8 @@ used as title."
                      :fork t
                      :files ("awk" "*.org" "*.sh" "*.el"))
   :custom
-  (org-fc-directories `(,*org-dir*)))
+  (org-fc-directories `(,*org-dir*))
+  (org-fragtog-ignore-predicates #'org-fc-entry-p))
 
 (use-package bir
   :straight '(bir.el :type git
