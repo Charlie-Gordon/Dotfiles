@@ -57,10 +57,6 @@
   (add-to-list 'shr-external-rendering-functions
                '(pre . shrface-tag-pre-highlight)))
 
-(use-package w3m
-  :straight t)
-
-
 (use-package eww
   :defer t
   :after shr
