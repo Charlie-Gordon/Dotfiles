@@ -10,7 +10,7 @@
                               "-model pc104aw-zqu"
                               "-layout us,us,th"
                               "-variant cmk_ed_dh,,pat"
-                              "-option grp:alt_space_toggle")
+                              "-option grp:sclk_toggle")
                             " "))
   (shell-command-to-string (concat (executable-find "xmodmap") " -verbose "
                                    (getenv "USERMODMAP"))))
