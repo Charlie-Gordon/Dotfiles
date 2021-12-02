@@ -31,8 +31,10 @@
                         :repo "vedang/pdf-tools"
                         :fork "orgtre/pdf-tools")
   :bind (:map pdf-view-mode-map
-               ("j" . pdf-view-next-line-or-next-page)
-               ("k" . pdf-view-previous-line-or-previous-page))
+              ("j" . pdf-view-next-line-or-next-page)
+              ("k" . pdf-view-previous-line-or-previous-page)
+              ("h" . image-backward-hscroll)
+              ("l" . image-forward-hscroll))
   :mode "\\.pdf\\'"
   :custom
   (pdf-keynav-copy-region-blink-delay 2)
@@ -127,49 +129,73 @@ Used to determines filename in `org-roam-capture-templates'."
   :init
   (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
   (defvar org-roam-v2-ack t)
+  :custom
+  (org-roam-node-display-template "${my-title:*} ${tags:10}")
+  (org-roam-dailies-directory (expand-file-name "daily" org-directory))
+  (org-roam-extract-new-file-path "%(org-roam-slip-box-new-file)")
+  (org-roam-capture-templates
+   `(("d" "default" plain
+      "%?"
+      :if-new
+      (file+head
+       "%(org-roam-slip-box-new-file)"
+       "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
+      :unnarrowed t)
+     ("n" "note" plain
+      (file ,(expand-file-name "org-template/ROAM-note.txt" user-emacs-directory))
+      :if-new
+      (file+head
+       "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
+       "#+TITLE: ${citekey}.  ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
+      :unnarrowed t)
+
+     ("a" "article")
+
+     ("au" "article from url" plain
+      "%(bir-import \"%^{url}\")"
+      :if-new
+      (file+head
+       "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
+       "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
+      :unnarrowed t)
+
+     ("af" "article from file" plain
+      "%(bir-import-file \"%^{file}\")"
+      :if-new
+      (file+head
+       "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
+       "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
+      :unnarrowed t)))
+  (org-roam-dailies-capture-templates
+   `(("d" "default" plain
+      "* %?"
+      :if-new
+      (file+head "%<%Y-%m-%d>.org"
+                 "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
+      :unnarrowed t)))
   :config
-  (setq org-roam-dailies-directory (expand-file-name "daily" org-directory))
-  (setq org-roam-extract-new-file-path "%(org-roam-slip-box-new-file)")
-  (setq org-roam-capture-templates
-        `(("d" "default" plain
-           "%?"
-           :if-new
-           (file+head
-            "%(org-roam-slip-box-new-file)"
-            "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
-           :unnarrowed t)
-          ("n" "note" plain
-           (file ,(expand-file-name "org-template/ROAM-note.txt" user-emacs-directory))
-           :if-new
-           (file+head
-            "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
-            "#+TITLE: ${citekey}.  ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
-           :unnarrowed t)
-
-          ("a" "article")
-
-          ("au" "article from url" plain
-           "%(bir-import \"%^{url}\")"
-           :if-new
-           (file+head
-            "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
-            "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
-           :unnarrowed t)
-
-          ("af" "article from file" plain
-           "%(bir-import-file \"%^{file}\")"
-           :if-new
-           (file+head
-            "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
-            "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
-           :unnarrowed t)))
-  (setq org-roam-dailies-capture-templates
-        `(("d" "default" plain
-           "* %?"
-           :if-new
-           (file+head "%<%Y-%m-%d>.org"
-                      "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
-           :unnarrowed t))))
+  (cl-defmethod org-roam-node-my-title ((node org-roam-node))
+    (if (string-match-p "^[[:digit:]]+" (org-roam-node-title node))
+        (with-temp-buffer
+          (insert-file-contents (org-roam-node-file node))
+          (replace-regexp-in-region
+           (concat "\\(?:"
+                   "^%+"                ; line beg with %
+                   "\\|" org-property-re
+                   "\\|" "\n"
+                   "\\|:\\S-+:"
+                   "\\|" org-table-line-regexp
+                   "\\|" org-heading-regexp
+                   "\\|" ":[[:alnum:]_@#%]+:"
+                   "\\|" org-keyword-regexp
+                   "\\|" org-element--timestamp-regexp
+                   "\\|^[#* ]+"      ; line beg with #, * and/or space
+                   "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
+                   "\\|#+"              ; line with just # chars
+                   "$\\)")
+           "")
+          (buffer-substring-no-properties (point-min) (or (re-search-forward (sentence-end) nil t) (point-max))))
+      (org-roam-node-title node))))
 
 (use-package org-roam-bibtex
   :straight t
@@ -178,7 +204,7 @@ Used to determines filename in `org-roam-capture-templates'."
               :map org-mode-map
               (("C-c m t" . orb-insert-non-ref)
                ("C-c m a" . orb-note-actions)))
- 
+  
   :custom
   (orb-autokey-format "%a%y")
   (orb-file-field-extensions '("pdf" "epub" "djvu"))
@@ -329,6 +355,7 @@ With a prefix ARG, remove start location."
                                      "\\|" org-property-re
                                      "\\|" "\n"
                                      "\\|:\\S-+:"
+                                     "\\|" org-table-line-regexp
                                      "\\|" org-heading-regexp
                                      "\\|" ":[[:alnum:]_@#%]+:"
                                      "\\|" org-link-bracket-re
