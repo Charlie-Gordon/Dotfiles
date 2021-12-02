@@ -174,6 +174,7 @@ Used to determines filename in `org-roam-capture-templates'."
                  "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
       :unnarrowed t)))
   :config
+  (org-roam-db-autosync-mode)
   (cl-defmethod org-roam-node-my-title ((node org-roam-node))
     (if (string-match-p "^[[:digit:]]+" (org-roam-node-title node))
         (with-temp-buffer
@@ -412,25 +413,6 @@ used as title."
    "#+TITLE: ${=key=}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\nLiterature notes for cite:${=key=}.\n\n")
   (bibtex-user-optional-fields '(("file" "Path to file")))
   (bibtex-completion-additional-search-fields '(file formats)))
-
-;;;; Helm-bibtex
-(use-package helm-bibtex
-  :straight '(helm-bibtex :type git :host github
-                          :repo "tmalsburg/helm-bibtex")
-  :config
-  (global-set-key (kbd "C-' b") #'helm-bibtex)
-  
-  (defun c1/bibtex-completion-open-org-noter (keys)
-    (with-temp-buffer
-      (bibtex-completion-edit-notes keys)
-      (org-noter)))
-
-  (helm-bibtex-helmify-action c1/bibtex-completion-open-org-noter helm-bibtex-open-org-noter)
-
-  (helm-add-action-to-source "Open in org-noter" #'helm-bibtex-open-org-noter helm-source-bibtex))
-
-
-
 
 ;;;; Trying out SRS (space-repetition system)
 (use-package org-anki
