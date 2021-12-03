@@ -29,7 +29,7 @@ fi
 export PATH="$PATH:$HOME/.local/bin"
 
 # Default programs:
-export EDITOR="emacs"
+export EDITOR="emacsclient"
 # export TERMINAL="st"
 # export BROWSER="brave"
 export CALIBRE_USE_DARK_PALETTE=1
