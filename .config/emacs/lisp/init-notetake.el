@@ -179,23 +179,26 @@ Used to determines filename in `org-roam-capture-templates'."
     (if (string-match-p "^[[:digit:]]+" (org-roam-node-title node))
         (with-temp-buffer
           (insert-file-contents (org-roam-node-file node))
-          (replace-regexp-in-region
-           (concat "\\(?:"
-                   "^%+"                ; line beg with %
-                   "\\|" org-property-re
-                   "\\|" "\n"
-                   "\\|:\\S-+:"
-                   "\\|" org-table-line-regexp
-                   "\\|" org-heading-regexp
-                   "\\|" ":[[:alnum:]_@#%]+:"
-                   "\\|" org-keyword-regexp
-                   "\\|" org-element--timestamp-regexp
-                   "\\|^[#* ]+"      ; line beg with #, * and/or space
-                   "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
-                   "\\|#+"              ; line with just # chars
-                   "$\\)")
-           "")
-          (buffer-substring-no-properties (point-min) (or (re-search-forward (sentence-end) nil t) (point-max))))
+          (org-roam-end-of-meta-data 'full)
+          (replace-regexp-in-string (concat "\\(?:"
+                                     "^%+" ; line beg with %
+                                     "\\|" org-property-re
+                                     "\\|" "\n"
+                                     "\\|:\\S-+:"
+                                     "\\|" org-table-line-regexp
+                                     "\\|" org-heading-regexp
+                                     "\\|" ":[[:alnum:]_@#%]+:"
+                                     "\\|" org-keyword-regexp
+                                     "\\|" org-element--timestamp-regexp
+                                     "\\|^[# ]+" ; line beg with #, * and/or space
+                                     "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
+                                     "\\|^Title:[\t ]*" ; MultiMarkdown metadata
+                                     "\\|#+" ; line with just # chars
+                                     "$\\)")
+                                    ""
+                                    (buffer-substring-no-properties
+                                     (point)
+                                     (or (re-search-forward (sentence-end) nil t) (point-max)))))
       (org-roam-node-title node))))
 
 (use-package org-roam-bibtex
