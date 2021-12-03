@@ -20,11 +20,9 @@
 
 (use-package eaf-pdf-viewer
   :ensure nil
-  :disabled
   :custom
   (eaf-pdf-outline-window-configuration t)
   (eaf-pdf-dark-mode "ignore")
-  (eaf-pdf-scroll-ratio 0.5)
   (eaf-pdf-marker-fontsize 16)
   :config
   (eaf-bind-key scroll_up "n" eaf-pdf-viewer-keybinding)
