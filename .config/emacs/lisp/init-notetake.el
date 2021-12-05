@@ -181,20 +181,18 @@ Used to determines filename in `org-roam-capture-templates'."
           (insert-file-contents (org-roam-node-file node))
           (org-roam-end-of-meta-data 'full)
           (replace-regexp-in-string (concat "\\(?:"
-                                     "^%+" ; line beg with %
-                                     "\\|" org-property-re
-                                     "\\|" "\n"
-                                     "\\|:\\S-+:"
-                                     "\\|" org-table-line-regexp
-                                     "\\|" org-heading-regexp
-                                     "\\|" ":[[:alnum:]_@#%]+:"
-                                     "\\|" org-keyword-regexp
-                                     "\\|" org-element--timestamp-regexp
-                                     "\\|^[# ]+" ; line beg with #, * and/or space
-                                     "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
-                                     "\\|^Title:[\t ]*" ; MultiMarkdown metadata
-                                     "\\|#+" ; line with just # chars
-                                     "$\\)")
+                                            "^%+" ; line beg with %
+                                            "\\|" org-property-re
+                                            "\\|" "\n"
+                                            "\\|:\\S-+:"
+                                            "\\|" org-table-line-regexp
+                                            "\\|" org-heading-regexp
+                                            "\\|" ":[[:alnum:]_@#%]+:"
+                                            "\\|" org-keyword-regexp
+                                            "\\|" "#\\+\\S-+$"
+                                            "\\|" org-element--timestamp-regexp
+                                            "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
+                                            "$\\)")
                                     ""
                                     (buffer-substring-no-properties
                                      (point)
@@ -211,7 +209,7 @@ Used to determines filename in `org-roam-capture-templates'."
   
   :custom
   (orb-autokey-format "%a%y")
-  (orb-file-field-extensions '("pdf" "epub" "djvu"))
+  (orb-file-field-extensions '("pdf" "epub" "djvu" "htm" "html"))
   :config
   (add-to-list 'orb-preformat-keywords "url")
   (add-to-list 'orb-preformat-keywords "file")
@@ -221,13 +219,14 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package org-roam-ui
   :straight
-    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-    :after org-roam
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+  (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t)
+  :diminish)
 
 (use-package vulpea
   :straight t
@@ -354,6 +353,7 @@ With a prefix ARG, remove start location."
   (deft-directory org-roam-directory)
   (deft-recursive t)
   (deft-extension '("org" "md"))
+  (deft-parse-title-function #'my-strip-title)
   (deft-strip-summary-regexp (concat "\\(?:"
                                      "^%+" ; line beg with %
                                      "\\|" org-property-re
@@ -361,8 +361,9 @@ With a prefix ARG, remove start location."
                                      "\\|:\\S-+:"
                                      "\\|" org-table-line-regexp
                                      "\\|" org-heading-regexp
-                                     "\\|" ":[[:alnum:]_@#%]+:"
                                      "\\|" org-link-bracket-re
+                                     "\\|" org-table-any-line-regexp
+                                     "\\|" org-scheduled-regexp
                                      "\\|" org-keyword-regexp
                                      "\\|" org-element--timestamp-regexp
                                      "\\|^[#* ]+" ; line beg with #, * and/or space
@@ -378,10 +379,32 @@ be the first non-empty line of the FILE.  Else the base name of the FILE is
 used as title."
   (if deft-use-filename-as-title
       (deft-base-filename file)
-    (let ((begin (string-match "^[ 	]*#\\+\\(\\S-+?\\):[ 	]*\\(.*\\)" contents)))
-      (if begin
-          (funcall deft-parse-title-function
-                   (substring contents begin (match-end 0)))))))
+    (if (string= (file-name-extension file) "org")
+        (with-temp-buffer
+          (insert contents)
+          (if (cadar (org-collect-keywords '("title")))
+              (cadar (org-collect-keywords '("title")))
+            (org-roam-end-of-meta-data 'full)
+            (replace-regexp-in-string
+             (concat "\\(?:"
+                     "^%+"              ; line beg with %
+                     "\\|" org-property-re
+                     "\\|" "\n"
+                     "\\|:\\S-+:"
+                     "\\|" org-table-line-regexp
+                     "\\|" org-heading-regexp
+                     "\\|" ":[[:alnum:]_@#%]+:"
+                     "\\|" org-keyword-regexp
+                     "\\|" org-element--timestamp-regexp
+                     "\\|^[# ]+"     ; line beg with #, * and/or space
+                     "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
+                     "\\|^Title:[\t ]*" ; MultiMarkdown metadata
+                     "\\|#+"            ; line with just # chars
+                     "$\\)")
+             ""
+             (buffer-substring-no-properties
+              (point)
+              (or (re-search-forward (sentence-end) nil t) (point-max)))))))))
 
 ;;;; Bibtex completion
 (use-package bibtex
@@ -440,8 +463,12 @@ used as title."
                      :fork t
                      :files ("awk" "*.org" "*.sh" "*.el"))
   :custom
-  (org-fc-directories `(,*org-dir*))
-  (org-fragtog-ignore-predicates #'org-fc-entry-p))
+  (org-fc-directories `(,org-roam-directory))
+  (org-fragtog-ignore-predicates #'org-fc-entry-p)
+  :config
+  (add-hook 'org-fc-before-setup-hook #'(lambda nil (when worf-mode (worf-mode 0))))
+  (org-fc-cache-mode)
+  :diminish org-fc-cache-mode)
 
 (use-package bir
   :straight '(bir.el :type git
