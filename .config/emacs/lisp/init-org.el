@@ -91,6 +91,11 @@ it can be passed in POS."
   (org-mode . visual-line-mode))
 
 
+(use-package org-contrib
+  :straight t)
+
+(use-package ol-bookmark
+  :straight t)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -186,10 +191,8 @@ it can be passed in POS."
 
 (defun org-inline-data-image (_protocol link el &optional _description)
   "Interpret LINK as base64-encoded image data."
-  (let* ((image-data (base64-decode-string (replace-regexp-in-string "image/png;base64," "" link)))
-         (ol (org-image-update-overlay image-data el t t)))
-    (when (and ol description)
-      (overlay-put ol 'after-string description))))
+  (let ((image-data (base64-decode-string (replace-regexp-in-string "image/.*;base64," "" link))))
+     (org-image-update-overlay image-data el t t)))
 
 (defun org-image-link (protocol link el &optional description)
   "Interpret LINK as base64-encoded image data."
