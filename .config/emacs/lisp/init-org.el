@@ -63,6 +63,7 @@ it can be passed in POS."
 	 ("C-'" . nil))
   :custom
   (org-id-link-to-org-use-id t)
+  (org-ctrl-k-protect-subtree t)
   (org-directory *org-dir*)
   (org-export-coding-system 'utf-8)
   (org-use-speed-commands nil)
