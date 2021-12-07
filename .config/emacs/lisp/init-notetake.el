@@ -262,13 +262,14 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package citar
   :straight t
   :bind (:map citar-map
-         ("i" . citar-insert-citation)
-         ("n" . citar-open-notes)
-         ("o" . citar-open)
-         :map minibuffer-local-map
-         ("M-b" . citar-insert-preset)
-         :map org-mode-map :package org
-         ("C-c b" . #'org-cite-insert))
+              ("i" . citar-insert-citation)
+              ("n" . citar-open-notes)
+              ("o" . citar-open)
+              ("r" . citar-refresh)
+              :map minibuffer-local-map
+              ("M-b" . citar-insert-preset)
+              :map org-mode-map :package org
+              ("C-c b" . #'org-cite-insert))
   :bind-keymap ("C-c b" . citar-map)
   :init
   (define-prefix-command 'citar-map nil "Citar")
