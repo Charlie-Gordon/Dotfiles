@@ -79,20 +79,31 @@
   (djvu-continuous t))
 
 ;;;; Calibre
-;; (use-package calibredb
-;;   :straight '(calibredb.el :type git :host github
-;;                            :repo "chenyanming/calibredb.el")
-;;   :when (executable-find "calibredb")
-;;   :config
-;;   (setq calibredb-program (executable-find "calibredb"))
-;;   (setq calibredb-root-dir *library-dir*)
-;;   (setq calibredb-library-alist `((,*library-dir*)))
-;;   (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
-;;   (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
-;;   (setq calibredb-sort-by 'title)
-;;   (setq calibredb-sql-newline "\n")
-;;   (setq calibredb-sql-separator "|")
-;;   (setq calibredb-detailed-view nil))
+(use-package calibredb
+  :straight '(calibredb.el :type git :host github
+                           :repo "chenyanming/calibredb.el")
+  :when (executable-find "calibredb")
+  :config
+  (setq calibredb-program (executable-find "calibredb"))
+  (setq calibredb-root-dir *library-dir*)
+  (setq calibredb-library-alist `((,*library-dir*)))
+  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
+  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
+  (setq calibredb-sort-by 'title)
+  (setq calibredb-sql-newline "\n")
+  (setq calibredb-sql-separator "|")
+  (setq calibredb-detailed-view nil))
+
+(defun calibredb-query (sql-query)
+  "Query calibre databse and return the result.
+Argument SQL-QUERY is the sqlite sql query string."
+  (interactive)
+  (if (file-exists-p calibredb-db-dir)
+    (shell-command-to-string
+       (format "%s -list -noheader %s -init %s"
+               sql-sqlite-program
+               (shell-quote-argument (expand-file-name calibredb-db-dir))
+               (make-temp-file "calibredb-query-string" nil nil sql-query))) nil))
              
 ;;;; Note-taking with org
 ;;;;; Org-roam
@@ -114,8 +125,7 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;###autoload
 (defun org-roam-slip-box-new-file ()
   "Return a new file path when creating a new note."
-  (concat org-roam-directory (number-to-string (1+ (c1/count-org-file-in-directory org-roam-directory)))
-          ".org"))
+  (number-to-string (1+ (c1/count-org-file-in-directory org-roam-directory))))
 
 (use-package org-roam
   :straight t
@@ -132,13 +142,13 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (org-roam-node-display-template "${my-title:*} ${tags:10}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
-  (org-roam-extract-new-file-path "%(org-roam-slip-box-new-file)")
+  (org-roam-extract-new-file-path "%<%F-%s>-%(org-roam-slip-box-new-file).org")
   (org-roam-capture-templates
    `(("d" "default" plain
       "%?"
       :if-new
       (file+head
-       "%(org-roam-slip-box-new-file)"
+       "%<%F-%s>.org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
      ("n" "note" plain
@@ -157,6 +167,12 @@ Used to determines filename in `org-roam-capture-templates'."
       (file+head
        "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
+      :unnarrowed t)
+     
+     ("ak" "article from clipboard" entry
+      "%(org-web-tools--url-as-readable-org)"
+      :if-new
+      (file "%<%F-%s>.org")
       :unnarrowed t)
 
      ("af" "article from file" plain
@@ -245,11 +261,17 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package citar
   :straight t
-  :bind (("C-c b" . citar-insert-citation)
+  :bind (:map citar-map
+         ("i" . citar-insert-citation)
+         ("n" . citar-open-notes)
+         ("o" . citar-open)
          :map minibuffer-local-map
          ("M-b" . citar-insert-preset)
          :map org-mode-map :package org
          ("C-c b" . #'org-cite-insert))
+  :bind-keymap ("C-c b" . citar-map)
+  :init
+  (define-prefix-command 'citar-map nil "Citar")
   :custom
   (citar-bibliography (directory-files *bibliography-dir* t ".bib"))
   (org-cite-global-bibliography '("~/bib/references.bib"))
@@ -465,10 +487,40 @@ used as title."
   :custom
   (org-fc-directories `(,org-roam-directory))
   (org-fragtog-ignore-predicates #'org-fc-entry-p)
+  (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
+  ;; (org-fc-directories '("/home/i/git/10000-markdown-files/done"))
   :config
   (add-hook 'org-fc-before-setup-hook #'(lambda nil (when worf-mode (worf-mode 0))))
   (org-fc-cache-mode)
   :diminish org-fc-cache-mode)
+
+(defun org-fc-browser-list-db ()
+  (seq-map
+   (lambda (row)
+     (cl-destructuring-bind (id title review-data props tags) row
+       (let* ((due (substring-no-properties (nth 4 (car review-data))))
+              (intrv (substring-no-properties (nth 3 (car review-data))))
+              (type (cdr (assoc org-fc-type-property props #'string=)))
+              (parent (cdr (assoc bir-ref-parent-property props #'string=))))
+
+         (if (not parent)
+             ""
+           (string-match org-link-bracket-re parent)
+           (setq parent (match-string 1 parent)))
+         
+         (list id (vector (or title "No title") intrv due type parent)))))
+   (org-roam-db-query
+    "SELECT
+id,
+title,
+review_data,
+properties,
+tags
+FROM
+notes
+LEFT JOIN tags ON tags.node_id
+WHERE review_data IS NOT NULL
+")))
 
 (use-package bir
   :straight '(bir.el :type git
