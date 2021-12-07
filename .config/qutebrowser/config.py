@@ -385,3 +385,5 @@ c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
                        'yt': 'https://www.youtube.com/results?search_query={}',
                        'gl': 'https://gitlab.com/explore?name={}',
                        'gh': 'https://github.com/search?q={}'}
+
+c.editor.command = ['emacsclient', '+{line}:{column}', '{file}']
