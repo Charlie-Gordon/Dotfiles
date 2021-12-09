@@ -76,11 +76,26 @@ config.set('colors.webpage.darkmode.enabled', True)
 
 config.set('hints.chars', 'qwfarstxcdv')
 
+config.bind('[[', 'navigate decrement')
+config.bind(']]', 'navigate increment')
+config.bind('{{', 'navigate prev')
+config.bind('}}', 'navigate next')
+
+config.bind('cs', 'config-source')
+
+config.bind('E', 'edit-url')
+
 config.bind('o', 'set-cmd-text -s :open --window')
 
 config.bind('O', 'set-cmd-text -s :open --window')
 
-config.bind('o', 'set-cmd-text -xoHs :open --window')
+config.bind('#', 'hint code userscript code_select.py')
+
+c.hints.selectors["code"] = [
+    # Selects all code tags whose direct parent is not a pre tag
+    ":not(pre) > code",
+    "pre"
+]
 
 c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
                        'wk': 'https://en.wikipedia.org/wiki/{}',
