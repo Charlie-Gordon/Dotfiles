@@ -4,3 +4,6 @@
 [submodule ".config/emacs/site-lisp/el-easydraw"]
 	path = .config/emacs/site-lisp/el-easydraw
 	url = https://github.com/misohena/el-easydraw
+[submodule "/home/i/.config/emacs/site-lisp/pbui"]
+	path = /home/i/.config/emacs/site-lisp/pbui
+	url = https://github.com/mmontone/pbui
