@@ -21,6 +21,26 @@
 (use-package elfeed
   :straight t)
 
+(use-package org-el-cache
+  :straight '(org-zk :type git
+                     :host github
+                     :repo "l3kn/org-el-cache")
+  :disabled)
+
+
+(use-package peertube
+  :straight t)
+
+
+(use-package org-zettelkasten
+  :disabled
+  :straight '(org-zk :type git
+                     :host github
+                     :repo "l3kn/org-zettelkasten"))
+
+
+
+
 
 (provide 'init-local)
 ;;; init-local.el ends here

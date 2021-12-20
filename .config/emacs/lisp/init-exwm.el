@@ -110,7 +110,8 @@
                        (interactive)
                        (exwm-workspace-switch-create ,i))))
                  (number-sequence 0 9))))
-    (setq exwm-manage-force-tiling t)
+    (setq exwm-manage-force-tiling nil)
+    
     ;; Set the initial workspace number
     (setq exwm-workspace-number 4)
     ;; Proper modeline

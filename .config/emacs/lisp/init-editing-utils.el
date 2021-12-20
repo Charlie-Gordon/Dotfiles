@@ -90,6 +90,13 @@
   (which-key-mode)
   :diminish)
 
+;; persistent-scratch
+(use-package persistent-scratch
+  :straight t
+  :config
+  (persistent-scratch-setup-default)
+  :diminish persistent-scratch-mode)
+
 ;;; Snippets
 (use-package yasnippet
   :straight t

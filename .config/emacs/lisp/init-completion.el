@@ -114,6 +114,7 @@
   :bind
   ("s-'" . embark-act)
   ("s-\"" . embark-dwim)
+  ("M-:" . pp-eval-expression)
   (:map embark-url-map
 	("s" . browse-url-xdg-open)
 	("m" . c1/mpv-play-url))

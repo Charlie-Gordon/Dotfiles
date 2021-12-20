@@ -140,7 +140,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
   (defvar org-roam-v2-ack t)
   :custom
-  (org-roam-node-display-template "${my-title:*} ${tags:10}")
+  (org-roam-node-display-template "${article}${my-title:*} ${tags:10}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (org-roam-extract-new-file-path "%<%F-%s>-%(org-roam-slip-box-new-file).org")
   (org-roam-capture-templates
@@ -191,6 +191,12 @@ Used to determines filename in `org-roam-capture-templates'."
       :unnarrowed t)))
   :config
   (org-roam-db-autosync-mode)
+  (cl-defmethod org-roam-node-article ((node org-roam-node))
+    (if-let* ((props (org-roam-node-properties node))
+              (article (cdr (assoc bir-ref-article-property props #'string=)))
+              (desc (string-match org-link-bracket-re article)))
+        (concat (match-string 2 article) ". ")
+      ""))
   (cl-defmethod org-roam-node-my-title ((node org-roam-node))
     (if (string-match-p "^[[:digit:]]+" (org-roam-node-title node))
         (with-temp-buffer
@@ -245,11 +251,13 @@ Used to determines filename in `org-roam-capture-templates'."
   :diminish)
 
 (use-package vulpea
+  :disabled
   :straight t
   ;; hook into org-roam-db-autosync-mode you wish to enable
   ;; persistence of meta values (see respective section in README to
   ;; find out what meta means)
   :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable)))
+
 
 
 ;;;;; Org-ref
@@ -269,8 +277,8 @@ Used to determines filename in `org-roam-capture-templates'."
               :map minibuffer-local-map
               ("M-b" . citar-insert-preset)
               :map org-mode-map :package org
-              ("C-c b" . #'org-cite-insert))
-  :bind-keymap ("C-c b" . citar-map)
+              ("C-c B" . #'org-cite-insert))
+  :bind-keymap ("C-c ]" . citar-map)
   :init
   (define-prefix-command 'citar-map nil "Citar")
   :custom
@@ -367,67 +375,69 @@ With a prefix ARG, remove start location."
 
 ;;;;; Org-download
 (use-package org-download
-  :straight t)
-
-;;;;; Deft
-(use-package deft
   :straight t
   :custom
-  (deft-directory org-roam-directory)
-  (deft-recursive t)
-  (deft-extension '("org" "md"))
-  (deft-parse-title-function #'my-strip-title)
-  (deft-strip-summary-regexp (concat "\\(?:"
-                                     "^%+" ; line beg with %
-                                     "\\|" org-property-re
-                                     "\\|" "\n"
-                                     "\\|:\\S-+:"
-                                     "\\|" org-table-line-regexp
-                                     "\\|" org-heading-regexp
-                                     "\\|" org-link-bracket-re
-                                     "\\|" org-table-any-line-regexp
-                                     "\\|" org-scheduled-regexp
-                                     "\\|" org-keyword-regexp
-                                     "\\|" org-element--timestamp-regexp
-                                     "\\|^[#* ]+" ; line beg with #, * and/or space
-                                     "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
-                                     "\\|^Title:[\t ]*" ; MultiMarkdown metadata
-                                     "\\|#+" ; line with just # chars
-                                     "$\\)")))
+  (org-download-method 'attach))
 
-(defun deft-parse-title (file contents)
-  "Parse the given FILE and CONTENTS and determine the title.
-If `deft-use-filename-as-title' is nil, the title is taken to
-be the first non-empty line of the FILE.  Else the base name of the FILE is
-used as title."
-  (if deft-use-filename-as-title
-      (deft-base-filename file)
-    (if (string= (file-name-extension file) "org")
-        (with-temp-buffer
-          (insert contents)
-          (if (cadar (org-collect-keywords '("title")))
-              (cadar (org-collect-keywords '("title")))
-            (org-roam-end-of-meta-data 'full)
-            (replace-regexp-in-string
-             (concat "\\(?:"
-                     "^%+"              ; line beg with %
-                     "\\|" org-property-re
-                     "\\|" "\n"
-                     "\\|:\\S-+:"
-                     "\\|" org-table-line-regexp
-                     "\\|" org-heading-regexp
-                     "\\|" ":[[:alnum:]_@#%]+:"
-                     "\\|" org-keyword-regexp
-                     "\\|" org-element--timestamp-regexp
-                     "\\|^[# ]+"     ; line beg with #, * and/or space
-                     "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
-                     "\\|^Title:[\t ]*" ; MultiMarkdown metadata
-                     "\\|#+"            ; line with just # chars
-                     "$\\)")
-             ""
-             (buffer-substring-no-properties
-              (point)
-              (or (re-search-forward (sentence-end) nil t) (point-max)))))))))
+;;;;; Deft
+;; (use-package deft
+;;   :straight t
+;;   :custom
+;;   (deft-directory org-roam-directory)
+;;   (deft-recursive t)
+;;   (deft-extension '("org" "md"))
+;;   (deft-parse-title-function #'my-strip-title)
+;;   (deft-strip-summary-regexp (concat "\\(?:"
+;;                                      "^%+" ; line beg with %
+;;                                      "\\|" org-property-re
+;;                                      "\\|" "\n"
+;;                                      "\\|:\\S-+:"
+;;                                      "\\|" org-table-line-regexp
+;;                                      "\\|" org-heading-regexp
+;;                                      "\\|" org-link-bracket-re
+;;                                      "\\|" org-table-any-line-regexp
+;;                                      "\\|" org-scheduled-regexp
+;;                                      "\\|" org-keyword-regexp
+;;                                      "\\|" org-element--timestamp-regexp
+;;                                      "\\|^[#* ]+" ; line beg with #, * and/or space
+;;                                      "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
+;;                                      "\\|^Title:[\t ]*" ; MultiMarkdown metadata
+;;                                      "\\|#+" ; line with just # chars
+;;                                      "$\\)")))
+
+;; (defun deft-parse-title (file contents)
+;;   "Parse the given FILE and CONTENTS and determine the title.
+;; If `deft-use-filename-as-title' is nil, the title is taken to
+;; be the first non-empty line of the FILE.  Else the base name of the FILE is
+;; used as title."
+;;   (if deft-use-filename-as-title
+;;       (deft-base-filename file)
+;;     (if (string= (file-name-extension file) "org")
+;;         (with-temp-buffer
+;;           (insert contents)
+;;           (if (cadar (org-collect-keywords '("title")))
+;;               (cadar (org-collect-keywords '("title")))
+;;             (org-roam-end-of-meta-data 'full)
+;;             (replace-regexp-in-string
+;;              (concat "\\(?:"
+;;                      "^%+"              ; line beg with %
+;;                      "\\|" org-property-re
+;;                      "\\|" "\n"
+;;                      "\\|:\\S-+:"
+;;                      "\\|" org-table-line-regexp
+;;                      "\\|" org-heading-regexp
+;;                      "\\|" ":[[:alnum:]_@#%]+:"
+;;                      "\\|" org-keyword-regexp
+;;                      "\\|" org-element--timestamp-regexp
+;;                      "\\|^[# ]+"     ; line beg with #, * and/or space
+;;                      "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
+;;                      "\\|^Title:[\t ]*" ; MultiMarkdown metadata
+;;                      "\\|#+"            ; line with just # chars
+;;                      "$\\)")
+;;              ""
+;;              (buffer-substring-no-properties
+;;               (point)
+;;               (or (re-search-forward (sentence-end) nil t) (point-max)))))))))
 
 ;;;; Bibtex completion
 (use-package bibtex
@@ -484,51 +494,59 @@ used as title."
                      :host github
                      :repo "l3kn/org-fc"
                      :fork t
-                     :files ("awk" "*.org" "*.sh" "*.el"))
+                     :files ("awk" "*.org" "*.sh" "*.el" "tests"))
+  :init (use-package tablist-filter :ensure nil)
   :custom
-  (org-fc-directories `(,org-roam-directory))
+  (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   (org-fragtog-ignore-predicates #'org-fc-entry-p)
   (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
-  ;; (org-fc-directories '("/home/i/git/10000-markdown-files/done"))
+  (org-fc-index-function #'org-fc-roam-index)
   :config
+  (add-to-list 'org-fc-custom-contexts (cons 'outstanding '(:paths all :outstanding t)))
   (add-hook 'org-fc-before-setup-hook #'(lambda nil (when worf-mode (worf-mode 0))))
-  (org-fc-cache-mode)
+  ;; (add-to-list 'org-fc-intialize-review-data-functions #'org-fc-algo-sm2-cloze-review-interval)
+  ;; (org-fc-cache-mode)
   :diminish org-fc-cache-mode)
 
-(defun org-fc-browser-list-db ()
-  (seq-map
-   (lambda (row)
-     (cl-destructuring-bind (id title review-data props tags) row
-       (let* ((due (substring-no-properties (nth 4 (car review-data))))
-              (intrv (substring-no-properties (nth 3 (car review-data))))
-              (type (cdr (assoc org-fc-type-property props #'string=)))
-              (parent (cdr (assoc bir-ref-parent-property props #'string=))))
+(defun org-fc-algo-sm2-cloze-review-interval (position)
+  (when (and (org-fc-entry-cloze-p) (org-entry-get nil bir-ref-parent-property))
+    (let ((interval (+ 12 (cl-random 30.0))))
+      (list position (org-fc-algo-sm2-ease-initial) 0
+            interval
+            (org-fc-timestamp-in interval)))))
 
-         (if (not parent)
-             ""
-           (string-match org-link-bracket-re parent)
-           (setq parent (match-string 1 parent)))
-         
-         (list id (vector (or title "No title") intrv due type parent)))))
-   (org-roam-db-query
-    "SELECT
-id,
-title,
-review_data,
-properties,
-tags
-FROM
-notes
-LEFT JOIN tags ON tags.node_id
-WHERE review_data IS NOT NULL
-")))
+(use-package org-fc-roam
+  :ensure nil
+  :hook ((org-roam-db-autosync-mode . org-fc-roam-db-autosync-enable)))
+
+
+(defun org-fc-browser-list-db ()
+  (let ((outstanding (plist-get org-fc-browser-context :outstanding))
+        (rows (org-roam-db-query [:select * :from review-history :where (and (!= prior "-") (= rating "Future")) :order-by prior])))
+    (cl-loop for row in rows
+             append (pcase-let*
+                        ((`(,id ,title ,pos ,prior ,ease ,box ,intrv ,date ,rating ,type ,tags) row)
+                         (now (current-time))
+                         (prior-bg-color (org-fc-priority-color prior)))
+                      (when (or (not outstanding) (and outstanding
+                                                       (not (time-less-p (parse-iso8601-time-string date) now))))
+                        
+                        `((,id
+                           [,title
+                            (,(number-to-string prior) . (face
+                                                          (:background
+                                                           ,prior-bg-color
+                                                           :foreground
+                                                           ,(readable-foreground-color prior-bg-color))))
+                            ,(number-to-string intrv)
+                            ,date
+                            ,(symbol-name type)
+                            ""])))))))
 
 (use-package bir
   :straight '(bir.el :type git
                      :repo "https://notabug.org/c1-g/bir.el.git"
                      :files ("icons" "*.el")))
-
-
 ;;;; eww-bibtex
 (use-package eww-bibtex
   :straight '(eww-bibtex :type git

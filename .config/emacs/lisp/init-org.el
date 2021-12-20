@@ -103,6 +103,9 @@ it can be passed in POS."
  '((python . t)
    (C . t)))
 
+(use-package request-deferred
+  :straight t)
+
 (use-package deferred
   :straight t)
 
