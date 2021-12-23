@@ -76,8 +76,6 @@ it can be passed in POS."
                  :html-foreground "Black" :html-background "Transparent"
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
-  :init
-  (defvar org-cite-global-blibliography `(,(expand-file-name "references.bib" *bibliography-dir*)))
   :config
   (add-to-list 'org-modules 'org-protocol)
   (add-hook 'org-mode-hook #'(lambda nil
@@ -151,35 +149,39 @@ it can be passed in POS."
   :custom
   (org-capture-ref-headline-tags nil)
   (org-capture-ref-capture-target '(:file "/storage/org/slip-box/lit/inbox.org"))
+  (org-capture-ref-capture-template-set-p t)
   (org-capture-ref-capture-template
    `(:group "org-capture-ref template"
-                  :type entry
-                  ,@org-capture-ref-capture-target
-                  :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
-                  :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
-                  :org-entry (lambda () (org-capture-ref-get-org-entry))
-                  :bibtex (lambda ()
-                            (string-join `(":BIBTEX:"
-                                           "#+begin_src bibtex"
-                                           ,(org-capture-ref-get-bibtex-field :bibtex-string)
-                                           "#+end_src"
-                                           ":END:")
-                                         "\n"))
-                  :clock-in nil
-                  :after-finalize (lambda ()
-                                    (org-babel-tangle nil (expand-file-name "references.bib" *bibliography-dir*) "bibtex")
-                                    (org-fc-type-topic-init))
-                  :template
-                  ("%{fetch-bibtex} %?%{space}%{org-entry}%{bibtex}")
-                  :children (("Interactive org-capture-ref template"
-                              :keys ,(car org-capture-ref-capture-keys)
-                              :space " ")
-                             ("Silent org-capture-ref template"
-                              :keys ,(cadr org-capture-ref-capture-keys)
-                              :space ""
-                              :immediate-finish t))))
+            :type entry
+            ,@org-capture-ref-capture-target
+            :clock-in nil
+            :jump-to-captured t
+            :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
+            :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
+            :org-entry (lambda () (org-capture-ref-get-org-entry))
+            :bibtex (lambda ()
+                      (string-join `(":BIBTEX:"
+                                     "#+begin_src bibtex"
+                                     ,(org-capture-ref-get-bibtex-field :bibtex-string)
+                                     "#+end_src"
+                                     ":END:")
+                                   "\n"))
+            :template
+            ("%{fetch-bibtex}* %?%{space}%{org-entry}%{bibtex}")
+            :children (("Interactive org-capture-ref template"
+                        :keys ,(car org-capture-ref-capture-keys)
+                        :space " ")
+                       ("Silent org-capture-ref template"
+                        :keys ,(cadr org-capture-ref-capture-keys)
+                        :space ""
+                        :immediate-finish t))))
   :config
-  (org-capture-ref-set-capture-template))
+  (let ((templates (doct org-capture-ref-capture-template)))
+    (dolist (template templates)
+      (asoc-put! org-capture-templates
+                 (car template)
+                 (cdr template)
+                 'replace))))
 
 (use-package org-super-agenda
   :straight t

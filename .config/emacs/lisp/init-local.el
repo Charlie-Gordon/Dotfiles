@@ -27,11 +27,6 @@
                      :repo "l3kn/org-el-cache")
   :disabled)
 
-
-(use-package peertube
-  :straight t)
-
-
 (use-package org-zettelkasten
   :disabled
   :straight '(org-zk :type git

@@ -278,17 +278,17 @@ Used to determines filename in `org-roam-capture-templates'."
               ("M-b" . citar-insert-preset)
               :map org-mode-map :package org
               ("C-c B" . #'org-cite-insert))
-  :bind-keymap ("C-c ]" . citar-map)
+  :bind-keymap ("C-c t" . citar-map)
   :init
   (define-prefix-command 'citar-map nil "Citar")
   :custom
   (citar-bibliography (directory-files *bibliography-dir* t ".bib"))
-  (org-cite-global-bibliography '("~/bib/references.bib"))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
   (citar-at-point-function 'embark-act)
   (citar-open-note-function 'orb-citar-edit-note)
+  (citar-notes-paths `(,*org-dir*))
   :config
   (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
 
@@ -494,7 +494,7 @@ With a prefix ARG, remove start location."
                      :host github
                      :repo "l3kn/org-fc"
                      :fork t
-                     :files ("awk" "*.org" "*.sh" "*.el" "tests"))
+                     :files ("awk" "*.org" "*.sh" "*.el" "tests" "icon"))
   :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))

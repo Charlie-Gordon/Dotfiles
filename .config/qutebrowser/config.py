@@ -13,90 +13,39 @@
 # Change the argument to True to still load settings configured via autoconfig.yml
 config.load_autoconfig(False)
 
-
-# * Minimize fingerprinting
-# The default of qutebrowser is pretty good.
-# This will break some sites.
-# See https://github.com/qutebrowser/qutebrowser/issues/4045
-# ** Common user agent
-config.set('content.headers.user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36')
-# ** Disable reading from canvas
-config.set('content.canvas_reading', False)
-# ** Disable WebGL
-config.set('content.webgl', False)
-# ** Common HTTP_ACCEPT header
-config.set('content.headers.accept_language', 'en-US,en;q=0.5')
-config.set('content.headers.custom', {"accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"})
-# ** WebRTC exposes LAN IP address
-config.set('content.webrtc_ip_handling_policy', 'default-public-interface-only')
-# ** Disable geolocation
-config.set('content.geolocation', False)
-config.set('content.cookies.accept', 'no-3rdparty')
-
-# ** Font
+# ui
+config.source('theme.py')
+config.set('colors.webpage.darkmode.enabled', True)
 c.fonts.default_family = '"Iosevka Aile"'
 c.fonts.default_size = '12pt'
 c.fonts.completion.entry = '12pt "Iosevka Aile"'
 c.fonts.debug_console = '12pt "Iosevka Aile"'
 c.fonts.prompts = 'default_size Iosevka Aile'
 c.fonts.statusbar = '12pt "Iosevka Aile"'
-# * Custom key bindings
-# Bindings for normal mode
-config.bind('xD', 'hint links spawn --detach mpv {hint-url}')
-config.bind('xd', 'hint links spawn --detach mpv --ytdl-format="bestvideo[height<360]+bestaudio" {hint-url}')
-config.bind('xa', 'hint links spawn --detach mpv -no-video {hint-url}')
+c.colors.webpage.preferred_color_scheme = "dark"
+c.completion.shrink = True
+c.completion.use_best_match = True
+c.downloads.position = "bottom"
+c.downloads.remove_finished = 10000
+c.statusbar.widgets = ["progress", "keypress", "url", "history"]
+c.scrolling.bar = "always"
+c.tabs.position = "left"
+c.tabs.title.format = "{index}: {audio}{current_title}"
+c.tabs.title.format_pinned = "{index}: {audio}{current_title}"
 
-# Load images automatically in web pages.
-# Type: Bool
-config.set('content.images', True, 'chrome-devtools://*')
+# privacy
+config.set('content.headers.user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36')
+config.set('content.canvas_reading', False)
+config.set('content.webgl', False)
+config.set('content.headers.accept_language', 'en-US,en;q=0.5')
+config.set('content.headers.custom', {"accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"})
+config.set('content.webrtc_ip_handling_policy', 'default-public-interface-only')
+config.set('content.geolocation', False)
+config.set('content.cookies.accept', 'no-3rdparty')
 
-# Load images automatically in web pages.
-# Type: Bool
-config.set('content.images', True, 'devtools://*')
-
-# Enable JavaScript.
-# Type: Bool
-config.set('content.javascript.enabled', True, 'chrome-devtools://*')
-
-# Enable JavaScript.
-# Type: Bool
-config.set('content.javascript.enabled', True, 'devtools://*')
-
-# Enable JavaScript.
-# Type: Bool
-config.set('content.javascript.enabled', True, 'chrome://*/*')
-
-# Enable JavaScript.
-# Type: Bool
-config.set('content.javascript.enabled', True, 'qute://*/*')
-
-config.set('content.mute', True, 'https://www.youtube.com/*')
-config.set('colors.webpage.darkmode.enabled', True)
-# config.set('content.user_stylesheets', '~/.config/qutebrowser/gruvbox-all-sites.css')
-
-config.set('hints.chars', 'qwfarstxcdv')
-
-config.bind('[[', 'navigate decrement')
-config.bind(']]', 'navigate increment')
-config.bind('{{', 'navigate prev')
-config.bind('}}', 'navigate next')
-
-config.bind('cs', 'config-source')
-
-config.bind('E', 'edit-url')
-
-config.bind('o', 'set-cmd-text -s :open --window')
-
-config.bind('O', 'set-cmd-text -s :open --window')
-
-config.bind('#', 'hint code userscript code_select.py')
-
-c.hints.selectors["code"] = [
-    # Selects all code tags whose direct parent is not a pre tag
-    ":not(pre) > code",
-    "pre"
-]
-
+# urls
+c.url.default_page = 'about:blank'
+c.url.start_pages = 'about:blank'
 c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
                        'wk': 'https://en.wikipedia.org/wiki/{}',
                        'od': 'https://odysee.com/$/search?q={}',
@@ -105,6 +54,45 @@ c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
                        'gh': 'https://github.com/search?q={}',
                        'inv': 'https://redirect.invidious.io/search?q={}'}
 
+
 c.editor.command = ['emacsclient', '+{line}:{column}', '{file}']
 
-config.source('theme.py')
+config.set('content.images', True, 'chrome-devtools://*')
+config.set('content.images', True, 'devtools://*')
+config.set('content.javascript.enabled', True, 'chrome-devtools://*')
+config.set('content.javascript.enabled', True, 'devtools://*')
+config.set('content.javascript.enabled', True, 'chrome://*/*')
+config.set('content.javascript.enabled', True, 'qute://*/*')
+config.set('content.mute', True, 'https://www.youtube.com/*')
+
+# hints
+c.hints.selectors["code"] = [
+    # Selects all code tags whose direct parent is not a pre tag
+    ":not(pre) > code",
+    "pre"
+]
+
+config.set('hints.chars', 'qwfarstxcdv')
+
+# binding
+bindings = {
+    'xD': 'hint links spawn --detach mpv {hint-url}',
+    'xd': 'hint links spawn --detach mpv --ytdl-format="bestvideo[height<360]+bestaudio" {hint-url}',
+    'xa': 'hint links spawn --detach mpv -no-video {hint-url}',
+    '[[': 'navigate decrement',
+    ']]': 'navigate increment',
+    '{{': 'navigate prev',
+    '}}': 'navigate next',
+    'cs': 'config-source',
+    'ce': 'config-edit',
+    'cc': 'spawn --userscript ~/.config/qutebrowser/userscripts/org-capture-ref',
+    'e': 'edit-text',
+    'E': 'edit-url',
+    'o': 'set-cmd-text -s :open --window',
+    'O': 'set-cmd-text -s :open --window',
+    '#': 'hint code userscript code_select.py',
+}
+for key, bind in bindings.items():
+    config.bind(key, bind)
+    
+
