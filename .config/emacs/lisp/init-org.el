@@ -58,26 +58,17 @@ it can be passed in POS."
   :termux
   :straight t
   :bind (("C-c c" . org-capture)
-	 ("C-c a" . org-agenda)
-	 :map org-mode-map
-	 ("C-'" . nil))
+         ("C-c a" . org-agenda)
+         :map org-mode-map
+         ("C-'" . nil)
+         ("C-c l" . org-store-link))
   :custom
   (org-id-link-to-org-use-id t)
   (org-ctrl-k-protect-subtree t)
   (org-directory *org-dir*)
   (org-export-coding-system 'utf-8)
-  (org-use-speed-commands nil)
+  (org-use-speed-commands t)
   (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
-  (org-todo-keywords
-   '((sequence "TODO(t)" "|" "DONE(d)")
-     (sequence "QUIZ(q)" "|" "FOR_ZETTEL(d)" "ZETTEL'ED")
-     (sequence "REVIEW(r)" "|" "ANSWERED(d)" "ANKIFIED(a)")))
-  (org-todo-keyword-faces
-   '(("QUIZ" . "Skyblue1")
-     ("FOR_ZETTEL" . "SkyBlue3")
-     ("ZETTEL'ED" . "SkyBlue4")
-     ("ANSWERED" . "PaleGreen2")
-     ("ANKIFIED" . "PaleGreen4")))
   (org-image-actual-width nil)
   (org-format-latex-options
    '(:foreground default
@@ -85,12 +76,20 @@ it can be passed in POS."
                  :html-foreground "Black" :html-background "Transparent"
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
+  :init
+  (defvar org-cite-global-blibliography `(,(expand-file-name "references.bib" *bibliography-dir*)))
   :config
+  (add-to-list 'org-modules 'org-protocol)
   (add-hook 'org-mode-hook #'(lambda nil
                                (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
+  (org-load-modules-maybe t)
   :hook
   (org-mode . visual-line-mode))
 
+(use-package oc
+  :ensure nil
+  :custom
+  (org-cite-global-bibliography `(,(expand-file-name "references.bib" *bibliography-dir*))))
 
 (use-package org-contrib
   :straight t)
@@ -108,11 +107,6 @@ it can be passed in POS."
 
 (use-package deferred
   :straight t)
-
-(use-package worf
-  :straight t
-  :hook
-  (org-mode . worf-mode))
 
 (use-package org-make-toc
   :straight t)
@@ -145,6 +139,48 @@ it can be passed in POS."
            ((org-show-context-detail 'minimal)
             (org-agenda-prefix-format ""))))))
 
+(straight-use-package '(asoc :type git :host github :repo "troyp/asoc.el"))
+(straight-use-package 'doct)
+
+(use-package org-capture-ref
+  :after org
+  :straight (org-capture-ref
+             :type git
+             :host github
+             :repo "yantar92/org-capture-ref")
+  :custom
+  (org-capture-ref-headline-tags nil)
+  (org-capture-ref-capture-target '(:file "/storage/org/slip-box/lit/inbox.org"))
+  (org-capture-ref-capture-template
+   `(:group "org-capture-ref template"
+                  :type entry
+                  ,@org-capture-ref-capture-target
+                  :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
+                  :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
+                  :org-entry (lambda () (org-capture-ref-get-org-entry))
+                  :bibtex (lambda ()
+                            (string-join `(":BIBTEX:"
+                                           "#+begin_src bibtex"
+                                           ,(org-capture-ref-get-bibtex-field :bibtex-string)
+                                           "#+end_src"
+                                           ":END:")
+                                         "\n"))
+                  :clock-in nil
+                  :after-finalize (lambda ()
+                                    (org-babel-tangle nil (expand-file-name "references.bib" *bibliography-dir*) "bibtex")
+                                    (org-fc-type-topic-init))
+                  :template
+                  ("%{fetch-bibtex} %?%{space}%{org-entry}%{bibtex}")
+                  :children (("Interactive org-capture-ref template"
+                              :keys ,(car org-capture-ref-capture-keys)
+                              :space " ")
+                             ("Silent org-capture-ref template"
+                              :keys ,(cadr org-capture-ref-capture-keys)
+                              :space ""
+                              :immediate-finish t))))
+  :config
+  (org-capture-ref-set-capture-template))
+
 (use-package org-super-agenda
   :straight t
   :hook (org-agenda-mode . org-super-agenda-mode))
@@ -153,6 +189,13 @@ it can be passed in POS."
   :ensure nil
   :mode
   ("\\.edraw\\.svg$" . edraw-mode))
+
+(use-package org-special-block-extras
+  :straight t
+  :hook (org-mode . org-special-block-extras-mode)
+  :config
+  (o-defblock notes (page) nil
+              contents))
 
 
 ;;;; Recur
@@ -217,6 +260,63 @@ it can be passed in POS."
           (lambda (overlay)
             (when (and overlay description)
               (overlay-put overlay 'after-string description))))))))
+
+(defun org-element-special-block-parser (limit affiliated)
+  "Parse a special block.
+
+LIMIT bounds the search.  AFFILIATED is a list of which CAR is
+the buffer position at the beginning of the first affiliated
+keyword and CDR is a plist of affiliated keywords along with
+their value.
+
+Return a list whose CAR is `special-block' and CDR is a plist
+containing `:type', `:begin', `:end', `:contents-begin',
+`:contents-end', `:post-blank' and `:post-affiliated' keywords.
+
+Assume point is at the beginning of the block."
+  (let* ((case-fold-search t)
+         (type (progn (looking-at "[ \t]*#\\+BEGIN_\\(\\S-+\\)\\(?:[	 ]+\\(.+\\)\\)?")
+                      (match-string-no-properties 1)))
+         (arguments (match-string-no-properties 2)))
+    (if (not (save-excursion
+               (re-search-forward
+                (format "^[ \t]*#\\+END_%s[ \t]*$" (regexp-quote type))
+                limit t)))
+        ;; Incomplete block: parse it as a paragraph.
+        (org-element-paragraph-parser limit affiliated)
+      (let ((block-end-line (match-beginning 0)))
+        (save-excursion
+          (let* ((begin (car affiliated))
+                 (post-affiliated (point))
+                 ;; Empty blocks have no contents.
+                 (contents-begin (progn (forward-line)
+                                        (and (< (point) block-end-line)
+                                             (point))))
+                 (contents-end (and contents-begin block-end-line))
+                 (pos-before-blank (progn (goto-char block-end-line)
+                                          (forward-line)
+                                          (point)))
+                 (end (progn (skip-chars-forward " \r\t\n" limit)
+                             (if (eobp) (point) (line-beginning-position)))))
+            (list 'special-block
+                  (nconc
+                   (list :type type
+                         :arguments arguments
+                         :begin begin
+                         :end end
+                         :contents-begin contents-begin
+                         :contents-end contents-end
+                         :post-blank (count-lines pos-before-blank end)
+                         :post-affiliated post-affiliated)
+                   (cdr affiliated)))))))))
+
+(defun org-element-special-block-interpreter (special-block contents)
+  "Interpret SPECIAL-BLOCK element as Org syntax.
+CONTENTS is the contents of the element."
+  (let ((block-type (org-element-property :type special-block))
+        (block-arg (org-element-property :arguments special-block)))
+    (format "#+begin_%s %s\n%s#+end_%s" block-type block-arg contents block-type)))
+
 
 (provide 'init-org)
 ;;; init-org.el ends here
