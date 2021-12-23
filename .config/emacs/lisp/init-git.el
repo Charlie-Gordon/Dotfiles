@@ -19,7 +19,7 @@
 
 
 (use-package magit
-  :straight t vc straight
+  :straight t 
   :when (executable-find "git")
   :bind
   (("C-x g g" . magit-status)
