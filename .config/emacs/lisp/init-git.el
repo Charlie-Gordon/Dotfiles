@@ -78,11 +78,21 @@
                                 (yadm--files)))
                     (apply #'dired-revert args))))))
 
+(defun yadm-dired-jump (&optional other-window)
+  (interactive "P")
+  (let ((default-directory "~/"))
+    (dired-jump other-window
+                (when-let ((file (magit-file-at-point)))
+                  (expand-file-name (if (file-directory-p file)
+                                        (file-name-as-directory file)
+                                      file))))))
+
 (define-minor-mode yadm-minor-mode
   "A minor mode for magit yadm buffers."
   :keymap (let ((map (make-sparse-keymap)))
             (define-key map (kbd "C-x d") 'yadm-dired)
             (define-key map (kbd "C-x C-f") 'yadm-find-file)
+            (define-key map (kbd "C-x C-j") 'yadm-dired-jump)
             (define-key map "s" 'yadm-stage)
             map))
 
