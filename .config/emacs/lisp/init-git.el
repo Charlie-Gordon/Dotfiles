@@ -99,7 +99,9 @@
 (defun yadm-status ()
   (interactive)
   (with-current-buffer (magit-status "/yadm::")
-    (yadm-minor-mode 1)))
+    (yadm-minor-mode 1)
+    (when (magit-todos-mode)
+      (magit-todos-mode -1))))
 
 
 (provide 'init-git)
