@@ -76,8 +76,8 @@ config.set('hints.chars', 'qwfarstxcdv')
 
 # binding
 bindings = {
-    'xD': 'hint links spawn --detach mpv {hint-url}',
-    'xd': 'hint links spawn --detach mpv --ytdl-format="bestvideo[height<360]+bestaudio" {hint-url}',
+    'xD': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start.sh',
+    'xd': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start-lowres.sh',
     'xa': 'hint links spawn --detach mpv -no-video {hint-url}',
     '[[': 'navigate decrement',
     ']]': 'navigate increment',
