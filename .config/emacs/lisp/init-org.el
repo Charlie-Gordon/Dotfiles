@@ -196,8 +196,15 @@ it can be passed in POS."
   :straight t
   :hook (org-mode . org-special-block-extras-mode)
   :config
-  (o-defblock notes (page) nil
-              contents))
+  (o-defblock extract
+              (id "ID of the extract" :face 'org-dispatcher-highlight)
+              nil
+              contents)
+
+  (o-deflink extract
+             ""
+             [:face 'org-dispatcher-highlight
+                    :follow (org-id-goto o-label)]))
 
 
 ;;;; Recur
