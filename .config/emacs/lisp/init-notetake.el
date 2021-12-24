@@ -152,7 +152,7 @@ Used to determines filename in `org-roam-capture-templates'."
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
      ("n" "note" plain
-      (file ,(expand-file-name "org-template/ROAM-note.txt" user-emacs-directory))
+      "${c1/insert-noter-doc-file-level}"
       :if-new
       (file+head
        "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
@@ -300,7 +300,7 @@ Used to determines filename in `org-roam-capture-templates'."
                              :host github
                              :repo "yuchen-lea/org-media-note")
   :hook (org-mode . org-media-note-mode)
-  :bind ("s-v" . org-media-note-hydra/body)
+  :bind* ("s-v" . org-media-note-hydra/body)
   :config
   (use-package org-media-note-org-ref :ensure nil))
 
@@ -325,7 +325,9 @@ Used to determines filename in `org-roam-capture-templates'."
   :straight '(org-noter :type git
                         :host github
                         :repo "c1-g/org-noter-plus-djvu"
-                        :files ("other" "*.el"))
+                        :files ("other/*.el" "*.el"))
+  :bind (:map org-noter-doc-mode-map
+              ("M-i" . org-noter-insert-note-special))
   :custom
   (org-noter-property-doc-file "DOCUMENT_SOURCE")
   (org-noter-property-note-location "DOCUMENT_PAGE")
@@ -336,7 +338,8 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
-  (use-package org-noter-nov-overlay :load-path "straight/build/org-noter/other"))
+  (use-package org-noter-nov-overlay :ensure nil)
+  (use-package org-noter-special-block :ensure nil))
 
 (use-package org-noter-pdftools
   :after org-noter
@@ -494,7 +497,7 @@ With a prefix ARG, remove start location."
                      :host github
                      :repo "l3kn/org-fc"
                      :fork t
-                     :files ("awk" "*.org" "*.sh" "*.el" "tests" "icon"))
+                     :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
   :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
@@ -503,10 +506,16 @@ With a prefix ARG, remove start location."
   (org-fc-index-function #'org-fc-roam-index)
   :config
   (add-to-list 'org-fc-custom-contexts (cons 'outstanding '(:paths all :outstanding t)))
-  (add-hook 'org-fc-before-setup-hook #'(lambda nil (when worf-mode (worf-mode 0))))
+  ;; (add-hook 'org-fc-before-setup-hook #'(lambda nil (when worf-mode (worf-mode 0))))
   ;; (add-to-list 'org-fc-intialize-review-data-functions #'org-fc-algo-sm2-cloze-review-interval)
   ;; (org-fc-cache-mode)
+  (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
   :diminish org-fc-cache-mode)
+
+(defun c1/maybe-open-org-noter ()
+  (when (org-roam-node-refs (org-roam-node-at-point))
+    (let (org-noter-always-create-frame)
+      (org-noter))))
 
 (defun org-fc-algo-sm2-cloze-review-interval (position)
   (when (and (org-fc-entry-cloze-p) (org-entry-get nil bir-ref-parent-property))
@@ -521,37 +530,35 @@ With a prefix ARG, remove start location."
 
 
 (defun org-fc-browser-list-db ()
+  "docstring"
   (let ((outstanding (plist-get org-fc-browser-context :outstanding))
-        (rows (org-roam-db-query [:select * :from review-history :where (and (!= prior "-") (= rating "Future")) :order-by prior])))
-    (cl-loop for row in rows
-             append (pcase-let*
-                        ((`(,id ,title ,pos ,prior ,ease ,box ,intrv ,date ,rating ,type ,tags) row)
-                         (now (current-time))
-                         (prior-bg-color (org-fc-priority-color prior)))
-                      (when (or (not outstanding) (and outstanding
-                                                       (not (time-less-p (parse-iso8601-time-string date) now))))
-                        
-                        `((,id
-                           [,title
-                            (,(number-to-string prior) . (face
-                                                          (:background
-                                                           ,prior-bg-color
-                                                           :foreground
-                                                           ,(readable-foreground-color prior-bg-color))))
-                            ,(number-to-string intrv)
-                            ,date
-                            ,(symbol-name type)
-                            ""])))))))
+        cards)
+    (if (and outstanding org-fc-review--session)
+        (setq cards (oref org-fc-review--session cards))
+      (setq cards (org-fc-index org-fc-browser-context))
+      (if (not outstanding)
+          (setq cards (org-fc-index-positions cards))
+        (setq cards (funcall org-fc-index-filter-function cards))
+        (setq cards (funcall org-fc-index-sort-function cards))
+        (setq org-fc-review--session (org-fc-make-review-session cards))))
+    (if cards
+        (cl-loop for card in cards
+                 append `((,(plist-get card :id)
+                           [,(if (string-empty-p (plist-get card :title))
+                                 (plist-get card :filetitle)
+                               (plist-get card :title))
+                            ,(number-to-string (plist-get card :prior))
+                            ,(number-to-string (plist-get card :interval))
+                            ,(format-time-string "%FT%TZ" (plist-get card :due) "UTC0")
+                            ,(symbol-name (plist-get card :type))])))
+      (message "No cards due right now")
+      nil)))
 
 (use-package bir
   :straight '(bir.el :type git
                      :repo "https://notabug.org/c1-g/bir.el.git"
                      :files ("icons" "*.el")))
-;;;; eww-bibtex
-(use-package eww-bibtex
-  :straight '(eww-bibtex :type git
-                         :host gitlab
-                         :repo "c1-g/eww-bibtex"))
+
 
 (provide 'init-notetake)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
