@@ -24,22 +24,6 @@ buffer is not visiting a file."
 
 (global-set-key [remap find-file-read-only] #'doas-edit)
 
-;;;; Magit shortcuts
-;;;###autoload
-(defun c1/magit-status-dotfiles ()
-  (interactive)
-  "Open magit in dotfiles repository."
-  (magit-status "/yadm::"))
-
-;;;###autoload
-(defun  c1/go-to-dotfiles ()
-  (interactive)
-  (find-file user-emacs-directory))
-
-(global-set-key (kbd "C-c d") 'c1/go-to-dotfiles)
-
-(global-set-key (kbd "C-c s") 'c1/magit-status-dotfiles)
-
 ;;;; Screenshot
 ;; https://www.reddit.com/r/emacs/comments/idz35e/emacs_27_can_take_svg_screenshots_of_itself/
 ;;;###autoload
