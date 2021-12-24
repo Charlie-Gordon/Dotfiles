@@ -8,7 +8,7 @@
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile Oblique")
 
-(add-to-list 'face-font-rescale-alist '("Umpush" . 0.9))
+(add-to-list 'face-font-rescale-alist '("Umpush" . 0.85))
 
 (provide 'init-face)
 ;;; init-face.el ends here
