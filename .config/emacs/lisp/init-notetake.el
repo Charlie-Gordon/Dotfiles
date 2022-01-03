@@ -330,20 +330,25 @@ Used to determines filename in `org-roam-capture-templates'."
                         :host github
                         :repo "c1-g/org-noter-plus-djvu"
                         :files ("other/*.el" "*.el"))
-  :bind (:map org-noter-doc-mode-map
-              ("M-i" . org-noter-insert-note-special))
   :custom
-  (org-noter-property-doc-file "DOCUMENT_SOURCE")
+  (org-noter-property-doc-file "ROAM_REFS")
   (org-noter-property-note-location "DOCUMENT_PAGE")
   (org-noter-doc-split-fraction '(0.6 0.4))
   (org-noter-auto-save-last-location t)
+  (org-noter-swap-window t)
   (org-noter-always-create-frame t)
+  (org-noter-keep-notes-after-kill-session t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
+  (add-to-list 'org-speed-commands '("." . org-noter-sync-current-note))
   (use-package org-noter-nov-overlay :ensure nil)
-  (use-package org-noter-special-block :ensure nil))
+  (use-package org-noter-special-block :ensure nil)
+  (use-package org-noter-citar :ensure nil))
+
+(defun org-noter-import-koreader (file)
+  (interactive (list (read-file-name "Clip json file."))))
 
 (use-package org-noter-pdftools
   :after org-noter
@@ -426,7 +431,7 @@ With a prefix ARG, remove start location."
                               :type git
                               :host github
                               :repo "eyeinsky/org-anki")
-  
+  :disabled
   :when (executable-find "anki")
   :init
   :custom
@@ -445,21 +450,52 @@ With a prefix ARG, remove start location."
   :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
-  (org-fragtog-ignore-predicates #'org-fc-entry-p)
   (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
   (org-fc-index-function #'org-fc-roam-index)
+  (org-fc-topic-proportion 80)
+  (org-fc-browser-headers
+   '(("No." num>?)
+     ("Title" nil)
+     ("Priority" org-fc-browser-priority>?)
+     ("Intrv" intrv>?)
+     ("Due" t :read-only)
+     ("Type" nil)))
   :config
+  (org-fc-roam-db-autosync-enable)
+  (use-package org-fc-roam :ensure nil)
+  (define-org-fc-browser-predicate num>? > (string-to-number (substring-no-properties (aref <> 0))))
+  (define-org-fc-browser-predicate priority>? > (string-to-number (substring-no-properties (aref <> 2))))
+  (define-org-fc-browser-predicate intrv>? > (string-to-number (substring-no-properties (aref <> 3))))
   (add-to-list 'org-fc-custom-contexts (cons 'outstanding '(:paths all :outstanding t)))
-  ;; (add-hook 'org-fc-before-setup-hook #'(lambda nil (when worf-mode (worf-mode 0))))
+  (add-hook 'org-fc-before-setup-hook #'visual-line-mode)
+  (add-hook 'org-fc-after-flip-hook #'c1/maybe-close-org-noter)
+  (add-hook 'org-fc-before-next-card-hook #'c1/maybe-close-org-noter)
   ;; (add-to-list 'org-fc-intialize-review-data-functions #'org-fc-algo-sm2-cloze-review-interval)
   ;; (org-fc-cache-mode)
   (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
   :diminish org-fc-cache-mode)
 
+(defun c1/maybe-close-org-noter ()
+  (org-noter--with-valid-session
+   (org-noter-kill-session session)))
+
 (defun c1/maybe-open-org-noter ()
-  (when (org-roam-node-refs (org-roam-node-at-point))
-    (let (org-noter-always-create-frame)
-      (org-noter))))
+  (interactive)
+  (require 'citar)
+  (require 'orb-utils)
+  (let* ((key (or (org-roam-node-refs (org-roam-node-at-point))
+                  (when (org-entry-get nil "ROAM_REFS" t)
+                    (list (catch 'found
+                            (dolist (c (split-string-and-unquote (org-entry-get nil "ROAM_REFS" t)))
+                              (when (string-match orb-utils-citekey-re c)
+                                (throw 'found (match-string 1 c))))))))))
+    (when (and key
+               (citar-file--files-for-multiple-entries
+                (citar--ensure-entries key)
+                (append citar-library-paths citar-notes-paths) nil))
+      (let ((org-noter-disable-narrowing t)
+            (org-noter-use-indirect-buffer nil))
+        (org-noter 0)))))
 
 (defun org-fc-algo-sm2-cloze-review-interval (position)
   (when (and (org-fc-entry-cloze-p) (org-entry-get nil bir-ref-parent-property))
@@ -467,10 +503,6 @@ With a prefix ARG, remove start location."
       (list position (org-fc-algo-sm2-ease-initial) 0
             interval
             (org-fc-timestamp-in interval)))))
-
-(use-package org-fc-roam
-  :ensure nil
-  :hook ((org-roam-db-autosync-mode . org-fc-roam-db-autosync-enable)))
 
 
 (defun org-fc-browser-list-db ()
@@ -488,13 +520,18 @@ With a prefix ARG, remove start location."
     (if cards
         (cl-loop for card in cards
                  append `((,(plist-get card :id)
-                           [,(if (string-empty-p (plist-get card :title))
+                           [,(number-to-string (plist-get card :num))
+                            ,(if (string-empty-p (plist-get card :title))
                                  (plist-get card :filetitle)
-                               (plist-get card :title))
-                            ,(number-to-string (plist-get card :prior))
-                            ,(number-to-string (plist-get card :interval))
+                               (plist-get card :title)) 
+                            ,(if (plist-get card :prior)
+                                 (number-to-string (plist-get card :prior))
+                               "-")
+                            ,(format "%.2f" (plist-get card :interval))
                             ,(format-time-string "%FT%TZ" (plist-get card :due) "UTC0")
-                            ,(symbol-name (plist-get card :type))])))
+                            ,(symbol-name (plist-get card :type))
+                            ,(plist-get card :position)
+                            ,(plist-get card :tags)])))
       (message "No cards due right now")
       nil)))
 
