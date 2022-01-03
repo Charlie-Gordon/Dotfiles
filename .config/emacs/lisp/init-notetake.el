@@ -137,9 +137,8 @@ Used to determines filename in `org-roam-capture-templates'."
          ("C-c n j" . org-roam-dailies-capture-today))
   :init
   (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
-  (defvar org-roam-v2-ack t)
   :custom
-  (org-roam-node-display-template "${article}${my-title:*} ${tags:10}")
+  (org-roam-node-display-template "${article}${my-title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (org-roam-extract-new-file-path "%<%F-%s>-%(org-roam-slip-box-new-file).org")
   (org-roam-capture-templates
@@ -151,7 +150,7 @@ Used to determines filename in `org-roam-capture-templates'."
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
      ("n" "note" plain
-      "${c1/insert-noter-doc-file-level}"
+      "%?"
       :if-new
       (file+head
        "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
@@ -201,7 +200,7 @@ Used to determines filename in `org-roam-capture-templates'."
         (with-temp-buffer
           (insert-file-contents (org-roam-node-file node))
           (org-roam-end-of-meta-data 'full)
-          (replace-regexp-in-string (concat "\\(?:"
+          (replace-regexp-in-region (concat "\\(?:"
                                             "^%+" ; line beg with %
                                             "\\|" org-property-re
                                             "\\|" "\n"
@@ -210,14 +209,14 @@ Used to determines filename in `org-roam-capture-templates'."
                                             "\\|" org-heading-regexp
                                             "\\|" ":[[:alnum:]_@#%]+:"
                                             "\\|" org-keyword-regexp
-                                            "\\|" "#\\+\\S-+$"
+                                            "\\|" "#\\+.*"
                                             "\\|" org-element--timestamp-regexp
                                             "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
                                             "$\\)")
-                                    ""
-                                    (buffer-substring-no-properties
-                                     (point)
-                                     (or (re-search-forward (sentence-end) nil t) (point-max)))))
+                                    "")
+          (buffer-substring-no-properties
+           (point)
+           (or (re-search-forward (sentence-end) nil t) (point-max))))
       (org-roam-node-title node))))
 
 (use-package org-roam-bibtex
