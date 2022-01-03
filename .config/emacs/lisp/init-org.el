@@ -71,13 +71,15 @@ it can be passed in POS."
   (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
   (org-image-actual-width nil)
   (org-format-latex-options
-   '(:foreground default
-                 :background "Transparent" :scale 1.6
+   '(:foreground auto
+                 :background auto :scale 1.6
                  :html-foreground "Black" :html-background "Transparent"
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :config
   (add-to-list 'org-modules 'org-protocol)
+  (add-to-list 'org-speed-commands '("w" . widen))
+  (add-to-list 'org-speed-commands '("N" . org-narrow-to-element))
   (add-hook 'org-mode-hook #'(lambda nil
                                (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
   (org-load-modules-maybe t)
