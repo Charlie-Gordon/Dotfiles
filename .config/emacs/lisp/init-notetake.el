@@ -381,66 +381,6 @@ With a prefix ARG, remove start location."
   :custom
   (org-download-method 'attach))
 
-;;;;; Deft
-;; (use-package deft
-;;   :straight t
-;;   :custom
-;;   (deft-directory org-roam-directory)
-;;   (deft-recursive t)
-;;   (deft-extension '("org" "md"))
-;;   (deft-parse-title-function #'my-strip-title)
-;;   (deft-strip-summary-regexp (concat "\\(?:"
-;;                                      "^%+" ; line beg with %
-;;                                      "\\|" org-property-re
-;;                                      "\\|" "\n"
-;;                                      "\\|:\\S-+:"
-;;                                      "\\|" org-table-line-regexp
-;;                                      "\\|" org-heading-regexp
-;;                                      "\\|" org-link-bracket-re
-;;                                      "\\|" org-table-any-line-regexp
-;;                                      "\\|" org-scheduled-regexp
-;;                                      "\\|" org-keyword-regexp
-;;                                      "\\|" org-element--timestamp-regexp
-;;                                      "\\|^[#* ]+" ; line beg with #, * and/or space
-;;                                      "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
-;;                                      "\\|^Title:[\t ]*" ; MultiMarkdown metadata
-;;                                      "\\|#+" ; line with just # chars
-;;                                      "$\\)")))
-
-;; (defun deft-parse-title (file contents)
-;;   "Parse the given FILE and CONTENTS and determine the title.
-;; If `deft-use-filename-as-title' is nil, the title is taken to
-;; be the first non-empty line of the FILE.  Else the base name of the FILE is
-;; used as title."
-;;   (if deft-use-filename-as-title
-;;       (deft-base-filename file)
-;;     (if (string= (file-name-extension file) "org")
-;;         (with-temp-buffer
-;;           (insert contents)
-;;           (if (cadar (org-collect-keywords '("title")))
-;;               (cadar (org-collect-keywords '("title")))
-;;             (org-roam-end-of-meta-data 'full)
-;;             (replace-regexp-in-string
-;;              (concat "\\(?:"
-;;                      "^%+"              ; line beg with %
-;;                      "\\|" org-property-re
-;;                      "\\|" "\n"
-;;                      "\\|:\\S-+:"
-;;                      "\\|" org-table-line-regexp
-;;                      "\\|" org-heading-regexp
-;;                      "\\|" ":[[:alnum:]_@#%]+:"
-;;                      "\\|" org-keyword-regexp
-;;                      "\\|" org-element--timestamp-regexp
-;;                      "\\|^[# ]+"     ; line beg with #, * and/or space
-;;                      "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
-;;                      "\\|^Title:[\t ]*" ; MultiMarkdown metadata
-;;                      "\\|#+"            ; line with just # chars
-;;                      "$\\)")
-;;              ""
-;;              (buffer-substring-no-properties
-;;               (point)
-;;               (or (re-search-forward (sentence-end) nil t) (point-max)))))))))
-
 ;;;; Bibtex completion
 (use-package bibtex
   :straight t
