@@ -46,6 +46,7 @@
 
 (use-package magit-todos
   :straight t
+  :disabled
   :hook
   (magit-mode . magit-todos-mode))
 
