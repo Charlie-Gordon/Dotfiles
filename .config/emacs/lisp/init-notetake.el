@@ -17,8 +17,7 @@
 	      ("C-S-p" . shr-previous-link))
   :mode (("\\.epub\\'" . nov-mode))
   :custom
-  (nov-text-width fill-column)
-  (nov-variable-pitch nil))
+  (nov-text-width fill-column))
 
 ;; (use-package ereader
 ;;   :straight t
