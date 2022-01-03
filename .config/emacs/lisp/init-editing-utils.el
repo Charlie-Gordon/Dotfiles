@@ -27,7 +27,10 @@
  sentence-end-double-space nil
  tooltip-delay 1.5
  truncate-lines nil
- truncate-partial-width-windows nil)
+ truncate-partial-width-windows nil
+ bidi-paragraph-direction 'left-to-right)
+
+
 
 (add-hook 'after-init-hook 'delete-selection-mode)
 
@@ -39,6 +42,8 @@
       auto-revert-verbose nil)
 
 (save-place-mode t)
+
+(global-so-long-mode 1)
 
 (use-package autorevert
   :ensure nil
@@ -125,10 +130,8 @@
   :bind-keymap* ("C-' n" . navigation-map))
 
 ;;; Writing
-(use-package typoel
-  :straight '(typoel :type git :host github :repo "jorgenschaefer/typoel")
-  :hook
-  (text-mode . typo-mode))
+(use-package typo
+  :straight '(typoel :type git :host github :repo "jorgenschaefer/typoel"))
 
 (provide 'init-editing-utils)
 ;;; init-editing-utils.el ends here
