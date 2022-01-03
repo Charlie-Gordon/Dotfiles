@@ -62,33 +62,35 @@
                               ?\s-v)
      ;; Line-editing keybindings for X windows
      exwm-input-simulation-keys '(;; Backward-char
-				  ([?\C-b] . [left])
-				  ;; Forward-char
-				  ([?\C-f] . [right])
-				  ;; Previous-line
-				  ([?\C-p] . [up])
-				  ;; Next-line
-				  ([?\C-n] . [down])
-				  ;; Beginning of the line
-				  ([?\C-a] . [home])
-				  ;; End of the line
-				  ([?\C-e] . [end])
-				  ;; Forward-word
-				  ([?\M-f] . [C-right])
-				  ;; Backward-word
-				  ([?\M-b] . [C-left])
+                                  ([?\C-b] . [left])
+                                  ;; Forward-char
+                                  ([?\C-f] . [right])
+                                  ;; Previous-line
+                                  ([?\C-p] . [up])
+                                  ;; Next-line
+                                  ([?\C-n] . [down])
+                                  ;; Beginning of the line
+                                  ([?\C-a] . [home])
+                                  ;; End of the line
+                                  ([?\C-e] . [end])
+                                  ;; Forward-word
+                                  ([?\M-f] . [C-right])
+                                  ;; Backward-word
+                                  ([?\M-b] . [C-left])
                                   ;; Delete-word
                                   ([?\M-d] . [C-delete])
-				  ;; Down screenful
-				  ([?\M-v] . [prior])
-				  ;; Up screenful
-				  ([?\C-v] . [next])
-				  ;; Delete following char
-				  ([?\C-d] . [delete])
-				  ;; Kill(Cut) the input line
-				  ([?\C-k] . [S-end C-x])
-				  ;; Yank(Paste)
-				  ([?\C-y] . [C-v]))
+                                  ;; Down screenful
+                                  ([?\M-v] . [prior])
+                                  ;; Up screenful
+                                  ([?\C-v] . [next])
+                                  ;; Delete following char
+                                  ([?\C-d] . [delete])
+                                  ;; Kill(Cut) the input line
+                                  ([?\C-k] . [S-end C-x])
+                                  ([?\C-w] . [?\C-x])
+                                  ;; Yank(Paste)
+                                  ([?\C-y] . [?\C-v])
+                                  ([?\C-s] . [?\C-f]))
      exwm-input-global-keys
      `(;; 's-r': Reset (to line-mode).
        ([?\s-r] . exwm-reset)
@@ -98,6 +100,7 @@
        ([?\s-&] . (lambda (command)
                     (interactive (list (read-shell-command "$ ")))
                     (start-process-shell-command command nil command)))
+       ([?\s-f] . exwm-floating-toggle-floating)
        ;; 's-.': Reload init.el
        ([?\s-.] . c1/reload-emacs-configuration)
        ([?\s-d] . modus-themes-toggle)
@@ -111,6 +114,22 @@
                        (interactive)
                        (exwm-workspace-switch-create ,i))))
                  (number-sequence 0 9))))
+    (add-hook 'exwm-manage-finish-hook (lambda ()
+                                         (when (and exwm-class-name
+                                                    (string= exwm-class-name "Firefox"))
+                                           (exwm-input-set-local-simulation-keys
+                                            `(,@exwm-input-simulation-keys
+                                              ([?\C-\M-j] . ,(kbd "C-<tab>"))
+                                              ([?\C-\M-k] . ,(kbd "C-S-<tab>"))
+                                              ([?\C-\M-h] . ,(kbd "M-<left>"))
+                                              ([?\C-\M-l] . ,(kbd "M-<right>"))
+                                              ([?\C-l] . [f6])
+                                              ([?\C-q] . ?\C-w)
+                                              ([?\C-s] . ?\C-f)
+                                              ([?\C-r] . ?\C-g)
+                                              ([?\C-m] . ?\')
+                                              ([?\M-a] . [C-home])
+                                              ([?\M-e] . [C-end]))))))
     (setq exwm-manage-force-tiling nil)
     
     ;; Set the initial workspace number
