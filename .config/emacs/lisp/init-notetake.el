@@ -323,10 +323,27 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package org-transclusion
   :straight '(org-transclusion :type git :host github :repo "nobiot/org-transclusion")
   :after org
-  :bind ("<f9>" . org-transclusion-add)
+  :bind ("<f9>" . c1/org-transclusion-toggle)
   :custom
   (org-transclusion-add-all-on-activate nil)
-  (org-transclusion-exclude-elements '()))
+  (org-transclusion-exclude-elements '(drawer)))
+
+(defun c1/org-transclusion-exclude-element-id (data)
+  (org-element-map data '(node-property)
+    (lambda (d)
+      (when (string= "ID" (org-element-property :key d))
+        (org-element-extract-element d))))
+  data)
+
+(advice-add 'org-transclusion-content-filter-org-exclude-elements
+            :filter-return #'c1/org-transclusion-exclude-element-id)
+
+(defun c1/org-transclusion-toggle ()
+  (interactive)
+  (save-excursion
+    (if (org-transclusion-within-transclusion-p)
+        (org-transclusion-deactivate)
+      (org-transclusion-add))))
 
 (use-package interleave
   :straight t
