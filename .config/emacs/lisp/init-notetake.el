@@ -201,11 +201,21 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (org-roam-db-autosync-mode)
   (cl-defmethod org-roam-node-article ((node org-roam-node))
-    (if-let* ((props (org-roam-node-properties node))
-              (article (cdr (assoc bir-ref-article-property props #'string=)))
-              (desc (string-match org-link-bracket-re article)))
-        (concat (match-string 2 article) ". ")
-      ""))
+  (let* ((props (org-roam-node-properties node))
+         (article (cdr (assoc bir-ref-article-property props #'string=)))
+         desc)
+    (unless article
+      (setq article
+            (with-temp-buffer
+              (insert-file-contents (org-roam-node-file node))
+              (plist-get (org-element--get-global-node-properties)
+                         (intern (concat ":" (upcase bir-ref-article-property)))))))
+    (when article
+      (string-match org-link-bracket-re article)
+      (setq desc (match-string 2 article)))
+    (if desc
+        (concat desc ". ")
+      "")))
   (cl-defmethod org-roam-node-my-title ((node org-roam-node))
     (if (string-match-p "^[[:digit:]]+" (org-roam-node-title node))
         (with-temp-buffer
@@ -444,28 +454,56 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
   (org-fc-index-function #'org-fc-roam-index)
+  (org-fc-index-filter-function #'identity)
   (org-fc-topic-proportion 80)
   (org-fc-browser-headers
-   '(("No." num>?)
+   '(("No." org-fc-browser-num>?)
      ("Title" nil)
      ("Priority" org-fc-browser-priority>?)
-     ("Intrv" intrv>?)
+     ("Intrv" org-fc-browser-intrv>?)
      ("Due" t :read-only)
      ("Type" nil)))
   :config
-  (org-fc-roam-db-autosync-enable)
-  (use-package org-fc-roam :ensure nil)
+  (defmacro define-org-fc-browser-predicate (name test &rest body)
+    "Define transmission-NAME as a function.
+The function is to be used as a `sort' predicate for `tabulated-list-format'.
+The definition is (lambda (a b) (TEST ...)) where the body
+is constructed from TEST, BODY and the `tabulated-list-id' tagged as `<>'."
+    (declare (indent 2) (debug (symbolp function-form body)))
+    (let ((a (make-symbol "a"))
+          (b (make-symbol "b")))
+      (cl-labels
+          ((cut (form x)
+                (cond
+                 ((eq form '<>) (list 'cadr x))
+                 ((atom form) form)
+                 ((or (listp form) (null form))
+                  (mapcar (lambda (subexp) (cut subexp x)) form)))))
+        `(defun ,(intern (concat "org-fc-browser-" (symbol-name name))) (,a ,b)
+           (,test ,(cut (macroexp-progn body) a)
+                  ,(cut (macroexp-progn body) b))))))
+  (use-package org-fc-roam
+    :ensure nil
+    :config
+    (org-fc-roam-db-autosync-enable))
   (define-org-fc-browser-predicate num>? > (string-to-number (substring-no-properties (aref <> 0))))
   (define-org-fc-browser-predicate priority>? > (string-to-number (substring-no-properties (aref <> 2))))
   (define-org-fc-browser-predicate intrv>? > (string-to-number (substring-no-properties (aref <> 3))))
-  (add-to-list 'org-fc-custom-contexts (cons 'outstanding '(:paths all :outstanding t)))
+  (add-to-list 'org-fc-custom-contexts (cons 'outstanding '(:paths outstanding :outstanding t)))
+  (add-to-list 'org-fc-custom-contexts (cons 'pending '(:paths pending :pending t)))
   (add-hook 'org-fc-before-setup-hook #'visual-line-mode)
+  (add-hook 'org-fc-before-setup-hook #'c1/org-fc-hard-to-read-font)
   (add-hook 'org-fc-after-flip-hook #'c1/maybe-close-org-noter)
   (add-hook 'org-fc-before-next-card-hook #'c1/maybe-close-org-noter)
   ;; (add-to-list 'org-fc-intialize-review-data-functions #'org-fc-algo-sm2-cloze-review-interval)
   ;; (org-fc-cache-mode)
   (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
+  (advice-add org-fc-index-sort-function :before-until #'c1/dont-sort-pending-cards)
   :diminish org-fc-cache-mode)
+
+(defun c1/dont-sort-pending-cards (index)
+  (if (member org-fc-pending-tag (plist-get (car index) :tags))
+      (org-fc-index-positions index)))
 
 (defun c1/maybe-close-org-noter ()
   (org-noter--with-valid-session
@@ -496,31 +534,128 @@ Used to determines filename in `org-roam-capture-templates'."
             interval
             (org-fc-timestamp-in interval)))))
 
+;; (defun org-fc-roam-index-outstanding ()
+;;   (org-roam-db-query "SELECT * FROM
+;; (SELECT
+;; ':num', rowid,
+;; ':id', id,
+;; ':title', title,
+;; ':type', type,
+;; ':position', pos,
+;; ':prior', prior,
+;; ':ease', ease,
+;; ':box', box,
+;; ':interval', ivl,
+;; ':tags', '(' || group_concat(tags, ' ') || ')' as tags,
+;; ':due', '\"' || strftime('%%Y-%%m-%%dT%%H:%%M:%%SZ', due, 'unixepoch') || '\"',
+;; ':path', path,
+;; ':filetitle', filetitle
+;; FROM
+;; (SELECT * FROM
+;; (SELECT rowid, id, title, pos, prior, ease, box, ivl, due, postp, type, queue, tags, path, filetitle
+;; FROM
+;; (SELECT
+;; cards.rowid as rowid,
+;; cards.node_id as id,
+;; cards.title as title,
+;; cards.pos as pos,
+;; cards.prior as prior,
+;; cards.ease as ease,
+;; cards.box as box,
+;; cards.ivl as ivl,
+;; cards.due as due,
+;; cards.postp as postp,
+;; cards.type as type,
+;; cards.queue as queue,
+;; tags.tag as tags,
+;; nodes.file as path,
+;; files.title as filetitle
+;; FROM cards
+;; LEFT JOIN tags ON tags.node_id = cards.node_id
+;; LEFT JOIN nodes ON nodes.id = cards.node_id
+;; LEFT JOIN files ON files.file = nodes.file
+;; GROUP BY id, cards.pos, tags)
+;; GROUP BY id, pos)
+;; WHERE date(due, 'unixepoch', 'utc') <= date('now', 'localtime') AND queue = 1)
+;; GROUP BY id, pos)"))
+
+
+;; (defun org-fc-roam-index-pending ()
+;;   (org-roam-db-query "SELECT * FROM
+;; (SELECT
+;; ':num', rowid,
+;; ':id', id,
+;; ':title', title,
+;; ':type', type,
+;; ':position', pos,
+;; ':prior', prior,
+;; ':ease', ease,
+;; ':box', box,
+;; ':interval', ivl,
+;; ':tags', '(' || group_concat(tags, ' ') || ')' as tags,
+;; ':due', '\"' || strftime('%%Y-%%m-%%dT%%H:%%M:%%SZ', due, 'unixepoch') || '\"',
+;; ':path', path,
+;; ':filetitle', filetitle
+;; FROM
+;; (SELECT * FROM
+;; (SELECT rowid, id, title, pos, prior, ease, box, ivl, due, postp, type, queue, tags, path, filetitle
+;; FROM
+;; (SELECT
+;; cards.rowid as rowid,
+;; cards.node_id as id,
+;; cards.title as title,
+;; cards.pos as pos,
+;; cards.prior as prior,
+;; cards.ease as ease,
+;; cards.box as box,
+;; cards.ivl as ivl,
+;; cards.due as due,
+;; cards.postp as postp,
+;; cards.type as type,
+;; cards.queue as queue,
+;; tags.tag as tags,
+;; nodes.file as path,
+;; files.title as filetitle
+;; FROM cards
+;; LEFT JOIN tags ON tags.node_id = cards.node_id
+;; LEFT JOIN nodes ON nodes.id = cards.node_id
+;; LEFT JOIN files ON files.file = nodes.file
+;; GROUP BY id, cards.pos, tags)
+;; GROUP BY id, pos)
+;; WHERE date(due, 'unixepoch', 'utc') <= date('now', 'localtime') AND queue = 0)
+;; GROUP BY id, pos)"))
+
 
 (defun org-fc-browser-list-db ()
   "docstring"
   (let ((outstanding (plist-get org-fc-browser-context :outstanding))
+        (pending (plist-get org-fc-browser-context :pending))
         cards)
-    (if (and outstanding org-fc-review--session)
-        (setq cards (oref org-fc-review--session cards))
-      (setq cards (org-fc-index org-fc-browser-context))
-      (if (not outstanding)
-          (setq cards (org-fc-index-positions cards))
-        (setq cards (funcall org-fc-index-filter-function cards))
-        (setq cards (funcall org-fc-index-sort-function cards))
-        (setq org-fc-review--session (org-fc-make-review-session cards))))
+    (cond (outstanding
+           (if (and org-fc-review--session (oref org-fc-review--session cards))
+               (setq cards (oref org-fc-review--session cards))
+             (setq cards (org-fc-index org-fc-browser-context))
+             (setq cards (funcall org-fc-index-sort-function cards))))
+          (pending
+           (setq cards (org-fc-roam-index-pending))
+           (setq cards (org-fc-index-positions cards)))
+          (t
+           (setq cards (org-fc-index org-fc-browser-context))
+           (setq cards (org-fc-index-positions cards))))
     (if cards
         (cl-loop for card in cards
                  append `((,(plist-get card :id)
                            [,(number-to-string (plist-get card :num))
                             ,(if (string-empty-p (plist-get card :title))
                                  (plist-get card :filetitle)
-                               (plist-get card :title)) 
+                               (plist-get card :title))
                             ,(if (plist-get card :prior)
                                  (number-to-string (plist-get card :prior))
                                "-")
                             ,(format "%.2f" (plist-get card :interval))
-                            ,(format-time-string "%FT%TZ" (plist-get card :due) "UTC0")
+                            ,(if (stringp (plist-get card :due))
+                                 (plist-get card :due)
+                               (format-time-string "%FT%TZ" (plist-get card :due) "UTC0"))
                             ,(symbol-name (plist-get card :type))
                             ,(plist-get card :position)
                             ,(plist-get card :tags)])))
