@@ -146,7 +146,7 @@ Used to determines filename in `org-roam-capture-templates'."
       "%?"
       :if-new
       (file+head
-       "%<%F-%s>.org"
+       "%<%F-%s>-%(org-roam-slip-box-new-file).org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
      ("n" "note" plain
