@@ -169,7 +169,7 @@ it can be passed in POS."
                                      ":END:")
                                    "\n"))
             :template
-            ("%{fetch-bibtex}* %?%{space}%{org-entry}%{bibtex}")
+            ("%{fetch-bibtex}* TODO %?%{space}%{org-entry}%{bibtex}")
             :children (("Interactive org-capture-ref template"
                         :keys ,(car org-capture-ref-capture-keys)
                         :space " ")
