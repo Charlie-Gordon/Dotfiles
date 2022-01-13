@@ -17,7 +17,18 @@
 	      ("C-S-p" . shr-previous-link))
   :mode (("\\.epub\\'" . nov-mode))
   :custom
-  (nov-text-width fill-column))
+  (nov-text-width fill-column)
+  (nov-variable-pitch nil)
+  :config
+  (add-hook 'nov-post-html-render-hook 'c1/org-fc-hard-to-read-font))
+
+(defun c1/org-fc-hard-to-read-font ()
+  "Set font to a hard to read font in org-fc to enhance concentration."
+  (interactive)
+  (setq buffer-face-mode-face '(:family "Sans Forgetica"))
+  (buffer-face-mode))
+
+
 
 ;; (use-package ereader
 ;;   :straight t
