@@ -2,58 +2,82 @@
 ;;; Commentary:
 ;;; Code:
 ;;;; Selectrum
-(use-package selectrum
+;; (use-package selectrum
+;;   :straight t
+;;   :bind (:map ctl-x-map
+;;               ("C-z" . selectrum-repeat))
+;;   :custom
+;;   ;; Fill as many candidates as possible, even if it doesn't have that
+;;   ;; many.
+;;   (selectrum-fix-vertical-window-height selectrum-max-window-height)
+;;   :hook
+;;   (after-init . selectrum-mode))
+
+(use-package mct
   :straight t
-  :bind (:map ctl-x-map
-              ("C-z" . selectrum-repeat))
+  :bind (:map minibuffer-local-completion-map
+              ("SPC" . nil)
+              ("?" . nil))
   :custom
-  ;; Fill as many candidates as possible, even if it doesn't have that
-  ;; many.
-  (selectrum-fix-vertical-window-height selectrum-max-window-height)
-  :hook
-  (after-init . selectrum-mode))
+  (mct-remove-shadowed-file-names t) ; works when `file-name-shadow-mode' is enabled
+  (mct-hide-completion-mode-line t)
+  (mct-show-completion-line-numbers nil)
+  (mct-apply-completion-stripes t)
+  (mct-minimum-input 3)
+  (mct-live-update-delay 0.6)
+  (mct-completions-format 'one-column)
+  (mct-completion-passlist
+   '(imenu
+     Info-goto-node
+     Info-index
+     Info-menu
+     vc-retrieve-tag))
+  :config
+  (mct-minibuffer-mode 1)
+  (mct-region-mode 1))
 
 ;;;; Orderless
 (use-package orderless
   :straight t
-  :after selectrum
   :custom
   (selectrum-refine-candidates-function #'orderless-filter)
   (selectrum-highlight-candidates-function #'orderless-highlight-matches)
-  (completion-styles '(orderless partial-completion)))
+  (completion-styles
+   '(basic substring initials flex partial-completion orderless))
+  (completion-category-overrides
+   '((file (styles . (basic partial-completion orderless))))))
 
 ;;;; Marginalia
 (use-package marginalia
   :straight t
-  :after selectrum
   :config (marginalia-mode 1))
 
 ;;;; Consult
 (use-package consult
   :straight t
-;;  Replacing functions with their consult counterparts
+  ;;  Replacing functions with their consult counterparts
   :bind (;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
          ("C-c m" . consult-mode-command)
          ("C-c b" . consult-bookmark)
          ("C-c k" . consult-kmacro)
          ;; C-x bindings (ctl-x-map)
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer) ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
-         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
          ("C-M-#" . consult-register)
          ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-         ("<help> a" . consult-apropos)            ;; orig. apropos-command
+         ("M-y" . consult-yank-pop)     ;; orig. yank-pop
+         ("<help> a" . consult-apropos) ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g f" . consult-flymake) ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)   ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line) ;; orig. goto-line
          ("M-g o" . consult-outline)
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
@@ -72,9 +96,9 @@
          ;; Isearch integration
          ("M-s e" . consult-isearch)
          :map isearch-mode-map
-         ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-         ("M-s l" . consult-line))                 ;; required by consult-line to detect isearch
+         ("M-e" . consult-isearch)   ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch) ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)) ;; required by consult-line to detect isearch
   :init
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
@@ -104,6 +128,7 @@
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; (kbd "C-+")
+  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help))
@@ -115,6 +140,8 @@
   ("s-'" . embark-act)
   ("s-\"" . embark-dwim)
   ("M-:" . pp-eval-expression)
+  (:map embark-symbol-map
+        ("h" . helpful-symbol))
   (:map embark-url-map
 	("s" . browse-url-xdg-open)
 	("m" . c1/mpv-play-url))
@@ -129,10 +156,28 @@
                  (window-parameters (mode-line-format . none)))))
 
 ;;;; Company
-(use-package company
+;; (use-package company
+;;   :straight t
+;;   :hook (after-init . global-company-mode)
+;;   :diminish)
+
+(use-package corfu
   :straight t
-  :hook (after-init . global-company-mode)
-  :diminish)
+  :custom
+  (tab-always-indent 'complete)
+  (corfu-preselect-first nil)
+  (completion-cycle-threshold 3)
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+
+  :init
+  (corfu-global-mode))
+
+
 ;;; Ivy
 (use-package swiper
   :straight t
