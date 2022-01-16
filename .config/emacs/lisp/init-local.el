@@ -3,11 +3,21 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package volume
+  :straight '(volume.el :type git
+                        :host github
+                        :repo "spwhitton/volume.el"
+                        :branch "series/define-obsolete-variable-alias")
+  :bind ("s-c" . volume))
+
 (use-package password-store
   :straight t)
 
 (use-package transmission
-  :straight t)
+  :straight '(transmission :type git
+                           :host github
+                           :repo "xFA25E/transmission"
+                           :branch "feature/rename-path"))
 
 (use-package trashed
   :straight t)

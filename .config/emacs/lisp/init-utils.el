@@ -74,11 +74,5 @@ Saves to a temp file and puts the filename in the kill ring."
 
 (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file "~/")))
 
-;;;; Volume control
-(use-package volume-control
-  :ensure nil
-  :after exwm
-  :bind-keymap ("C-' v" . volume-control-map))
-
 (provide 'init-utils)
 ;;; init-utils.el ends here
