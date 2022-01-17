@@ -72,7 +72,6 @@
   (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
   (use-package init-mail :ensure nil)
-  (use-package init-bongo :ensure nil)
   (use-package init-uniquify :ensure nil)
   (use-package init-markdown :ensure nil)
   (use-package init-misc :ensure nil)
