@@ -59,9 +59,9 @@ it can be passed in POS."
   :straight t
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda)
+         ("C-c l" . org-store-link)
          :map org-mode-map
-         ("C-'" . nil)
-         ("C-c l" . org-store-link))
+         ("C-'" . nil))
   :custom
   (org-id-link-to-org-use-id t)
   (org-ctrl-k-protect-subtree t)
