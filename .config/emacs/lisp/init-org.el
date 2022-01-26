@@ -196,8 +196,8 @@ it can be passed in POS."
 
 (use-package org-special-block-extras
   :straight t
-  :hook (org-mode . org-special-block-extras-mode)
   :config
+  (add-hook 'org-mode #'org-special-block-extras-mode)
   (o-defblock extract
               (id "ID of the extract" :face 'org-dispatcher-highlight)
               nil
