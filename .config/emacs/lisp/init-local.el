@@ -43,9 +43,20 @@
                      :host github
                      :repo "l3kn/org-zettelkasten"))
 
-
-
-
+(use-package emms
+  :straight t
+  :bind
+  ("s-m e" . emms)
+  ("s-m b" . emms-smart-browse)
+  :custom
+  (emms-source-file-default-directory "/storage/music/")
+  (emms-history-file (expand-file-name "emms-history" emms-source-file-default-directory))
+  (emms-history-start-playing t)
+  :config
+  (use-package emms-setup :ensure nil)
+  (emms-all)
+  (emms-default-players)
+  (use-package emms-history :ensure nil))
 
 (provide 'init-local)
 ;;; init-local.el ends here
