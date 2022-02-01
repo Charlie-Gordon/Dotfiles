@@ -13,10 +13,13 @@
   :config
   (global-set-key (kbd "<f12>") #'eaf-toggle)
   (defun eaf-toggle ()
+
+(defun eaf-toggle ()
   (interactive)
-  (if (advice-member-p 'eaf--find-file-advisor 'find-file)
-      (advice-remove 'find-file 'eaf--find-file-advisor)
-    (advice-add #'find-file :around #'eaf--find-file-advisor))))
+  (if (member "pdf" eaf-find-file-ext-blacklist)
+      (setq eaf-find-file-ext-blacklist
+            (delete "pdf" eaf-find-file-ext-blacklist))
+    (push "pdf" eaf-find-file-ext-blacklist)))
 
 (use-package eaf-org
   :ensure nil
