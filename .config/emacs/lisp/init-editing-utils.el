@@ -98,6 +98,8 @@
 ;; persistent-scratch
 (use-package persistent-scratch
   :straight t
+  :custom
+  (persistent-scratch-backup-directory (cdar backup-directory-alist))
   :config
   (persistent-scratch-setup-default)
   :diminish persistent-scratch-mode)
