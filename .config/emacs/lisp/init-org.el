@@ -124,29 +124,6 @@ but `delete-file' is ignored."
   :hook
   (org-mode . org-fragtog-mode))
 
-(use-package org-agenda
-  :ensure nil
-  :config
-  ;; Daniel Patru's answer at
-  ;; https://stackoverflow.com/questions/17215868/recursively-adding-org-files-in-a-top-level-directory-for-org-agenda-files-take
-  (defun org-get-agenda-files-recursively (dir)
-    "Get org agenda files from root DIR."
-    (directory-files-recursively dir "\.org$"))
-  (defun org-set-agenda-files-recursively (dir)
-    "Set org-agenda files from root DIR."
-    (setq org-agenda-files 
-	  (org-get-agenda-files-recursively dir)))
-  (defun org-add-agenda-files-recursively (dir)
-    "Add org-agenda files from root DIR."
-    (nconc org-agenda-files 
-	   (org-get-agenda-files-recursively dir)))
-  (add-hook 'after-init-hook (lambda nil (org-set-agenda-files-recursively *org-dir*)))
-  
-  (setq org-agenda-custom-commands
-        '(("R" "List of all headline with REVIEW keyword." search "REVIEW"
-           ((org-show-context-detail 'minimal)
-            (org-agenda-prefix-format ""))))))
-
 (straight-use-package '(asoc :type git :host github :repo "troyp/asoc.el"))
 (straight-use-package 'doct)
 
