@@ -86,6 +86,14 @@ it can be passed in POS."
   :hook
   (org-mode . visual-line-mode))
 
+(defun org-babel-tangle-append (&optional arg target-file lang-re)
+  "Append source code block at point to its tangle file.
+The command works like `org-babel-tangle' with prefix arg
+but `delete-file' is ignored."
+  (interactive)
+  (cl-letf (((symbol-function 'delete-file) #'ignore))
+    (org-babel-tangle arg target-file lang-re)))
+
 (use-package oc
   :ensure nil
   :custom
@@ -158,6 +166,7 @@ it can be passed in POS."
             ,@org-capture-ref-capture-target
             :clock-in nil
             :jump-to-captured t
+            :prepare-finalize (lambda () (org-babel-tangle-append nil (expand-file-name "references.bib" *bibliography-dir*) "bibtex"))
             :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
@@ -169,8 +178,13 @@ it can be passed in POS."
                                      ":END:")
                                    "\n"))
             :template
-            ("%{fetch-bibtex}* TODO %?%{space}%{org-entry}%{bibtex}")
-            :children (("Interactive org-capture-ref template"
+            ("%{fetch-bibtex}* %?%{space}%{org-entry}%{bibtex}%{content}")
+            :children (("Interactive + Content"
+                        :keys "s"
+                        :space " "
+                        :content
+                        (lambda () (bir-import (org-capture-ref-get-buffer-from-html-file-in-query))))
+                       ("Interactive org-capture-ref template"
                         :keys ,(car org-capture-ref-capture-keys)
                         :space " ")
                        ("Silent org-capture-ref template"
@@ -197,12 +211,7 @@ it can be passed in POS."
 (use-package org-special-block-extras
   :straight t
   :config
-  (add-hook 'org-mode #'org-special-block-extras-mode)
-  (o-defblock extract
-              (id "ID of the extract" :face 'org-dispatcher-highlight)
-              nil
-              contents)
-
+  (add-hook 'org-mode-hook #'org-special-block-extras-mode)
   (o-deflink extract
              ""
              [:face 'org-dispatcher-highlight

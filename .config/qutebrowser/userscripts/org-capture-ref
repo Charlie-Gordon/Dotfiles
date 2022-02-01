@@ -52,6 +52,10 @@ while :; do
             TEMPLATE="r"
             shift
             ;;
+        --skeleton)
+            TEMPLATE="s"
+            shift
+            ;;
         *)
             break
     esac
