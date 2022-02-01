@@ -68,8 +68,11 @@ it can be passed in POS."
   (org-directory *org-dir*)
   (org-export-coding-system 'utf-8)
   (org-use-speed-commands t)
-  (org-refile-target '((org-agenda-files . (:maxlevel . 6))))
+  (org-refile-targets '(("/storage/org/gtd/inbox.org" :maxlevel . 2)
+                        ("/storage/org/gtd/org-gtd-tasks.org" :maxlevel . 2)))
   (org-image-actual-width nil)
+  (org-todo-keywords
+   '((sequence "NEXT(n)" "|" "DONE(d)" "CNCL(c)")))
   (org-format-latex-options
    '(:foreground auto
                  :background auto :scale 1.6
@@ -135,7 +138,7 @@ but `delete-file' is ignored."
              :repo "yantar92/org-capture-ref")
   :custom
   (org-capture-ref-headline-tags nil)
-  (org-capture-ref-capture-target '(:file "/storage/org/slip-box/lit/inbox.org"))
+  (org-capture-ref-capture-target `(:file ,(expand-file-name "inbox.org" *gtd-dir*)))
   (org-capture-ref-capture-template-set-p t)
   (org-capture-ref-capture-template
    `(:group "org-capture-ref template"
@@ -194,6 +197,69 @@ but `delete-file' is ignored."
              [:face 'org-dispatcher-highlight
                     :follow (org-id-goto o-label)]))
 
+(use-package org-edna
+  :straight t)
+
+(use-package org-gtd
+  :straight t
+  :after org org-edna
+  :bind (:map org-gtd-map
+              ("c" . org-gtd-choose)
+              ("e" . org-gtd-engage)
+              ("p" . org-gtd-process-inbox)
+              ("C" . org-gtd-capture))
+  :bind-keymap ("C-c g" . org-gtd-map)
+  :init
+  (define-prefix-command 'org-gtd-map)
+  :custom
+  (org-gtd-agenda-custom-commands
+   '(("g" "Scheduled today and all NEXT items"
+      ((agenda ""
+               ((org-agenda-span 1)
+                (org-agenda-start-day nil)))
+       (todo "NEXT"
+             ((org-agenda-overriding-header "All NEXT items")
+              (org-agenda-prefix-format "%b %i")
+              (org-agenda-compact-blocks t)
+              (org-agenda-breadcrumbs-separator "⋅")))
+       (todo "WAIT"
+             ((org-agenda-todo-ignore-with-date t)
+              (org-agenda-overriding-header "Blocked items"))))
+      "")))
+  (org-gtd-directory "/storage/org/gtd/")
+  (org-gtd-process-item-hooks nil)
+  (org-edna-use-inheritance t)
+  :config
+  (org-edna-mode))
+
+(defun c1/mark-as-project ()
+  (interactive)
+  (org-set-property "COOKIE_DATA" "todo recursive"))
+
+(add-hook 'org-gtd-process-item-hooks #'c1/mark-as-project)
+
+(defun c1/org-gtd--project ()
+  "Process GTD inbox item by transforming it into a project.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Refile to `org-gtd-actionable-file-basename'."
+  (interactive)
+
+  (if (org-gtd--poorly-formatted-project-p)
+      (org-gtd--show-error-and-return-to-editing)
+
+    (org-gtd--decorate-item)
+    (org-gtd-projects--nextify)
+    (goto-char (point-min))
+    (let ((org-special-ctrl-a t))
+      (org-beginning-of-line))
+    (insert "[/] ")
+    (org-update-statistics-cookies t)
+    (org-gtd--refile org-gtd-projects)
+    (org-gtd-process-inbox)))
+
+(advice-add 'org-gtd--project :override #'c1/org-gtd--project)
+
 
 ;;;; Recur
 
@@ -201,6 +267,7 @@ but `delete-file' is ignored."
   :hook ((org-mode . org-recur-mode)
          (org-agenda-mode . org-recur-agenda-mode))
   :straight t
+  :disabled
   :config
   (define-key org-recur-mode-map (kbd "C-c d") 'org-recur-finish)
 
