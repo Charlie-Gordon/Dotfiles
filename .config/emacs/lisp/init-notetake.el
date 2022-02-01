@@ -467,6 +467,10 @@ Used to determines filename in `org-roam-capture-templates'."
      ("Due" t :read-only)
      ("Type" nil)))
   :config
+  (use-package org-fc-roam
+    :ensure nil
+    :config
+    (org-fc-roam-db-autosync-enable))
   (defmacro define-org-fc-browser-predicate (name test &rest body)
     "Define transmission-NAME as a function.
 The function is to be used as a `sort' predicate for `tabulated-list-format'.
@@ -485,23 +489,17 @@ is constructed from TEST, BODY and the `tabulated-list-id' tagged as `<>'."
         `(defun ,(intern (concat "org-fc-browser-" (symbol-name name))) (,a ,b)
            (,test ,(cut (macroexp-progn body) a)
                   ,(cut (macroexp-progn body) b))))))
-  (use-package org-fc-roam
-    :ensure nil
-    :config
-    (org-fc-roam-db-autosync-enable))
   (define-org-fc-browser-predicate num>? > (string-to-number (substring-no-properties (aref <> 0))))
   (define-org-fc-browser-predicate priority>? > (string-to-number (substring-no-properties (aref <> 2))))
   (define-org-fc-browser-predicate intrv>? > (string-to-number (substring-no-properties (aref <> 3))))
-  (add-to-list 'org-fc-custom-contexts (cons 'outstanding '(:paths outstanding :outstanding t)))
-  (add-to-list 'org-fc-custom-contexts (cons 'pending '(:paths pending :pending t)))
-  (add-hook 'org-fc-before-setup-hook #'visual-line-mode)
-  (add-hook 'org-fc-before-setup-hook #'c1/org-fc-hard-to-read-font)
-  (add-hook 'org-fc-after-flip-hook #'c1/maybe-close-org-noter)
-  (add-hook 'org-fc-before-next-card-hook #'c1/maybe-close-org-noter)
+  ;; (add-hook 'org-fc-before-setup-hook #'visual-line-mode)
+  ;; (add-hook 'org-fc-before-setup-hook #'c1/org-fc-hard-to-read-font)
+  ;; (add-hook 'org-fc-after-flip-hook #'c1/maybe-close-org-noter)
+  ;; (add-hook 'org-fc-before-next-card-hook #'c1/maybe-close-org-noter)
   ;; (add-to-list 'org-fc-intialize-review-data-functions #'org-fc-algo-sm2-cloze-review-interval)
   ;; (org-fc-cache-mode)
-  (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
-  (advice-add org-fc-index-sort-function :before-until #'c1/dont-sort-pending-cards)
+  ;; (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
+  ;; (advice-add org-fc-index-sort-function :before-until #'c1/dont-sort-pending-cards)
   :diminish org-fc-cache-mode)
 
 (defun c1/dont-sort-pending-cards (index)
