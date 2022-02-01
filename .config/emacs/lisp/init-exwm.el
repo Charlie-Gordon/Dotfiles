@@ -59,7 +59,9 @@
                               ?\M-&
                               ?\M-:
                               ?\s-o
-                              ?\s-v)
+                              ?\s-c
+                              ?\s-v
+                              ?\s-m)
      ;; Line-editing keybindings for X windows
      exwm-input-simulation-keys '(;; Backward-char
                                   ([?\C-b] . [left])
