@@ -23,8 +23,9 @@
   (mct-hide-completion-mode-line t)
   (mct-show-completion-line-numbers nil)
   (mct-apply-completion-stripes t)
+  (mct-completion-blocklist nil)
   (mct-minimum-input 3)
-  (mct-live-update-delay 0.6)
+  (mct-live-update-delay 0.3)
   (mct-completions-format 'one-column)
   (mct-completion-passlist
    '(imenu
