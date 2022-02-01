@@ -34,8 +34,7 @@
      Info-menu
      vc-retrieve-tag))
   :config
-  (mct-minibuffer-mode 1)
-  (mct-region-mode 1))
+  (mct-minibuffer-mode 1))
 
 ;;;; Orderless
 (use-package orderless
@@ -44,7 +43,7 @@
   (selectrum-refine-candidates-function #'orderless-filter)
   (selectrum-highlight-candidates-function #'orderless-highlight-matches)
   (completion-styles
-   '(basic substring initials flex partial-completion orderless))
+   '(orderless basic substring initials flex partial-completion))
   (completion-category-overrides
    '((file (styles . (basic partial-completion orderless))))))
 
