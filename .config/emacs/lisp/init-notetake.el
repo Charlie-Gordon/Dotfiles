@@ -535,51 +535,6 @@ is constructed from TEST, BODY and the `tabulated-list-id' tagged as `<>'."
             interval
             (org-fc-timestamp-in interval)))))
 
-;; (defun org-fc-roam-index-outstanding ()
-;;   (org-roam-db-query "SELECT * FROM
-;; (SELECT
-;; ':num', rowid,
-;; ':id', id,
-;; ':title', title,
-;; ':type', type,
-;; ':position', pos,
-;; ':prior', prior,
-;; ':ease', ease,
-;; ':box', box,
-;; ':interval', ivl,
-;; ':tags', '(' || group_concat(tags, ' ') || ')' as tags,
-;; ':due', '\"' || strftime('%%Y-%%m-%%dT%%H:%%M:%%SZ', due, 'unixepoch') || '\"',
-;; ':path', path,
-;; ':filetitle', filetitle
-;; FROM
-;; (SELECT * FROM
-;; (SELECT rowid, id, title, pos, prior, ease, box, ivl, due, postp, type, queue, tags, path, filetitle
-;; FROM
-;; (SELECT
-;; cards.rowid as rowid,
-;; cards.node_id as id,
-;; cards.title as title,
-;; cards.pos as pos,
-;; cards.prior as prior,
-;; cards.ease as ease,
-;; cards.box as box,
-;; cards.ivl as ivl,
-;; cards.due as due,
-;; cards.postp as postp,
-;; cards.type as type,
-;; cards.queue as queue,
-;; tags.tag as tags,
-;; nodes.file as path,
-;; files.title as filetitle
-;; FROM cards
-;; LEFT JOIN tags ON tags.node_id = cards.node_id
-;; LEFT JOIN nodes ON nodes.id = cards.node_id
-;; LEFT JOIN files ON files.file = nodes.file
-;; GROUP BY id, cards.pos, tags)
-;; GROUP BY id, pos)
-;; WHERE date(due, 'unixepoch', 'utc') <= date('now', 'localtime') AND queue = 1)
-;; GROUP BY id, pos)"))
-
 
 ;; (defun org-fc-roam-index-pending ()
 ;;   (org-roam-db-query "SELECT * FROM
