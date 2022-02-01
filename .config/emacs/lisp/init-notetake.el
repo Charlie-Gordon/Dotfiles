@@ -181,7 +181,7 @@ Used to determines filename in `org-roam-capture-templates'."
      ("ak" "article from clipboard" entry
       "%(org-web-tools--url-as-readable-org)"
       :if-new
-      (file "%<%F-%s>.org")
+      (file "%<%F-%s>-%(org-roam-slip-box-new-file).org")
       :unnarrowed t)
 
      ("af" "article from file" plain
