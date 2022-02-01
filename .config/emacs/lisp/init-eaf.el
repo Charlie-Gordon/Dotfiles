@@ -18,8 +18,18 @@
       (advice-remove 'find-file 'eaf--find-file-advisor)
     (advice-add #'find-file :around #'eaf--find-file-advisor))))
 
-(use-package eaf-pdf-viewer
+(use-package eaf-org
   :ensure nil
+  :custom
+  (eaf-org-override-pdf-links-store t))
+
+
+(use-package eaf-pdf-viewer
+  :straight '(eaf-pdf-viewer
+              :type git
+              :host github
+              :repo "emacs-eaf/eaf-pdf-viewer"
+              :files ("core" "app" "*.el" "*.py"))
   :custom
   (eaf-pdf-outline-window-configuration t)
   (eaf-pdf-dark-mode "ignore")
