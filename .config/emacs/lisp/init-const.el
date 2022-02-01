@@ -15,5 +15,9 @@
 (defconst *bibliography-dir* (if (file-exists-p "/storage/bib/")
                                  "/storage/bib/"))
 
+(defconst *gtd-dir* (if (file-exists-p "/storage/bib/")
+                        "/storage/org/gtd/"))
+
+
 (provide 'init-const)
 ;;; init-const.el ends here
