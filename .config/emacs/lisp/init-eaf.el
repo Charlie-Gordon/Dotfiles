@@ -9,10 +9,7 @@
               :type git
               :host github
               :repo "emacs-eaf/emacs-application-framework"
-              :files ("core" "app" "*.el" "*.py"))
-  :config
-  (global-set-key (kbd "<f12>") #'eaf-toggle)
-  (defun eaf-toggle ()
+              :files ("core" "extension" "*.el" "*.py")))
 
 (defun eaf-toggle ()
   (interactive)
