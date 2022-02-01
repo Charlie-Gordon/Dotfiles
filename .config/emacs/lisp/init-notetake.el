@@ -368,6 +368,9 @@ Used to determines filename in `org-roam-capture-templates'."
                         :host github
                         :repo "c1-g/org-noter-plus-djvu"
                         :files ("other/*.el" "*.el"))
+  :bind (:map org-noter-doc-mode-map
+              ("I" . org-noter-insert-dynamic-block)
+              ("M-I" . org-noter-insert-precise-dynamic-block))
   :custom
   (org-noter-property-doc-file "ROAM_REFS")
   (org-noter-property-note-location "DOCUMENT_PAGE")
@@ -384,7 +387,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (add-to-list 'org-speed-commands '("." . org-noter-sync-current-note))
   (use-package org-noter-nov-overlay :ensure nil)
-  (use-package org-noter-special-block :ensure nil)
+  (use-package org-noter-dynamic-block :ensure nil)
   (use-package org-noter-citar :ensure nil))
 
 ;;;;; Org-download
