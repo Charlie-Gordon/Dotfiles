@@ -451,13 +451,14 @@ Used to determines filename in `org-roam-capture-templates'."
                      :host github
                      :repo "l3kn/org-fc"
                      :fork t
-                     :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
+                     :files ("awk" "*.org" "*.sh" "*.el" "tests"  "icons"))
   :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
-  (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
+  ;; (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
   (org-fc-index-function #'org-fc-roam-index)
   (org-fc-index-filter-function #'identity)
+  (org-fc-algorithm 'roam-sm2)
   (org-fc-topic-proportion 80)
   (org-fc-browser-headers
    '(("No." org-fc-browser-num>?)
