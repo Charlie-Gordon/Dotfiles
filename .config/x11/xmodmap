@@ -33,3 +33,5 @@ keycode 105 = Super_R
 add mod1    = Alt_R Alt_L Meta_R Meta_L
 add mod4    = Super_R Super_L Menu
 add control = Control_R Control_L
+
+pointer = 3 2 1
