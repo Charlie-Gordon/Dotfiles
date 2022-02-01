@@ -33,19 +33,6 @@
   (eaf-bind-key quit-window "q" eaf-pdf-viewer-keybinding)
   (eaf-bind-key jump_to_page "M-g l" eaf-pdf-viewer-keybinding))
 
-(use-package eaf-jupyter
-  :ensure nil)
-
-(use-package eaf-org-previewer
-  :ensure nil
-  :config
-  (defun eaf-org-open-file (file &optional link)
-    (eaf-open file))
-  (add-to-list 'org-file-apps '("\\.pdf\\'" . eaf-org-open-file)))
-
-(use-package eaf-demo
-  :ensure nil)
-
 
 ;;;###autoload
 (defun eaf-interleave--find-bibtex-note (filename)
