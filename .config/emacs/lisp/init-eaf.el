@@ -13,10 +13,16 @@
 
 (defun eaf-toggle ()
   (interactive)
-  (if (member "pdf" eaf-find-file-ext-blacklist)
+  (if (cl-remove-if-not (lambda (ext)
+                          (member ext eaf-pdf-extension-list))
+                        eaf-find-file-ext-blacklist)
       (setq eaf-find-file-ext-blacklist
-            (delete "pdf" eaf-find-file-ext-blacklist))
-    (push "pdf" eaf-find-file-ext-blacklist)))
+            (cl-remove-if (lambda (ext)
+                            (member ext eaf-pdf-extension-list))
+                          eaf-find-file-ext-blacklist))
+    (mapc (lambda (ext)
+            (push ext eaf-find-file-ext-blacklist))
+          eaf-pdf-extension-list)))
 
 (use-package eaf-org
   :ensure nil
