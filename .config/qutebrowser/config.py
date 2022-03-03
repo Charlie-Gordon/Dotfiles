@@ -80,7 +80,7 @@ config.set('hints.chars', 'qwfarstxcdv')
 bindings = {
     'xD': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start.sh',
     'xd': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start-lowres.sh',
-    'xa': 'hint links spawn --detach mpv -no-video {hint-url}',
+    'xa': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start-audio.sh',
     '[[': 'navigate decrement',
     ']]': 'navigate increment',
     '{{': 'navigate prev',
