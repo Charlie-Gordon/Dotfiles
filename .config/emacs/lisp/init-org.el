@@ -89,9 +89,19 @@ it can be passed in POS."
   (add-to-list 'org-speed-commands '("N" . org-narrow-to-element))
   (add-hook 'org-mode-hook #'(lambda nil
                                (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
+  (org-clock-persistence-insinuate)
   (org-load-modules-maybe t)
   :hook
-  (org-mode . visual-line-mode))
+  (org-mode . visual-line-mode)
+  (org-clock-in . c1/org-set-todo-progress)
+  (org-clock-out . c1/org-set-todo-waiting))
+
+(defun c1/org-set-todo-waiting ()
+  (org-entry-put nil "TODO" "WAIT"))
+
+(defun c1/org-set-todo-progress ()
+  (org-entry-put nil "TODO" "PROG"))
+
 
 (defun org-babel-tangle-append (&optional arg target-file lang-re)
   "Append source code block at point to its tangle file.
