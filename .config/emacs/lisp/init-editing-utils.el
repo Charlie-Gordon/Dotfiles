@@ -106,16 +106,6 @@
   (persistent-scratch-setup-default)
   :diminish persistent-scratch-mode)
 
-;;; Snippets
-(use-package yasnippet
-  :straight t
-  :init
-  (straight-use-package 'yasnippet-snippets)
-  :config
-  (yas-load-directory (concat user-emacs-directory "snippets"))
-  (yas-global-mode)
-  :diminish yas-minor-mode)
-
 ;;; Quick navigation
 
 (use-package affe
