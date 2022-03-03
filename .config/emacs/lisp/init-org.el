@@ -380,6 +380,22 @@ selected instead of creating a new buffer."
       (org-map-entries #'org-demote)
       (buffer-string))))
 
+(use-package org-agenda
+  :ensure nil
+  :hook (org-agenda-after-show . c1/agenda-maybe-go-to-saved-place))
+
+
+(defun c1/agenda-maybe-go-to-saved-place ()
+  (let ((beg (org-element-property :begin (org-element-at-point)))
+        (end (org-element-property :end (org-element-at-point)))
+        (saved-place (assoc buffer-file-name save-place-alist)))
+    (when saved-place
+      (or revert-buffer-in-progress-p
+          (and (integerp (cdr saved-place))
+               (and (> (cdr saved-place) beg) (< (cdr saved-place) end))
+               (goto-char (cdr saved-place))))
+      (setq save-place-mode t))))
+
 (use-package org-super-agenda
   :straight t
   :hook (org-agenda-mode . org-super-agenda-mode))
