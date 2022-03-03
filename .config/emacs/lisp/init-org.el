@@ -66,6 +66,8 @@ it can be passed in POS."
   (org-id-link-to-org-use-id t)
   (org-ctrl-k-protect-subtree t)
   (org-directory *org-dir*)
+  (org-clock-persist t)
+  (org-clock-sound "/storage/music/metronome.wav")
   (org-export-coding-system 'utf-8)
   (org-use-speed-commands t)
   (org-refile-targets '(("/storage/org/gtd/inbox.org" :maxlevel . 2)
@@ -164,6 +166,13 @@ but `delete-file' is ignored."
                         :space " "
                         :content
                         (lambda () (bir-import (org-capture-ref-get-buffer-from-html-file-in-query))))
+                       ("Interactive + outline"
+                        :keys "o"
+                        :space " "
+                        :content
+                        (lambda ()
+                          (c1/org-toc-from-html (or (org-capture-ref-get-buffer-from-html-file-in-query)
+                                                    (url-retrieve-synchronously (org-capture-ref-get-bibtex-url-from-capture-data))))))
                        ("Interactive org-capture-ref template"
                         :keys ,(car org-capture-ref-capture-keys)
                         :space " ")
@@ -178,6 +187,17 @@ but `delete-file' is ignored."
                  (car template)
                  (cdr template)
                  'replace))))
+
+(defun c1/org-toc-from-html (html-buffer)
+  (let ((out-buf (generate-new-buffer " *occur-toc*")))
+    (cl-letf (((symbol-function 'display-buffer) #'ignore))
+      (occur-1 "<h[1-6].*>.*</h[1-6]>" "\\&" (list html-buffer) out-buf))
+    (with-current-buffer out-buf
+      (shell-command-on-region (point-min) (point-max) "pandoc -f html - -t org" out-buf)
+      (org-mode)
+      (goto-char (point-min))
+      (org-map-entries #'org-demote)
+      (buffer-string))))
 
 (use-package org-super-agenda
   :straight t
