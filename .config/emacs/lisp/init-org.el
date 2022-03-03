@@ -530,8 +530,6 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
     (org-gtd--refile org-gtd-projects)
     (org-gtd-process-inbox)))
 
-(advice-add 'org-gtd--project :override #'c1/org-gtd--project)
-
 (defun c1/org-heading-read-time-estimate (&optional point as-duration)
   (let (end)
     (org-with-point-at (or point (point))
