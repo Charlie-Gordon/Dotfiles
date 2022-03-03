@@ -147,6 +147,12 @@ efforts may be updated by this function."
 
 (add-hook 'org-clock-in-prepare-hook 'my-org-effort-from-children-hook)
 
+(use-package org-super-links
+  :straight '(org-super-links :type git
+                              :host github
+                              :repo "toshism/org-super-links")
+  :custom
+  (org-super-links-related-into-drawer t))
 
 (defun org-babel-tangle-append (&optional arg target-file lang-re)
   "Append source code block at point to its tangle file.
