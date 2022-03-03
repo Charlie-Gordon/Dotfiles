@@ -321,7 +321,8 @@ selected instead of creating a new buffer."
              :repo "yantar92/org-capture-ref")
   :custom
   (org-capture-ref-headline-tags nil)
-  (org-capture-ref-capture-target `(:file ,(expand-file-name "inbox.org" *gtd-dir*)))
+  (org-capture-ref-capture-target
+   `(:file ,(expand-file-name org-gtd-inbox *gtd-dir*)))
   (org-capture-ref-capture-template-set-p t)
   (org-capture-ref-capture-template
    `(:group "org-capture-ref template"
@@ -329,7 +330,6 @@ selected instead of creating a new buffer."
             ,@org-capture-ref-capture-target
             :clock-in nil
             :jump-to-captured t
-            :prepare-finalize (lambda () (org-babel-tangle-append nil (expand-file-name "references.bib" *bibliography-dir*) "bibtex"))
             :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
@@ -341,12 +341,14 @@ selected instead of creating a new buffer."
                                      ":END:")
                                    "\n"))
             :template
-            ("%{fetch-bibtex}* %?%{space}%{org-entry}%{bibtex}%{content}")
+            ("%{fetch-bibtex}* TODO %?%{space}%{org-entry}%{bibtex}\n%{outline}%{content}")
             :children (("Interactive + Content"
                         :keys "s"
                         :space " "
                         :content
-                        (lambda () (bir-import (org-capture-ref-get-buffer-from-html-file-in-query))))
+                        (lambda ()
+                          (bir-import (or (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query))
+                                          (org-capture-ref-get-bibtex-url-from-capture-data)))))
                        ("Interactive + outline"
                         :keys "o"
                         :space " "
