@@ -79,12 +79,14 @@
   (global-set-key (kbd "C-z") nil)
   :bind
   ("C-z c" . avy-goto-char-timer)
-  ("C-z l" . avy-goto-line))
+  ("C-z l" . avy-goto-line)
+  :custom
+  (avy-timeout-seconds "0.4"))
 
 (use-package ace-link
   :straight t
   :config
-  (ace-link-setup-default)) 
+  (ace-link-setup-default))
 
 
 (use-package which-key
