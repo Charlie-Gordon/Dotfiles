@@ -8,6 +8,8 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defconst *termux* (string-match "Android" (shell-command-to-string "uname -a")))
+
 ;; From Jordon Biondo at
 ;; https://emacs.stackexchange.com/questions/2286/what-can-i-do-to-speed-up-my-start-up
 (let ((file-name-handler-alist nil))
