@@ -25,6 +25,15 @@
   (dired-mode . dired-hide-details-mode)
   (dired-mode . hl-line-mode))
 
+(use-package dired-hist
+  :straight '(dired-hist :type git
+                         :host github
+                         :repo "karthink/dired-hist")
+  :bind (:map dired-mode-map
+              ("l" . dired-hist-go-back)
+              ("r" . dired-hist-go-forward))
+  :hook (dired-mode . dired-hist-mode))
+
 (use-package dired-subtree
   :straight t
   :after dired
