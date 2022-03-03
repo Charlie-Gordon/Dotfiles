@@ -68,6 +68,7 @@ it can be passed in POS."
   (org-directory *org-dir*)
   (org-clock-persist t)
   (org-clock-sound "/storage/music/metronome.wav")
+  (org-habit-graph-column 60)
   (org-export-coding-system 'utf-8)
   (org-use-speed-commands t)
   (org-refile-targets '(("/storage/org/gtd/inbox.org" :maxlevel . 2)
@@ -83,6 +84,7 @@ it can be passed in POS."
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :config
   (add-to-list 'org-modules 'org-protocol)
+  (add-to-list 'org-modules 'habits)
   (add-to-list 'org-speed-commands '("w" . widen))
   (add-to-list 'org-speed-commands '("N" . org-narrow-to-element))
   (add-hook 'org-mode-hook #'(lambda nil
