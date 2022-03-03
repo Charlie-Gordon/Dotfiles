@@ -62,15 +62,10 @@ Saves to a temp file and puts the filename in the kill ring."
 ;;;; mpv-play-url
 ;; https://gist.github.com/bsless/19ca4a37eee828b1b62c84971181f506#file-yt-mpv-el
 ;;;###autoload
-(defun c1/mpv-play-url (&optional url &rest args)
+(defun c1/mpv-play-url (&optional url &rest _args)
   "Start mpv for URL."
   (interactive"sURL: ")
-  (require 'eww)
-  (unless url (setq url
-                    (if (consp (eww-suggested-uris))
-                        (car (eww-suggested-uris))
-                      (eww-suggested-uris))))
-  (start-process "mpv" nil (executable-find "mpv") url))
+  (mpv-start url))
 
 (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file "~/")))
 
