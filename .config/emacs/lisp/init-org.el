@@ -111,6 +111,96 @@ but `delete-file' is ignored."
   (cl-letf (((symbol-function 'delete-file) #'ignore))
     (org-babel-tangle arg target-file lang-re)))
 
+(defun my-generate-sanitized-alnum-dash-string (str)
+  "Returns a string which contains only a-zA-Z0-9 with single dashes
+ replacing all other characters in-between them.
+
+ Some parts were copied and adapted from org-hugo-slug
+ from https://github.com/kaushalmodi/ox-hugo (GPLv3)."
+  (let* (;; Remove "<FOO>..</FOO>" HTML tags if present.
+         (str (replace-regexp-in-string "<\\(?1:[a-z]+\\)[^>]*>.*</\\1>" "" str))
+         ;; Remove URLs if present in the string.  The ")" in the
+         ;; below regexp is the closing parenthesis of a Markdown
+         ;; link: [Desc](Link).
+         (str (replace-regexp-in-string (concat "\\](" ffap-url-regexp "[^)]+)") "]" str))
+         ;; Replace "&" with " and ", "." with " dot ", "+" with
+         ;; " plus ".
+         (str (replace-regexp-in-string
+               "&" " and "
+               (replace-regexp-in-string
+                "\\." " dot "
+                (replace-regexp-in-string
+                 "\\+" " plus " str))))
+         ;; Replace German Umlauts with 7-bit ASCII.
+         (str (replace-regexp-in-string "ä" "ae" str nil))
+         (str (replace-regexp-in-string "ü" "ue" str nil))
+         (str (replace-regexp-in-string "ö" "oe" str nil))
+         (str (replace-regexp-in-string "ß" "ss" str nil))
+         ;; Replace all characters except alphabets, numbers and
+         ;; parentheses with spaces.
+         (str (replace-regexp-in-string "[^[:alnum:]()]" " " str))
+         ;; On emacs 24.5, multibyte punctuation characters like "："
+         ;; are considered as alphanumeric characters! Below evals to
+         ;; non-nil on emacs 24.5:
+         ;;   (string-match-p "[[:alnum:]]+" "：")
+         ;; So replace them with space manually..
+         (str (if (version< emacs-version "25.0")
+                  (let ((multibyte-punctuations-str "：")) ;String of multibyte punctuation chars
+                    (replace-regexp-in-string (format "[%s]" multibyte-punctuations-str) " " str))
+                str))
+         ;; Remove leading and trailing whitespace.
+         (str (replace-regexp-in-string "\\(^[[:space:]]*\\|[[:space:]]*$\\)" "" str))
+         ;; Replace 2 or more spaces with a single space.
+         (str (replace-regexp-in-string "[[:space:]]\\{2,\\}" " " str))
+         ;; Replace parentheses with double-hyphens.
+         (str (replace-regexp-in-string "\\s-*([[:space:]]*\\([^)]+?\\)[[:space:]]*)\\s-*" " -\\1- " str))
+         ;; Remove any remaining parentheses character.
+         (str (replace-regexp-in-string "[()]" "" str))
+         ;; Replace spaces with hyphens.
+         (str (replace-regexp-in-string " " "-" str))
+         ;; Remove leading and trailing hyphens.
+         (str (replace-regexp-in-string "\\(^[-]*\\|[-]*$\\)" "" str)))
+    str))
+
+(defun my-id-get-or-generate (&optional force)
+  "Returns the ID property if set or generates and returns a new one if not set.
+ The generated ID is stripped off potential progress indicator cookies and
+ sanitized to get a slug. Furthermore, it is prepended with an ISO date-stamp
+ if none was found before."
+  (interactive)
+  (when force
+    (org-entry-put (point) "ID" nil))
+  (when (not (org-id-get))
+    (progn
+      (let* ((my-heading-text (or (if (= (org-outline-level) 0)
+                                      (cadar (org-collect-keywords '("TITLE")))
+                                    (nth 4 (org-heading-components)))
+                                  "")) ;; retrieve heading string
+             (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+%\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[25%]"
+             (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+/[0-9]+\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[2/7]"
+             (my-heading-text (replace-regexp-in-string "\\(\\[#[ABC]\\]\\)" "" my-heading-text)) ;; remove priority indicators like "[#A]"
+             (my-heading-text (replace-regexp-in-string "\\[\\[\\(.+?\\)\\]\\[" "" my-heading-text t)) ;; removes links, keeps their description and ending brackets
+             ;;                      (my-heading-text (replace-regexp-in-string "[<\\[][12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)[>\\]]" "" my-heading-text t));; removes day of week and time from date- and time-stamps (doesn't work somehow)
+             (my-heading-text (replace-regexp-in-string "<[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)>" "" my-heading-text t)) ;; removes day of week and time from active date- and time-stamps
+             (my-heading-text (replace-regexp-in-string "\\[[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)\\]" "" my-heading-text t)) ;; removes day of week and time from inactive date- and time-stamps
+             (new-id (my-generate-sanitized-alnum-dash-string my-heading-text)) ;; get slug from heading text
+             (my-created-property (assoc "CREATED" (org-entry-properties))) ;; nil or content of CREATED time-stamp
+             )
+        (when (not (string-match "[12][0-9][0-9][0-9]-[01][0-9]-[0123][0-9]-.+" new-id))
+          ;; only if no ISO date-stamp is found at the beginning of the new id:
+          (if my-created-property (progn
+                                    ;; prefer date-stamp of CREATED property (if found):
+                                    (setq my-created-datestamp (substring (org-entry-get nil "CREATED" nil) 1 11)) ;; returns "2021-12-16" or nil (if no CREATED property)
+                                    (setq new-id (concat my-created-datestamp "-" new-id)))
+            ;; use today's date-stamp if no CREATED property is found:
+            (setq new-id (concat (format-time-string "%Y-%m-%d-") new-id))))
+        (org-set-property "ID" new-id))))
+  (kill-new (concat "id:" (org-id-get))) ;; put ID in kill-ring
+  (org-id-get) ;; retrieve the current ID in any case as return value
+  )
+
+(advice-add 'org-id-get-create :override #'my-id-get-or-generate)
+
 (use-package oc
   :ensure nil
   :custom
