@@ -103,6 +103,50 @@ it can be passed in POS."
 (defun c1/org-set-todo-progress ()
   (org-entry-put nil "TODO" "PROG"))
 
+;; https://www.reddit.com/r/emacs/comments/be1n1y/orgmode_set_effort_of_headline_from_sum_of/
+
+;;; Recompute effort of a parent headline from the efforts of the children if
+;;; they sum to a higher value.
+(defun my-org-update-heading-effort-from-children (pt)
+  "Compute the sum of efforts for each child of the heading at point PT. If
+the sum is greater than the current effort for this heading, offer to update
+it. This function is called recursively on each child, so the entire tree's
+efforts may be updated by this function."
+  (save-excursion
+    (save-restriction
+      (goto-char pt)
+      (org-back-to-heading)
+      (org-narrow-to-subtree)
+      (outline-show-all)
+      (let*
+          ((current-effort
+            (org-duration-to-minutes
+             (or (org-entry-get (point) org-effort-property) 0)))
+           (children-effort 0))
+        (while (outline-next-heading)
+          (let ((x (my-org-update-heading-effort-from-children (point))))
+            (setq children-effort (+ children-effort (nth 0 x)))
+            (goto-char (nth 1 x))))
+        (goto-char pt)
+        (let ((children-effort-duration
+               (org-duration-from-minutes children-effort)))
+          (when (and (< current-effort children-effort)
+                     (y-or-n-p-with-timeout
+                      (format "Update effort to children's sum (%s)?"
+                              children-effort-duration)
+                      60 nil))
+            (org-entry-put (point) org-effort-property
+                           children-effort-duration)
+            (setq current-effort children-effort)))
+        (list current-effort (point-max))))))
+
+(defun my-org-effort-from-children-hook ()
+  "Update effort of a heading from its children before clocking in."
+  (my-org-update-heading-effort-from-children (point))
+  nil)
+
+(add-hook 'org-clock-in-prepare-hook 'my-org-effort-from-children-hook)
+
 
 (defun org-babel-tangle-append (&optional arg target-file lang-re)
   "Append source code block at point to its tangle file.
