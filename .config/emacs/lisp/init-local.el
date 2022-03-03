@@ -61,7 +61,8 @@
   (use-package emms-setup :ensure nil)
   (emms-all)
   (emms-default-players)
-  (use-package emms-history :ensure nil))
+  (use-package emms-history :ensure nil)
+  (add-to-list 'emms-player-mpv-parameters "--no-video"))
 
 (provide 'init-local)
 ;;; init-local.el ends here
