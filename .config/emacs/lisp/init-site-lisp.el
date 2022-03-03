@@ -12,7 +12,9 @@
 (let* ((path (expand-file-name "site-lisp" user-emacs-directory))
        (local-pkgs (mapcar 'file-name-directory (directory-files-recursively path ".*\\.el"))))
   (if (file-accessible-directory-p path)
-      (mapc (apply-partially 'add-to-list 'load-path) local-pkgs)
+      (mapc (lambda (pkg)
+              (push pkg load-path))
+            local-pkgs)
     (make-directory path :parents)))
 
 (provide 'init-site-lisp)
