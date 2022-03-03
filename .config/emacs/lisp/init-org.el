@@ -625,6 +625,14 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
         (org-duration-from-minutes (/ read-time 60))
       (/ read-time 60))))
 
+(defun org-edna-finder/tree-walk (root-level)
+  (save-excursion
+    (outline-next-heading)
+    (when (> (outline-level) root-level)
+      (list (point-marker)))))
+
+
+
 (defun c1/org-gtd--topic ()
   "Process GTD inbox item by transforming it into a project.
 Allow the user apply user-defined tags from
