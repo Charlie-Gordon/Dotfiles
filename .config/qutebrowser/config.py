@@ -49,6 +49,7 @@ c.url.default_page = 'about:blank'
 c.url.start_pages = 'about:blank'
 c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}',
                        'wk': 'https://en.wikipedia.org/wiki/{}',
+                       'weba': 'https://web.archive.org/web/{}',
                        'od': 'https://odysee.com/$/search?q={}',
                        'yt': 'https://www.youtube.com/results?search_query={}',
                        'gl': 'https://gitlab.com/explore?name={}',
