@@ -482,6 +482,65 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
 
 (advice-add 'org-gtd--project :override #'c1/org-gtd--project)
 
+(defun c1/org-heading-read-time-estimate (&optional point as-duration)
+  (let (end)
+    (org-with-point-at (or point (point))
+      (org-back-to-heading t)
+      (org-copy-subtree)
+      (with-temp-buffer
+        (org-mode)
+        (org-paste-subtree)
+        (replace-regexp-in-region
+         (concat org-property-re "\\|" org-keyword-regexp "\\|" org-planning-line-re
+                 "\\|" "^[ \t]*#\\+\\(\\S-+?\\):[ \t]*" "\\|" org-drawer-regexp
+                 "\\|" org-ts-regexp-both "\\|" org-clock-drawer-re)
+         ""
+         (point-min) (point-max))
+        (flush-lines "^[ \t\n\r]+$")
+        (setq end (org-element-property :end (org-element-at-point)))
+        (org-back-to-heading t)
+        (c1/region-read-time-estimate (point) end as-duration)))))
+
+(defun org-edna-action/read-time! (_entry)
+  (org-set-effort nil (c1/org-heading-read-time-estimate nil t)))
+
+(defun c1/region-read-time-estimate (beg end &optional as-duration)
+  (let ((case-fold-search t)
+        (read-time (* 60 (/ (how-many (rx (+ word)) beg end) 230.0)))
+        (img-count 0)
+        (pos beg))
+    (when (and (eq major-mode 'org-mode) (not org-inline-image-overlays))
+      (let ((file-extension-re (image-file-name-regexp))
+            (link-abbrevs (mapcar #'car
+                                  (append org-link-abbrev-alist-local
+                                          org-link-abbrev-alist))))
+        (setq img-count (how-many (concat (format "\\[\\[\\(%s\\):\\(?:image/png;base64,\\)?\\([^]]+\\)\\(?:%s\\)?\\]\\(?:\\[\\([^]]+\\)\\]\\)?\\]"
+                                                  (regexp-opt (list "http" "https"))
+                                                  (substring (image-file-name-regexp) nil -2))
+                                          "\\|"
+                                          (format "\\[\\[\\(?:file%s:\\|attachment:\\|[./~]\\)\\|\\]\\[\\(<?file:\\)"
+                                                  (if (not link-abbrevs) ""
+                                                    (concat "\\|" (regexp-opt link-abbrevs)))))
+                                  beg end))))
+    (while (and (not (= pos end))
+                (setq pos (next-single-property-change pos 'display nil end)))
+      (when (ignore-errors (image--get-image pos))
+        (cl-incf img-count)))
+    
+    (cond ((= img-count 1)
+           (cl-incf read-time 12))
+          ((= img-count 2)
+           (cl-incf read-time 12)
+           (cl-incf read-time 11))
+          ((>= img-count 3)
+           (cl-incf read-time 12)
+           (cl-incf read-time 11)
+           (cl-incf read-time (* 10 (- img-count 2)))))
+    
+    (if as-duration
+        (org-duration-from-minutes (/ read-time 60))
+      (/ read-time 60))))
+
 
 ;;;; Recur
 
