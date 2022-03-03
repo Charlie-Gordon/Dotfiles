@@ -430,9 +430,10 @@ selected instead of creating a new buffer."
   :bind (:map org-gtd-map
               ("c" . org-gtd-choose)
               ("e" . org-gtd-engage)
+              ("E" . org-gtd-plan)
               ("p" . org-gtd-process-inbox)
               ("C" . org-gtd-capture))
-  :bind-keymap ("C-c g" . org-gtd-map)
+  :bind-keymap* ("C-c g" . org-gtd-map)
   :init
   (define-prefix-command 'org-gtd-map)
   :custom
@@ -445,16 +446,51 @@ selected instead of creating a new buffer."
              ((org-agenda-overriding-header "All NEXT items")
               (org-agenda-prefix-format "%b %i")
               (org-agenda-compact-blocks t)
-              (org-agenda-breadcrumbs-separator "⋅")))
-       (todo "WAIT"
-             ((org-agenda-todo-ignore-with-date t)
-              (org-agenda-overriding-header "Blocked items"))))
+              (org-agenda-breadcrumbs-separator "⋅"))))
+      "")
+     ("t" "Scheduled today and all NEXT items"
+      ((agenda ""
+               ((org-agenda-prefix-format "%t")
+                (org-agenda-span 1)
+                (org-agenda-start-day nil))))
+      "")
+     ("p" "PLanning"
+      ((agenda ""
+               ((org-agenda-prefix-format "%(org-agenda-dych-fixed-indicator) │ %(org-agenda-dych-rigid-indicator) │ %-6e │ %t │ % s")
+                (org-agenda-span 1)
+                (org-agenda-sorting-strategy
+                 '(time-up habit-down priority-down category-keep))
+                (org-agenda-overriding-columns-format
+                 "%1FIXED %1RIGID %6TIME_ESTIMATE(LENGTH){:} %10Effort(ActLENGTH){:} %22SCHEDULED %30ITEM(TASK) %6CLOCKSUM")
+                (org-agenda-start-day nil)
+                (org-habit-graph-column 60)
+                (org-agenda-start-with-log-mode t)
+                (org-agenda-start-with-clockreport-mode t)
+                (org-agenda-overriding-header "")
+                (org-agenda-current-time-string "- - - - - - - - - - - - now - - - - - - - - - - - -")
+                (org-agenda-time-grid
+                 `((daily today require-timed)
+                   (800 1000 1200 1400 1600 1800 2000)
+                   " ───-" ,(make-string 53 ?\─)))
+                (org-agenda-compact-blocks t))))
       "")))
   (org-gtd-directory "/storage/org/gtd/")
   (org-gtd-process-item-hooks nil)
   (org-edna-use-inheritance t)
   :config
-  (org-edna-mode))
+  (add-to-list 'org-gtd--agenda-functions #'org-agenda-run-series)
+  (add-to-list 'org-gtd--agenda-functions #'org-save-all-org-buffers)
+  (org-gtd-mode)
+  (transient-insert-suffix 'org-gtd-choose "p" '("r" "Reading" c1/org-gtd--reading))
+  (transient-insert-suffix 'org-gtd-choose "p" '("h" "Habit" c1/org-gtd--habit))
+  (transient-insert-suffix 'org-gtd-choose "p" '("T" "Topic" c1/org-gtd--topic))
+  (transient-insert-suffix 'org-gtd-choose "c" '("D" "Daily" c1/org-gtd--daily)))
+
+(defun org-gtd-plan ()
+  (interactive)
+  (with-org-gtd-context
+      (org-agenda nil "p")
+      (org-agenda-dych-mode 1)))
 
 (defun c1/mark-as-project ()
   (interactive)
