@@ -460,19 +460,67 @@ selected instead of creating a new buffer."
 
 (add-hook 'org-gtd-process-item-hooks #'c1/mark-as-project)
 
-(defun c1/org-gtd--project ()
+(defun c1/org-gtd--habit (&optional arg)
+  (interactive "P")
+  (org-entry-put nil "STYLE" "habit")
+  (org-schedule arg))
+
+(defun c1/org-gtd--daily ()
+  (interactive)
+  (require 'org-roam-dailies)
+  (let ((org-roam-directory (expand-file-name org-roam-dailies-directory org-roam-directory))
+        (org-roam-dailies-directory "./"))
+    (org-back-to-heading)
+    (org-cut-subtree)
+    (org-roam-capture- :goto nil
+                       :keys "s"
+                       :node (org-roam-node-create)
+                       :templates org-roam-dailies-capture-templates
+                       :props (list :override-default-time (current-time))
+                       :info (list :tree (current-kill 0)))
+    (org-gtd-process-inbox)))
+
+(defun c1/org-gtd--reading (&optional arg)
   "Process GTD inbox item by transforming it into a project.
 Allow the user apply user-defined tags from
 `org-tag-persistent-alist', `org-tag-alist' or file-local tags in
 the inbox.  Refile to `org-gtd-actionable-file-basename'."
-  (interactive)
-
+  (interactive "P")
   (if (org-gtd--poorly-formatted-project-p)
       (org-gtd--show-error-and-return-to-editing)
 
     (org-gtd--decorate-item)
-    (org-gtd-projects--nextify)
-    (goto-char (point-min))
+    (cl-destructuring-bind
+        (first-entry . rest-entries)
+        (cdr (org-map-entries
+              (lambda ()
+                (if arg
+                    (when (>= (org-element-property
+                               :level
+                               (org-element-at-point))
+                              (- arg 1))
+                      (org-element-at-point))
+                  (org-element-at-point)))
+              t 'tree))
+      (org-element-map
+          (reverse rest-entries)
+          'headline
+        (lambda (myelt)
+          (org-entry-put (org-gtd-projects--org-element-pom myelt) "TODO" "TODO")))
+
+      (org-entry-put (org-gtd-projects--org-element-pom first-entry) "TODO" "NEXT")
+      (org-entry-put (org-gtd-projects--org-element-pom first-entry) "EFFORT"
+                     (c1/org-heading-read-time-estimate
+                      (org-gtd-projects--org-element-pom first-entry) t))
+      (goto-char (org-gtd-projects--org-element-pom first-entry))
+      (org-schedule 0)
+      
+      (org-entry-put (org-gtd-projects--org-element-pom first-entry) "TRIGGER"
+                     (format
+                      "tree-walk(2) todo!(NEXT) read-time! scheduled!(\"%s\") chain!(\"TRIGGER\")"
+                      (string-trim org-read-date-final-answer))))
+    (while (org-up-heading-safe))
+    (org-set-tags ":@computer:")
     (let ((org-special-ctrl-a t))
       (org-beginning-of-line))
     (insert "[/] ")
@@ -541,6 +589,22 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
         (org-duration-from-minutes (/ read-time 60))
       (/ read-time 60))))
 
+(defun c1/org-gtd--topic ()
+  "Process GTD inbox item by transforming it into a project.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Refile to `org-gtd-actionable-file-basename'."
+  (interactive)
+  (when-let ((id (org-id-get))
+             (buf (find-file-noselect
+                   (expand-file-name (format "lit/%s.org" id) org-roam-directory))))
+    (while (org-up-heading-safe))
+    (org-roam-ref-add (concat "cite:&" id))
+    (org-cut-subtree)
+    (with-current-buffer buf
+      (org-paste-subtree))
+    (org-gtd-process-inbox)
+    (pop-to-buffer buf)))
 
 ;;;; Recur
 
