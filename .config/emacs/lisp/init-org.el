@@ -384,6 +384,11 @@ selected instead of creating a new buffer."
   :ensure nil
   :hook (org-agenda-after-show . c1/agenda-maybe-go-to-saved-place))
 
+(use-package org-agenda-dych-mode
+  :ensure nil
+  :custom
+  (org-agenda-dych-default-start "05:00")
+  (org-agenda-dych-default-work-hour "16h"))
 
 (defun c1/agenda-maybe-go-to-saved-place ()
   (let ((beg (org-element-property :begin (org-element-at-point)))
