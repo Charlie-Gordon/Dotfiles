@@ -16,14 +16,13 @@
 ;;;; Is this operating system an Android?
 (defconst *termux* (string-match "Android" (shell-command-to-string "uname -a")))
 
-(unless *termux*
-;;  (desktop-save-mode 1)
-  (menu-bar-mode -1)
+(if *termux*
+    (menu-bar-mode -1)
 ;;;; Disable GUI elements
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (fringe-mode 4)
-  ;; Time in modeline 
+  ;; Time in modeline
   (display-time-mode 1)
   (setq display-time-day-and-date t))
 (setq enable-recursive-minibuffers t)
