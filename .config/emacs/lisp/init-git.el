@@ -44,6 +44,19 @@
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2))))
 
+(use-package git-gutter
+  :straight t
+  :hook (prog-mode . git-gutter-mode)
+  :config
+  (setq git-gutter:update-interval 0.02))
+
+(use-package git-gutter-fringe
+  :straight t
+  :config
+  (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
+
 (use-package magit-todos
   :straight t
   :disabled
