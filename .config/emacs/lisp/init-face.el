@@ -3,7 +3,10 @@
 (use-package modus-themes
   :config
   (load-theme 'modus-vivendi t)
-  :straight t)
+  :straight t
+  :custom
+  (modus-themes-links '(bold faint))
+  (modus-themes-org-agenda '((scheduled . rainbow))))
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
 (set-face-attribute 'variable-pitch nil :font "Iosevka Aile Oblique")
