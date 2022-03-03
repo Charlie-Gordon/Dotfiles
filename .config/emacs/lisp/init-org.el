@@ -635,42 +635,7 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
                      :repo "TobiasZawada/org-yt"
                      :fork t))
 
-(org-link-set-parameters
- "http"
- :image-data-fun #'org-image-link)
 
-(org-link-set-parameters
- "https"
- :image-data-fun #'org-image-link)
-
-(org-link-set-parameters
- "data"
- :image-data-fun #'org-inline-data-image)
-
-(defun org-inline-data-image (_protocol link el &optional _description)
-  "Interpret LINK as base64-encoded image data."
-  (let ((image-data (base64-decode-string (replace-regexp-in-string "image/.*;base64," "" link))))
-    (deferred:next
-      (lambda () (save-excursion (org-image-update-overlay image-data el t t))))))
-
-(defun org-image-link (protocol link el &optional description)
-  "Interpret LINK as base64-encoded image data."
-  (when (string-match-p (image-file-name-regexp) link)
-    (deferred:$
-      (deferred:url-retrieve (concat protocol ":" link))
-      (deferred:nextc it
-        (lambda (buf)
-          (with-current-buffer buf
-            (goto-char (point-min))
-            (re-search-forward "\r?\n\r?\n")
-            (buffer-substring-no-properties (point) (point-max)))))
-      (deferred:nextc it
-        (lambda (image-data)
-          (save-excursion (org-image-update-overlay image-data el t t))))
-      (deferred:nextc it
-        (lambda (overlay)
-          (when (and overlay description)
-            (overlay-put overlay 'after-string description)))))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
