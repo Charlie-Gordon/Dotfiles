@@ -322,7 +322,7 @@ selected instead of creating a new buffer."
 (straight-use-package 'doct)
 
 (use-package org-capture-ref
-  :after org
+  :after org org-gtd
   :straight (org-capture-ref
              :type git
              :host github
