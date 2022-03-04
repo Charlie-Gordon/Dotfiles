@@ -97,6 +97,14 @@ it can be passed in POS."
   (org-clock-in . c1/org-set-todo-progress)
   (org-clock-out . c1/org-set-todo-waiting))
 
+(use-package org-clock-convenience
+  :straight t
+  :bind (:map org-agenda-mode-map
+              ("<s-up>" . org-clock-convenience-timestamp-up)
+              ("<s-down>" . org-clock-convenience-timestamp-down)
+              ("+" . org-clock-convenience-fill-gap)
+              ("=" . org-clock-convenience-fill-gap-both)))
+
 (defun c1/org-set-todo-waiting ()
   (org-entry-put nil "TODO" "WAIT"))
 
