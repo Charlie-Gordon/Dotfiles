@@ -562,11 +562,8 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
       (org-schedule 0)
       
       (org-entry-put (org-gtd-projects--org-element-pom first-entry) "TRIGGER"
-                     (format
-                      "tree-walk(2) todo!(NEXT) read-time! scheduled!(\"%s\") chain!(\"TRIGGER\")"
-                      (string-trim org-read-date-final-answer))))
+                     "tree-walk(2) todo!(NEXT) read-time! scheduled!(.) chain!(\"TRIGGER\")"))
     (while (org-up-heading-safe))
-    (org-set-tags ":@computer:")
     (let ((org-special-ctrl-a t))
       (org-beginning-of-line))
     (insert "[/] ")
