@@ -494,7 +494,23 @@ selected instead of creating a new buffer."
 (defun org-gtd-plan ()
   (interactive)
   (with-org-gtd-context
-      (org-agenda nil "p")
+      (let ((org-agenda-buffer-name "*Plan*")
+            (org-agenda-window-setup 'other-window)
+            (buf))
+        (set-window-dedicated-p
+         (display-buffer-in-side-window
+          (progn (org-agenda nil "p")
+                 (setq buf (current-buffer))
+                 (delete-window)
+                 buf)
+          '((side . right)
+            (slot . 0)
+            (window-width . 58)
+            (dedicated . t)
+            (window-parameters
+             (no-delete-other-windows . t)
+             (delete-window . nil))))
+         t))
       (org-agenda-dych-mode 1)))
 
 (defun c1/mark-as-project ()
