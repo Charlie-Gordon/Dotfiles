@@ -82,7 +82,8 @@
   (use-package init-eaf :ensure nil)
   (use-package init-ibuffer :ensure nil)
   (use-package init-editing-utils :ensure nil :termux)
-  (use-package init-local :ensure nil))
+  (use-package init-local :ensure nil)
+  (use-package init-eva :ensure nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Local Variables:
