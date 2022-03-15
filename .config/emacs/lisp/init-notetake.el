@@ -607,9 +607,11 @@ GROUP BY id, pos)"))
              nil)))))
 
 (use-package bir
-  :straight '(bir.el :type git
-                     :repo "https://notabug.org/c1-g/bir.el.git"
-                     :files ("icons" "*.el")))
+  :straight '(bir :type git
+                  :host gitlab
+                  :repo "c1-g/bir")
+  :custom
+  (bir-directory (expand-file-name "lit/" org-roam-directory)))
 
 
 (provide 'init-notetake)
