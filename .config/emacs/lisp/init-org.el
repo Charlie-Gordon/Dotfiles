@@ -67,7 +67,8 @@ it can be passed in POS."
   (org-ctrl-k-protect-subtree t)
   (org-directory *org-dir*)
   (org-clock-persist t)
-  (org-clock-sound "/storage/music/metronome.wav")
+  (org-clock-auto-clock-resolution 'always)
+  (org-clock-sound "/storage/music/metronome2.wav")
   (org-id-link-to-org-use-id t)
   (org-habit-graph-column 60)
   (org-export-coding-system 'utf-8)
@@ -91,10 +92,13 @@ it can be passed in POS."
   (add-hook 'org-mode-hook #'(lambda nil
                                (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
   (org-clock-persistence-insinuate)
+  (org-clock-auto-clockout-insinuate)
   (org-load-modules-maybe t)
+  (org-resolve-clocks)
   :hook
   (org-mode . visual-line-mode)
   (org-clock-in . c1/org-set-todo-progress)
+  (org-clock-in . org-clock-save)
   (org-clock-out . c1/org-set-todo-waiting))
 
 (use-package org-clock-convenience
