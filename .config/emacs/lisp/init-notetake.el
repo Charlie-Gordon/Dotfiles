@@ -402,7 +402,8 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package org-download
   :straight t
   :custom
-  (org-download-method 'attach))
+  (org-download-method 'attach)
+  (org-download-screenshot-method "scrot -s %s"))
 
 ;;;; Bibtex completion
 (use-package bibtex
