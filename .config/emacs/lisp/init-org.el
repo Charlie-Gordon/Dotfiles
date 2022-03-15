@@ -481,7 +481,7 @@ selected instead of creating a new buffer."
   (add-to-list 'org-capture-templates
                `("n" "NEXT action" plain
                  (file+olp ,(file-name-with-extension (expand-file-name org-gtd-default-file-name *gtd-dir*) "org")
-                           "Actions")
+                           ("Actions"))
                  "* NEXT %?\nSCHEDULED: %t"))
   (add-to-list 'org-gtd--agenda-functions #'org-agenda-run-series)
   (add-to-list 'org-gtd--agenda-functions #'org-save-all-org-buffers)
