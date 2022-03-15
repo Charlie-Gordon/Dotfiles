@@ -335,7 +335,7 @@ selected instead of creating a new buffer."
   :custom
   (org-capture-ref-headline-tags nil)
   (org-capture-ref-capture-target
-   `(:file ,(expand-file-name org-gtd-inbox *gtd-dir*)))
+   `(:file ,(file-name-with-extension (expand-file-name org-gtd-inbox *gtd-dir*) "org")))
   (org-capture-ref-capture-template-set-p t)
   (org-capture-ref-capture-template
    `(:group "org-capture-ref template"
