@@ -513,6 +513,8 @@ selected instead of creating a new buffer."
          t))
       (org-agenda-dych-mode 1)))
 
+(add-hook 'after-init-hook #'org-gtd-plan 100)
+
 (defun c1/mark-as-project ()
   (interactive)
   (org-set-property "COOKIE_DATA" "todo recursive"))
