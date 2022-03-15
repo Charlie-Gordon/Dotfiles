@@ -160,6 +160,12 @@ Used to determines filename in `org-roam-capture-templates'."
        "%<%F-%s>-%(org-roam-slip-box-new-file).org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
+     ("r" "References" plain
+      "${tree}"
+      :if-new
+      (file+olp ,(expand-file-name "lit/refs/bibliography.org" org-roam-directory)
+                ("Unsorted"))
+      :unnarrowed t)
      ("n" "note" plain
       "%?"
       :if-new

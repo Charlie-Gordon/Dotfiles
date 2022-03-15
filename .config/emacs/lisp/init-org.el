@@ -644,16 +644,17 @@ Allow the user apply user-defined tags from
 `org-tag-persistent-alist', `org-tag-alist' or file-local tags in
 the inbox.  Refile to `org-gtd-actionable-file-basename'."
   (interactive)
-  (when-let ((id (org-id-get))
-             (buf (find-file-noselect
-                   (expand-file-name (format "lit/%s.org" id) org-roam-directory))))
+  (require 'org-roam)
+  (when-let ((id (org-id-get-create)))
     (while (org-up-heading-safe))
     (org-roam-ref-add (concat "cite:&" id))
     (org-cut-subtree)
-    (with-current-buffer buf
-      (org-paste-subtree))
-    (org-gtd-process-inbox)
-    (pop-to-buffer buf)))
+    (org-roam-capture- :goto nil
+                       :keys "r"
+                       :node (org-roam-node-create)
+                       :templates org-roam-capture-templates
+                       :props (list :override-default-time (current-time))
+                       :info (list :tree (current-kill 0)))))
 
 ;;;; Recur
 
