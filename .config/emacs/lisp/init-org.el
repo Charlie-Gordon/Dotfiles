@@ -75,7 +75,9 @@ it can be passed in POS."
   (org-export-coding-system 'utf-8)
   (org-use-speed-commands t)
   (org-refile-targets '(("/storage/org/gtd/inbox.org" :maxlevel . 2)
-                        ("/storage/org/gtd/org-gtd-tasks.org" :maxlevel . 2)))
+                        ("/storage/org/gtd/org-gtd-tasks.org" :maxlevel . 2)
+                        ("/storage/org/gtd/writing.org" :maxlevel . 2)
+                        ("/storage/org/slip-box/lit/refs/bibliography.org" :maxlevel . 2)))
   (org-image-actual-width nil)
   (org-todo-keywords
    '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d)" "CNCL(c)")))
