@@ -37,3 +37,6 @@
 (straight-use-package 'org)
 
 (straight-use-package '(org-fc :type git :host github :repo "c1-g/org-fc" :branch "org-roam"))
+(setq org-directory "~/storage/shared/Org/")
+
+(setq org-fc-directories (list org-directory))
