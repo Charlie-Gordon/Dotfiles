@@ -1,17 +1,3 @@
-;;; Use-package
-;;;; Initialize
-(package-initialize)
-;;;; Add package sources
-(unless (assoc-default "melpa" package-archives) 
- (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-;;;; Bootstrapping Use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile
-  (require 'use-package))
-(setq use-package-always-ensure t)
-(setq use-package-verbose t)
 ;;;; Org-mode
 (use-package org
   :ensure nil
@@ -62,3 +48,18 @@
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 ;;;; Lazy yes or no
 (fset 'yes-or-no-p 'y-or-n-p)
+
+;;; Straight
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
