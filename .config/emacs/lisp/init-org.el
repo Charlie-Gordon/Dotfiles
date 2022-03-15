@@ -167,14 +167,6 @@ efforts may be updated by this function."
   :custom
   (org-super-links-related-into-drawer t))
 
-(defun org-babel-tangle-append (&optional arg target-file lang-re)
-  "Append source code block at point to its tangle file.
-The command works like `org-babel-tangle' with prefix arg
-but `delete-file' is ignored."
-  (interactive)
-  (cl-letf (((symbol-function 'delete-file) #'ignore))
-    (org-babel-tangle arg target-file lang-re)))
-
 (defun my-generate-sanitized-alnum-dash-string (str)
   "Returns a string which contains only a-zA-Z0-9 with single dashes
  replacing all other characters in-between them.
