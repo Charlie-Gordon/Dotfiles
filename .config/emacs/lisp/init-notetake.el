@@ -291,9 +291,7 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Org-ref
 (use-package org-ref
   :straight t
-  :when *bibliography-dir*
-  :custom
-  (reftex-default-bibliography (directory-files *bibliography-dir* t directory-files-no-dot-files-regexp)))
+  :when *bibliography-dir*)
 
 (use-package citar
   :straight t
