@@ -398,6 +398,28 @@ Used to determines filename in `org-roam-capture-templates'."
   (use-package org-noter-dynamic-block :ensure nil)
   (use-package org-noter-citar :ensure nil))
 
+(use-package org-pdftools
+  :straight t
+  :hook (org-mode . org-pdftools-setup-link))
+
+(use-package org-noter-pdftools
+    :after (:and org-noter org-pdftools)
+    :straight t
+    :config
+    ;; Add a function to ensure precise note is inserted
+    (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
+      (interactive "P")
+      (org-noter--with-valid-session
+       (let ((org-noter-insert-note-no-questions (if toggle-no-questions
+                                                     (not org-noter-insert-note-no-questions)
+                                                   org-noter-insert-note-no-questions))
+             (org-pdftools-use-isearch-link t)
+             (org-pdftools-use-freepointer-annot t))
+         (org-noter-insert-note (org-noter--get-precise-info)))))
+
+    (with-eval-after-load 'pdf-annot
+      (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
 ;;;;; Org-download
 (use-package org-download
   :straight t
