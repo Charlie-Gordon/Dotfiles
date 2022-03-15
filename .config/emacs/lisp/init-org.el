@@ -431,6 +431,7 @@ selected instead of creating a new buffer."
 (use-package org-gtd
   :straight t
   :after org org-edna
+  :diminish org-gtd-mode
   :bind (:map org-gtd-map
               ("c" . org-gtd-choose)
               ("e" . org-gtd-engage)
