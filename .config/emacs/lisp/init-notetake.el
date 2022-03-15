@@ -420,6 +420,14 @@ Used to determines filename in `org-roam-capture-templates'."
     (with-eval-after-load 'pdf-annot
       (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
+(use-package org-noter-media
+  :straight '(org-noter-media :type git
+                              :host github
+                              :repo "auroranil/org-noter-media"))
+
+
+
+
 ;;;;; Org-download
 (use-package org-download
   :straight t
