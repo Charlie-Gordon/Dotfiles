@@ -453,30 +453,22 @@ selected instead of creating a new buffer."
               (org-agenda-compact-blocks t)
               (org-agenda-breadcrumbs-separator "⋅"))))
       "")
-     ("t" "Scheduled today and all NEXT items"
-      ((agenda ""
-               ((org-agenda-prefix-format "%t")
-                (org-agenda-span 1)
-                (org-agenda-start-day nil))))
-      "")
      ("p" "PLanning"
       ((agenda ""
-               ((org-agenda-prefix-format "%(org-agenda-dych-fixed-indicator) │ %(org-agenda-dych-rigid-indicator) │ %-6e │ %t │ % s")
+               ((org-agenda-prefix-format " %-5e %t │%(c1/org-agenda-title) ")
                 (org-agenda-span 1)
                 (org-agenda-sorting-strategy
                  '(time-up habit-down priority-down category-keep))
-                (org-agenda-overriding-columns-format
+                (org-overriding-columns-format
                  "%1FIXED %1RIGID %6TIME_ESTIMATE(LENGTH){:} %10Effort(ActLENGTH){:} %22SCHEDULED %30ITEM(TASK) %6CLOCKSUM")
                 (org-agenda-start-day nil)
                 (org-habit-graph-column 60)
-                (org-agenda-start-with-log-mode t)
-                (org-agenda-start-with-clockreport-mode t)
                 (org-agenda-overriding-header "")
                 (org-agenda-current-time-string "- - - - - - - - - - - - now - - - - - - - - - - - -")
                 (org-agenda-time-grid
                  `((daily today require-timed)
                    (800 1000 1200 1400 1600 1800 2000)
-                   " ───-" ,(make-string 53 ?\─)))
+                   "" ,(make-string 53 ?\─)))
                 (org-agenda-compact-blocks t))))
       "")))
   (org-gtd-directory "/storage/org/gtd/")
@@ -496,6 +488,13 @@ selected instead of creating a new buffer."
   (transient-insert-suffix 'org-gtd-choose "p" '("h" "Habit" c1/org-gtd--habit))
   (transient-insert-suffix 'org-gtd-choose "p" '("T" "Topic" c1/org-gtd--topic))
   (transient-insert-suffix 'org-gtd-choose "c" '("D" "Daily" c1/org-gtd--daily)))
+
+
+(defun c1/org-agenda-title ()
+  (let ((title (cadar (org-collect-keywords '("TITLE")))))
+    (if title
+        (concat title ". ")
+      "")))
 
 (defun org-gtd-plan ()
   (interactive)
