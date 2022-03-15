@@ -516,7 +516,7 @@ selected instead of creating a new buffer."
     (org-back-to-heading)
     (org-cut-subtree)
     (org-roam-capture- :goto nil
-                       :keys "s"
+                       :keys "t"
                        :node (org-roam-node-create)
                        :templates org-roam-dailies-capture-templates
                        :props (list :override-default-time (current-time))
