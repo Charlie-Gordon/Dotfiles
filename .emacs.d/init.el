@@ -1,7 +1,3 @@
-
-(use-package org-drill
-  :ensure t)
-
 ;;;; General Improvement
 ;;; Interface tweaks
 ;;;; Remove lame startup screen
@@ -40,3 +36,4 @@
 
 (straight-use-package 'org)
 
+(straight-use-package '(org-fc :type git :host github :repo "c1-g/org-fc" :branch "org-roam"))
