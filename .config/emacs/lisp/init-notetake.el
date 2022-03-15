@@ -374,7 +374,8 @@ Used to determines filename in `org-roam-capture-templates'."
   :straight '(org-noter :type git
                         :host github
                         :repo "c1-g/org-noter-plus-djvu"
-                        :files ("other/*.el" "*.el"))
+                        :branch "link-as-doc"
+                        :files ("other/*.el" "*.el" "modules/*.el"))
   :bind (:map org-noter-doc-mode-map
               ("I" . org-noter-insert-dynamic-block)
               ("M-I" . org-noter-insert-precise-dynamic-block))
