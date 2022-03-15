@@ -521,21 +521,12 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (defun c1/maybe-open-org-noter ()
   (interactive)
-  (require 'citar)
-  (require 'orb-utils)
-  (let* ((key (or (org-roam-node-refs (org-roam-node-at-point))
-                  (when (org-entry-get nil "ROAM_REFS" t)
-                    (list (catch 'found
-                            (dolist (c (split-string-and-unquote (org-entry-get nil "ROAM_REFS" t)))
-                              (when (string-match orb-utils-citekey-re c)
-                                (throw 'found (match-string 1 c))))))))))
-    (when (and key
-               (citar-file--files-for-multiple-entries
-                (citar--ensure-entries key)
-                (append citar-library-paths citar-notes-paths) nil))
-      (let ((org-noter-disable-narrowing t)
-            (org-noter-use-indirect-buffer nil))
-        (org-noter 0)))))
+  (require 'org-noter)
+  (when (or (org-property-values org-noter-property-note-location)
+            (org-property-values org-noter-property-doc-file))
+    (let ((org-noter-disable-narrowing t)
+          (org-noter-use-indirect-buffer nil))
+      (org-noter 0))))
 
 (defun org-fc-algo-sm2-cloze-review-interval (position)
   (when (and (org-fc-entry-cloze-p) (org-entry-get nil bir-ref-parent-property))
