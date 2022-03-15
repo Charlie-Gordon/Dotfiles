@@ -294,6 +294,11 @@ selected instead of creating a new buffer."
 (use-package org-contrib
   :straight t)
 
+(use-package ox-bibtex
+  :ensure nil
+  :custom
+  (org-bibtex-key-property "ID"))
+
 (use-package ol-bookmark
   :straight t)
 
