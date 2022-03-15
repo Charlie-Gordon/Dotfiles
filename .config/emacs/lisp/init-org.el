@@ -77,7 +77,7 @@ it can be passed in POS."
                         ("/storage/org/gtd/org-gtd-tasks.org" :maxlevel . 2)))
   (org-image-actual-width nil)
   (org-todo-keywords
-   '((sequence "NEXT(n)" "|" "DONE(d)" "CNCL(c)")))
+   '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d)" "CNCL(c)")))
   (org-format-latex-options
    '(:foreground auto
                  :background auto :scale 1.6
@@ -110,7 +110,8 @@ it can be passed in POS."
               ("=" . org-clock-convenience-fill-gap-both)))
 
 (defun c1/org-set-todo-waiting ()
-  (org-entry-put nil "TODO" "WAIT"))
+  (unless (member (org-entry-get nil "TODO") org-done-keywords)
+    (org-entry-put nil "TODO" "WAIT")))
 
 (defun c1/org-set-todo-progress ()
   (org-entry-put nil "TODO" "PROG"))
