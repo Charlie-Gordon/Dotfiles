@@ -312,7 +312,8 @@ Used to determines filename in `org-roam-capture-templates'."
   :init
   (define-prefix-command 'citar-map nil "Citar")
   :custom
-  (citar-bibliography (directory-files *bibliography-dir* t ".bib"))
+  (citar-bibliography (append (directory-files *bibliography-dir* t ".bib")
+                              (directory-files (expand-file-name "lit/refs/" org-roam-directory) t ".bib")))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
