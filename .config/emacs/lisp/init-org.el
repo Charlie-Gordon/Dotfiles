@@ -528,16 +528,7 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
     (org-gtd--decorate-item)
     (cl-destructuring-bind
         (first-entry . rest-entries)
-        (cdr (org-map-entries
-              (lambda ()
-                (if arg
-                    (when (>= (org-element-property
-                               :level
-                               (org-element-at-point))
-                              (- arg 1))
-                      (org-element-at-point))
-                  (org-element-at-point)))
-              t 'tree))
+        (cdr (org-map-entries #'org-element-at-point t 'tree))
       (org-element-map
           (reverse rest-entries)
           'headline
