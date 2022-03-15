@@ -69,6 +69,7 @@ it can be passed in POS."
   (org-clock-persist t)
   (org-clock-auto-clock-resolution 'always)
   (org-clock-sound "/storage/music/metronome2.wav")
+  (org-attach-id-dir "/storage/org/data/")
   (org-id-link-to-org-use-id t)
   (org-habit-graph-column 60)
   (org-export-coding-system 'utf-8)
