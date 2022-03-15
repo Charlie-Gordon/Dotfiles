@@ -201,6 +201,9 @@ Used to determines filename in `org-roam-capture-templates'."
    `(("d" "default" plain
       "* %?"
       :if-new
+      (file+head "%<%Y-%m-%d>.org"
+                 "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
+      :unnarrowed t)
      ("t" "tree" plain
       "${tree}"
       :if-new
