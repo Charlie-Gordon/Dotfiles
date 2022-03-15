@@ -346,15 +346,8 @@ selected instead of creating a new buffer."
             :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
-            :bibtex (lambda ()
-                      (string-join `(":BIBTEX:"
-                                     "#+begin_src bibtex"
-                                     ,(org-capture-ref-get-bibtex-field :bibtex-string)
-                                     "#+end_src"
-                                     ":END:")
-                                   "\n"))
             :template
-            ("%{fetch-bibtex}* TODO %?%{space}%{org-entry}%{bibtex}\n%{outline}%{content}")
+            ("%{fetch-bibtex}* TODO %?%{space}%{org-entry}\n%{outline}%{content}")
             :children (("Interactive + Content"
                         :keys "s"
                         :space " "
