@@ -661,12 +661,6 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
     (while (org-up-heading-safe))
     (org-roam-ref-add (concat "cite:&" id))
     (org-cut-subtree)
-    (org-roam-capture- :goto nil
-                       :keys "r"
-                       :node (org-roam-node-create)
-                       :templates org-roam-capture-templates
-                       :props (list :override-default-time (current-time))
-                       :info (list :tree (current-kill 0)))))
 
 ;;;; Recur
 
