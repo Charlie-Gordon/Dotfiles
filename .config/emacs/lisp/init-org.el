@@ -666,10 +666,24 @@ Allow the user apply user-defined tags from
 the inbox.  Refile to `org-gtd-actionable-file-basename'."
   (interactive)
   (require 'org-roam)
+  (require 'org-fc)
   (when-let ((id (org-id-get-create)))
     (while (org-up-heading-safe))
-    (org-roam-ref-add (concat "cite:&" id))
+    (org-bibtex "/storage/org/slip-box/lit/other/bibliography.bib")
+    (org-fc-type-topic-init)
     (org-cut-subtree)
+    (with-temp-buffer
+      (org-mode)
+      (org-paste-subtree)
+      (org-roam-ref-add (concat "cite:&" id))
+      (write-region (point-min) (point-max)
+                    (concat "/storage/org/slip-box/lit/" id ".org")
+                    nil t nil t)
+      (save-buffer))
+    (org-gtd-process-inbox)
+    (pop-to-buffer
+     (find-file-noselect
+      (concat "/storage/org/slip-box/lit/" id ".org")))))
 
 ;;;; Recur
 
