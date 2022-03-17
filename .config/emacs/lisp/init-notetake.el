@@ -523,6 +523,8 @@ Used to determines filename in `org-roam-capture-templates'."
    (let ((org-noter-use-indirect-buffer nil))
      (org-noter-kill-session session))))
 
+(advice-add 'org-fc-review-resume :before #'save-place-to-alist)
+
 (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
 
 (defun c1/maybe-open-org-noter ()
