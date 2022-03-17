@@ -23,6 +23,11 @@
   (browse-url-handlers
    `((,(rx "youtube.com/result" (* anything)) . ,browse-url-secondary-browser-function)
      (,(rx "youtu" (? ".") "be") . c1/mpv-play-url)
+     (,(concat (regexp-opt '("ogg" "mp3" "wav" "mpg" "mpeg" "wmv" "wma" "mov" "avi" "divx"
+                             "ogm" "ogv" "asf" "mkv" "rm" "rmvb" "mp4" "flac" "vob" "m4a" "ape"
+                             "flv" "webm" "aif" "opus"))
+               "$")
+      . c1/mpv-play-url)
      ("." . eww-browse-url)))
   (browse-url-secondary-browser-function
    'browse-url-default-browser))
