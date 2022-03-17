@@ -9,7 +9,7 @@
               :type git
               :host github
               :repo "emacs-eaf/emacs-application-framework"
-              :files ("core" "extension" "*.el" "*.py")))
+              :files ("core" "applications.json" "extension" "*.el" "*.py")))
 
 (defun eaf-toggle ()
   (interactive)
