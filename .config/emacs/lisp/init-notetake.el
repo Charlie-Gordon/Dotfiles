@@ -212,22 +212,6 @@ Used to determines filename in `org-roam-capture-templates'."
       :unnarrowed t)))
   :config
   (org-roam-db-autosync-mode)
-  ;; (cl-defmethod org-roam-node-article ((node org-roam-node))
-  ;; (let* ((props (org-roam-node-properties node))
-  ;;        (article (cdr (assoc bir-ref-article-property props #'string=)))
-  ;;        desc)
-  ;;   (unless article
-  ;;     (setq article
-  ;;           (with-temp-buffer
-  ;;             (insert-file-contents (org-roam-node-file node))
-  ;;             (plist-get (org-element--get-global-node-properties)
-  ;;                        (intern (concat ":" (upcase bir-ref-article-property)))))))
-  ;;   (when article
-  ;;     (string-match org-link-bracket-re article)
-  ;;     (setq desc (match-string 2 article)))
-  ;;   (if desc
-  ;;       (concat desc ". ")
-  ;;     "")))
   (cl-defmethod org-roam-node-my-title ((node org-roam-node))
     (if (string-match-p "^[[:digit:]]+" (org-roam-node-title node))
         (with-temp-buffer
