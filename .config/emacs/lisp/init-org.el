@@ -479,10 +479,10 @@ selected instead of creating a new buffer."
   :config
   (org-gtd-mode)
   (add-to-list 'org-capture-templates
-               `("n" "NEXT action" plain
+               `("n" "NEXT action" entry
                  (file+olp ,(file-name-with-extension (expand-file-name org-gtd-default-file-name *gtd-dir*) "org")
-                           ("Actions"))
-                 "* NEXT %?\nSCHEDULED: %t"))
+                           "Actions")
+                 "** NEXT %? %^g\nSCHEDULED: %t"))
   (add-to-list 'org-gtd--agenda-functions #'org-agenda-run-series)
   (add-to-list 'org-gtd--agenda-functions #'org-save-all-org-buffers)
   (transient-insert-suffix 'org-gtd-choose "p" '("r" "Reading" c1/org-gtd--reading))
