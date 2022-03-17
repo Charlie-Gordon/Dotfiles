@@ -617,7 +617,9 @@ GROUP BY id, pos)"))
                   :host gitlab
                   :repo "c1-g/bir")
   :custom
-  (bir-directory (expand-file-name "lit/" org-roam-directory)))
+  (bir-directory (expand-file-name "lit/" org-roam-directory))
+  :config
+  (use-package bir-org-noter :ensure nil))
 
 
 (provide 'init-notetake)
