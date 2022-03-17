@@ -151,7 +151,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (org-roam-node-display-template "${refs}. ${my-title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
-  (org-roam-extract-new-file-path "%<%F-%s>-%(org-roam-slip-box-new-file).org")
+  (org-roam-extract-new-file-path "lit/other/writing.org")
   (org-roam-capture-templates
    `(("d" "default" plain
       "%?"
@@ -291,7 +291,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (define-prefix-command 'citar-map nil "Citar")
   :custom
   (citar-bibliography (append (directory-files *bibliography-dir* t ".bib")
-                              (directory-files (expand-file-name "lit/refs/" org-roam-directory) t ".bib")))
+                              (directory-files (expand-file-name "lit/other/" org-roam-directory) t ".bib")))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
