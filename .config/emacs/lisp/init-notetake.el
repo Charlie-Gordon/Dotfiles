@@ -503,6 +503,8 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (advice-add 'org-fc-review-resume :before #'save-place-to-alist)
 
+(add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
+
 (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
 
 (defun c1/maybe-open-org-noter ()
