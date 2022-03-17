@@ -233,7 +233,7 @@ efforts may be updated by this function."
       (let* ((my-heading-text (or (if (= (org-outline-level) 0)
                                       (cadar (org-collect-keywords '("TITLE")))
                                     (nth 4 (org-heading-components)))
-                                  "")) ;; retrieve heading string
+                                  (c1/org-get-first-sentence))) ;; retrieve heading string
              (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+%\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[25%]"
              (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+/[0-9]+\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[2/7]"
              (my-heading-text (replace-regexp-in-string "\\(\\[#[ABC]\\]\\)" "" my-heading-text)) ;; remove priority indicators like "[#A]"
@@ -256,6 +256,15 @@ efforts may be updated by this function."
   (kill-new (concat "id:" (org-id-get))) ;; put ID in kill-ring
   (org-id-get) ;; retrieve the current ID in any case as return value
   )
+
+(defun c1/org-get-first-sentence ()
+  (require 'org-roam)
+  (save-excursion
+    (org-roam-end-of-meta-data 'full)
+    (while (looking-at org-keyword-regexp)
+      (goto-char (match-end 0))
+      (forward-line))
+    (string-trim (buffer-substring (point) (progn (forward-sentence) (point))))))
 
 (advice-add 'org-id-get-create :override #'my-id-get-or-generate)
 
