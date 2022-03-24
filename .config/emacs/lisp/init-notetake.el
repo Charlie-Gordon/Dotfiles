@@ -505,6 +505,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
   (add-hook 'org-fc-after-setup-hook #'c1/read-aloud-org))
 
+(add-to-list 'org-fc-custom-contexts (cons 'notecard `(:paths ,org-roam-directory :non-recursive t)))
 
 (use-package org-fc-roam
   :ensure nil
