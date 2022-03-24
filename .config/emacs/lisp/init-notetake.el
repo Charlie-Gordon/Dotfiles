@@ -487,7 +487,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-fc-index-filter-function #'identity)
   (org-fc-algorithm 'roam-sm2)
   (org-fc-custom-contexts '((writing :paths "/storage/org/gtd/writing.org")))
-  (org-fc-topic-proportion 80)
+  (org-fc-topic-proportion 20)
   (org-fc-browser-headers
    '(("No." org-fc-browser-num>?)
      ("Title" nil)
