@@ -175,6 +175,7 @@ efforts may be updated by this function."
 
  Some parts were copied and adapted from org-hugo-slug
  from https://github.com/kaushalmodi/ox-hugo (GPLv3)."
+  (require 'ffap)
   (let* (;; Remove "<FOO>..</FOO>" HTML tags if present.
          (str (replace-regexp-in-string "<\\(?1:[a-z]+\\)[^>]*>.*</\\1>" "" str))
          ;; Remove URLs if present in the string.  The ")" in the
