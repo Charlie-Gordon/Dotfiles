@@ -370,7 +370,8 @@ Used to determines filename in `org-roam-capture-templates'."
   (add-to-list 'org-speed-commands '("." . org-noter-sync-current-note))
   (use-package org-noter-nov-overlay :ensure nil)
   (use-package org-noter-dynamic-block :ensure nil)
-  (use-package org-noter-citar :ensure nil))
+  (use-package org-noter-citar :ensure nil)
+  (use-package org-noter-eww :ensure nil))
 
 (use-package org-pdftools
   :straight t
