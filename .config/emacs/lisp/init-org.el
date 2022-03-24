@@ -403,8 +403,8 @@ Headlines are exported using `org-bibtex-headline'."
                         :space " "
                         :content
                         (lambda ()
-                          (bir-import (or (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query))
-                                          (org-capture-ref-get-bibtex-url-from-capture-data)))))
+                          (bir-import (org-capture-ref-get-bibtex-url-from-capture-data)
+                                      (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))
                        ("Interactive + outline"
                         :keys "o"
                         :space " "
