@@ -310,6 +310,34 @@ selected instead of creating a new buffer."
   :custom
   (org-bibtex-key-property "ID"))
 
+(defun c1/org-bibtex-append (filename)
+  "Export each headline in the current file to a bibtex entry.
+Headlines are exported using `org-bibtex-headline'."
+  (interactive
+   (list (read-file-name
+          "Bibtex file: " nil nil nil
+          (let ((file (buffer-file-name (buffer-base-buffer))))
+            (and file
+                 (file-name-nondirectory
+                  (concat (file-name-sans-extension file) ".bib")))))))
+  (let ((error-point
+         (catch 'bib
+           (let ((bibtex-entries
+                  (remove nil (org-map-entries
+                               (lambda ()
+                                 (condition-case nil
+                                     (org-bibtex-headline)
+                                   (error (throw 'bib (point)))))))))
+             (with-temp-buffer
+               (insert (mapconcat #'identity bibtex-entries "\n"))
+               (append-to-file (point-min) (point-max) filename))
+             (message "Successfully exported %d BibTeX entries to %s"
+                      (length bibtex-entries) filename)
+             nil))))
+    (when error-point
+      (goto-char error-point)
+      (message "Bibtex error at %S" (nth 4 (org-heading-components))))))
+
 (use-package ol-bookmark
   :straight t)
 
@@ -352,6 +380,9 @@ selected instead of creating a new buffer."
             ,@org-capture-ref-capture-target
             :clock-in nil
             :jump-to-captured t
+            :prepare-finalize
+            (lambda ()
+              (c1/org-bibtex-append "/storage/org/slip-box/lit/other/bibliography.bib"))
             :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
@@ -654,8 +685,7 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
   (require 'org-fc)
   (when-let ((id (org-id-get-create)))
     (while (org-up-heading-safe))
-    (org-bibtex "/storage/org/slip-box/lit/other/bibliography.bib")
-    (org-fc-type-topic-init)
+    (c1/org-bibtex-append "/storage/org/slip-box/lit/other/bibliography.bib")
     (org-cut-subtree)
     (with-temp-buffer
       (org-mode)
