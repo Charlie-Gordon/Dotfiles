@@ -496,10 +496,6 @@ Used to determines filename in `org-roam-capture-templates'."
      ("Due" t :read-only)
      ("Type" nil)))
   :config
-  (use-package org-fc-roam
-    :ensure nil
-    :config
-    (org-fc-roam-db-autosync-enable))
   (advice-add 'org-fc-review-resume :before #'save-place-to-alist)
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
@@ -509,6 +505,12 @@ Used to determines filename in `org-roam-capture-templates'."
   (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
   (add-hook 'org-fc-after-setup-hook #'c1/read-aloud-org))
 
+
+(use-package org-fc-roam
+  :ensure nil
+  :after org-fc
+  :config
+  (org-fc-roam-db-autosync-enable))
 
 (defun c1/maybe-close-org-noter (&rest _args)
   (org-noter--with-valid-session
