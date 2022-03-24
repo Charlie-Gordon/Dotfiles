@@ -431,7 +431,7 @@ Headlines are exported using `org-bibtex-headline'."
 
 (use-package org-agenda
   :ensure nil
-  :hook (org-agenda-after-show . c1/agenda-maybe-go-to-saved-place))
+  :hook (org-agenda-after-show . c1/org-maybe-go-to-saved-place))
 
 (use-package org-agenda-dych-mode
   :ensure nil
@@ -439,7 +439,7 @@ Headlines are exported using `org-bibtex-headline'."
   (org-agenda-dych-default-start "05:00")
   (org-agenda-dych-default-work-hour "16h"))
 
-(defun c1/agenda-maybe-go-to-saved-place ()
+(defun c1/org-maybe-go-to-saved-place ()
   (let ((beg (org-element-property :begin (org-element-at-point)))
         (end (org-element-property :end (org-element-at-point)))
         (saved-place (assoc buffer-file-name save-place-alist)))
