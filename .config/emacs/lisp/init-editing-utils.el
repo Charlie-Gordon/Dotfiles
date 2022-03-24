@@ -85,6 +85,8 @@
 
 (use-package ace-link
   :straight t
+  :bind (:map org-mode-map
+              ("M-o" . ace-link))
   :config
   (ace-link-setup-default))
 
