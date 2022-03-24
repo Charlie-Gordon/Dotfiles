@@ -358,7 +358,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (org-noter-property-doc-file "ROAM_REFS")
   (org-noter-property-note-location "DOCUMENT_PAGE")
-  (org-noter-doc-split-fraction '(0.6 0.4))
+  (org-noter-doc-split-fraction '(0.65 0.4))
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
   (org-noter-disable-narrowing t)
