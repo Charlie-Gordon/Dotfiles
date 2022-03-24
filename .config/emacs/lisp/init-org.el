@@ -365,7 +365,7 @@ Headlines are exported using `org-bibtex-headline'."
 (straight-use-package 'doct)
 
 (use-package org-capture-ref
-  :after org org-gtd
+  :after org
   :straight (org-capture-ref
              :type git
              :host github
@@ -373,7 +373,7 @@ Headlines are exported using `org-bibtex-headline'."
   :custom
   (org-capture-ref-headline-tags nil)
   (org-capture-ref-capture-target
-   `(:file ,(file-name-with-extension (expand-file-name org-gtd-inbox *gtd-dir*) "org")))
+   `(:file "/storage/org/gtd/inbox.org"))
   (org-capture-ref-capture-template-set-p t)
   (org-capture-ref-capture-template
    `(:group "org-capture-ref template"
