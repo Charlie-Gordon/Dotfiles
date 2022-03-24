@@ -125,6 +125,11 @@
   :after consult affe
   :bind-keymap* ("C-' n" . navigation-map))
 
+(use-package ctrlf
+  :straight t
+  :config
+  (ctrlf-mode +1))
+
 ;;; Writing
 (use-package typo
   :straight '(typoel :type git :host github :repo "jorgenschaefer/typoel"))
