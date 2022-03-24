@@ -531,39 +531,6 @@ Used to determines filename in `org-roam-capture-templates'."
             interval
             (org-fc-timestamp-in interval)))))
 
-(defun org-fc-browser-index-pending ()
-  (org-roam-db-query "SELECT * FROM
-(SELECT id,
- '[',
-'\"' || rowid || '\"',
-title,
-'\"' || prior || '\"',
-'\"' || ivl || '\"',
-'\"' || strftime('%%Y-%%m-%%dT%%H:%%M:%%SZ', due, 'unixepoch') || '\"',
-'\"' || type || '\"', pos,
-'(' || group_concat(tags, ' ') || ')' as tags,
-']'
-FROM
-(SELECT
-cards.rowid as rowid,
-cards.node_id as id,
-cards.title as title,
-cards.pos as pos,
-cards.prior as prior,
-cards.ease as ease,
-cards.box as box,
-cards.ivl as ivl,
-cards.due as due,
-cards.postp as postp,
-cards.type as type,
-cards.queue as queue,
-tags.tag as tags
-FROM cards
-LEFT JOIN tags ON tags.node_id = cards.node_id
-GROUP BY id, cards.pos, tags)
-WHERE queue = 0
-GROUP BY id, pos)"))
-
 (defun org-fc-browser-list-db ()
   "docstring"
   (let ((outstanding (plist-get org-fc-browser-context :outstanding))
