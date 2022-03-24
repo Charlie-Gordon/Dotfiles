@@ -541,21 +541,6 @@ selected instead of creating a new buffer."
   (org-entry-put nil "STYLE" "habit")
   (org-schedule arg))
 
-(defun c1/org-gtd--daily ()
-  (interactive)
-  (require 'org-roam-dailies)
-  (let ((org-roam-directory (expand-file-name org-roam-dailies-directory org-roam-directory))
-        (org-roam-dailies-directory "./"))
-    (org-back-to-heading)
-    (org-cut-subtree)
-    (org-roam-capture- :goto nil
-                       :keys "t"
-                       :node (org-roam-node-create)
-                       :templates org-roam-dailies-capture-templates
-                       :props (list :override-default-time (current-time))
-                       :info (list :tree (current-kill 0)))
-    (org-gtd-process-inbox)))
-
 (defun c1/org-gtd--reading (&optional arg)
   "Process GTD inbox item by transforming it into a project.
 Allow the user apply user-defined tags from
