@@ -506,14 +506,47 @@ Used to determines filename in `org-roam-capture-templates'."
   (add-hook 'org-fc-before-setup-hook #'c1/org-fc-hard-to-read-font)
   ;; (org-fc-cache-mode)
   (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter))
+  (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
+  (add-hook 'org-fc-after-setup-hook #'c1/read-aloud-org))
+
 
 (defun c1/maybe-close-org-noter (&rest _args)
   (org-noter--with-valid-session
    (let ((org-noter-use-indirect-buffer nil))
      (org-noter-kill-session session))))
 
+(org-export-define-derived-backend 'ascii-simple 'ascii
+  :translate-alist
+  '((link . c1/ascii-simple-link)
+    (bold . c1/ascii-simple-bold)))
 
+(defun c1/ascii-simple-link (link desc info)
+  "Transcode a LINK object from Org to ASCII.
 
+DESC is the description part of the link, or the empty string.
+INFO is a plist holding contextual information."
+  (if (org-string-nw-p desc)
+      desc
+    "link"))
+
+(defun c1/ascii-simple-bold (_bold contents _info)
+  contents)
+
+(defun c1/read-aloud-org ()
+  (interactive)
+  (let ((org-export-with-toc nil)
+        (org-export-with-author nil)
+        (org-export-with-emphasize nil)
+        (org-export-with-tables nil)
+        (org-ascii-links-to-notes nil)
+        (buf))
+    (if (org-before-first-heading-p)
+        (setq buf (org-export-to-buffer 'ascii-simple "*Org Ascii export*"
+                    nil nil t t nil (lambda () (text-mode))))
+      (setq buf (org-export-to-buffer 'ascii-simple "*Org Ascii export*"
+                  nil t t t nil (lambda () (text-mode)))))
+    (with-current-buffer buf
+      (read-aloud-buf))))
 
 (defun c1/maybe-open-org-noter ()
   (interactive)
