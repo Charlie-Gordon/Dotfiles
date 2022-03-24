@@ -103,6 +103,15 @@ it can be passed in POS."
   (org-clock-in . org-clock-save)
   (org-clock-out . c1/org-set-todo-waiting))
 
+(use-package org-capture
+  :ensure nil
+  :config
+  (add-to-list 'org-capture-templates
+               '("w" "Writing inbox" plain
+                 (file "/storage/org/slip-box/lit/other/writing.org")
+                 "* %?"
+                 :unnarrowed t)))
+
 (use-package org-clock-convenience
   :straight t
   :bind (:map org-agenda-mode-map
