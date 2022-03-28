@@ -99,9 +99,15 @@ it can be passed in POS."
   (org-resolve-clocks)
   :hook
   (org-mode . visual-line-mode)
+  (org-mode . org-modern-mode)
   (org-clock-in . c1/org-set-todo-progress)
   (org-clock-in . org-clock-save)
   (org-clock-out . c1/org-set-todo-waiting))
+
+(use-package org-modern
+  :straight t
+  :custom
+  (org-modern-star nil))
 
 (use-package org-capture
   :ensure nil
