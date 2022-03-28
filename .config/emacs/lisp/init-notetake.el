@@ -139,7 +139,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :init
   (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
   :custom
-  (org-roam-node-display-template "${refs}. ${my-title:100} ${tags:20}")
+  (org-roam-node-display-template "${refs} ${my-title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (org-roam-extract-new-file-path "lit/other/writing.org")
   (org-roam-capture-templates
