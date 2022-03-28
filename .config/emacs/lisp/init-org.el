@@ -63,10 +63,14 @@ it can be passed in POS."
          :map org-mode-map
          ("C-'" . nil))
   :custom
+  (org-ellipsis "…")
+  (org-pretty-entities t)
+  (org-hide-emphasis-markers t)
   (org-id-link-to-org-use-id t)
   (org-ctrl-k-protect-subtree t)
   (org-directory *org-dir*)
   (org-clock-persist t)
+  (org-special-ctrl-a/e t)
   (org-clock-auto-clock-resolution 'always)
   (org-clock-sound "/storage/music/metronome2.wav")
   (org-attach-id-dir "/storage/org/data/")
