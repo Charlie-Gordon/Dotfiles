@@ -507,6 +507,21 @@ Used to determines filename in `org-roam-capture-templates'."
    (let ((org-noter-use-indirect-buffer nil))
      (org-noter-kill-session session))))
 
+(defun c1/maybe-open-org-noter (&rest _args)
+  (interactive)
+  (require 'org-noter)
+  (or save-place-loaded (load-save-place-alist-from-file))
+  (let* ((cell (assoc buffer-file-name save-place-alist))
+         (saved-place (cdr cell)))
+    (when (or (org-entry-get saved-place org-noter-property-note-location)
+              (org-entry-get saved-place org-noter-property-doc-file))
+      (or revert-buffer-in-progress-p
+          (and (integerp (cdr cell))
+               (goto-char (cdr cell))))
+      (let ((org-noter-disable-narrowing t)
+            (org-noter-use-indirect-buffer nil))
+        (org-noter 0)))))
+
 (org-export-define-derived-backend 'ascii-simple 'ascii
   :translate-alist
   '((link . c1/ascii-simple-link)
@@ -539,16 +554,6 @@ INFO is a plist holding contextual information."
                   nil t t t nil (lambda () (text-mode)))))
     (with-current-buffer buf
       (read-aloud-buf))))
-
-(defun c1/maybe-open-org-noter ()
-  (interactive)
-  (require 'org-noter)
-  (save-place-find-file-hook)
-  (when (or (org-entry-get nil org-noter-property-note-location)
-            (org-entry-get nil org-noter-property-doc-file))
-    (let ((org-noter-disable-narrowing t)
-          (org-noter-use-indirect-buffer nil))
-      (org-noter 0))))
 
 (defun org-fc-algo-sm2-cloze-review-interval (position)
   (when (and (org-fc-entry-cloze-p) (org-entry-get nil bir-ref-parent-property))
