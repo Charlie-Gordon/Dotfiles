@@ -18,17 +18,7 @@
   :mode (("\\.epub\\'" . nov-mode))
   :custom
   (nov-text-width fill-column)
-  (nov-variable-pitch nil)
-  :config
-  (add-hook 'nov-post-html-render-hook 'c1/org-fc-hard-to-read-font))
-
-(defun c1/org-fc-hard-to-read-font ()
-  "Set font to a hard to read font in org-fc to enhance concentration."
-  (interactive)
-  (setq buffer-face-mode-face '(:family "Sans Forgetica"))
-  (buffer-face-mode))
-
-
+  (nov-variable-pitch t))
 
 ;; (use-package ereader
 ;;   :straight t
@@ -499,7 +489,6 @@ Used to determines filename in `org-roam-capture-templates'."
   (advice-add 'org-fc-review-resume :before #'save-place-to-alist)
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
-  (add-hook 'org-fc-before-setup-hook #'c1/org-fc-hard-to-read-font)
   ;; (org-fc-cache-mode)
   (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter))
   (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
