@@ -713,6 +713,7 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
       (write-region (point-min) (point-max)
                     (concat "/storage/org/slip-box/lit/" id ".org")
                     nil t nil t)
+      (org-fc-type-topic-init)
       (save-buffer))
     (org-gtd-process-inbox)
     (pop-to-buffer
