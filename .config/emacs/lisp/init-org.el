@@ -543,8 +543,7 @@ Headlines are exported using `org-bibtex-headline'."
   (add-to-list 'org-gtd--agenda-functions #'org-save-all-org-buffers)
   (transient-insert-suffix 'org-gtd-choose "p" '("r" "Reading" c1/org-gtd--reading))
   (transient-insert-suffix 'org-gtd-choose "p" '("h" "Habit" c1/org-gtd--habit))
-  (transient-insert-suffix 'org-gtd-choose "p" '("T" "Topic" c1/org-gtd--topic))
-  (transient-insert-suffix 'org-gtd-choose "c" '("D" "Daily" c1/org-gtd--daily)))
+  (transient-insert-suffix 'org-gtd-choose "p" '("T" "Topic" c1/org-gtd--topic)))
 
 
 (defun c1/org-agenda-title ()
