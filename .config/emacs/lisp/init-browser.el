@@ -110,6 +110,9 @@
   (eww-form-checkbox-selected-symbol "[X]")
   (eww-form-checkbox-symbol "[ ]"))
 
+(use-package elpher
+  :straight t)
+
 (defgroup prot/eww ()
   "Tweaks for EWW."
   :group 'eww)
