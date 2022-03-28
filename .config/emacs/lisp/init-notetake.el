@@ -473,8 +473,6 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   ;; (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
-  (org-fc-index-function #'org-fc-roam-index)
-  (org-fc-index-filter-function #'identity)
   (org-fc-algorithm 'roam-sm2)
   (org-fc-custom-contexts '((writing :paths "/storage/org/gtd/writing.org")))
   (org-fc-topic-proportion 20)
@@ -499,8 +497,10 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package org-fc-roam
   :ensure nil
   :after org-fc
+  :diminish
   :config
-  (org-fc-roam-db-autosync-enable))
+  (org-fc-roam-db-autosync-enable)
+  (org-fc-roam-mode +1))
 
 (defun c1/maybe-close-org-noter (&rest _args)
   (org-noter--with-valid-session
