@@ -9,7 +9,7 @@
   (modus-themes-org-agenda '((scheduled . rainbow))))
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
-(set-face-attribute 'variable-pitch nil :font "Iosevka Aile Oblique")
+(set-face-attribute 'variable-pitch nil :font "ETBembo" :height 180 :weight 'thin)
 
 (add-to-list 'face-font-rescale-alist '("Umpush" . 0.85))
 
