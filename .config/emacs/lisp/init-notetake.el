@@ -150,6 +150,38 @@ Used to determines filename in `org-roam-capture-templates'."
        "%<%F-%s>-%(org-roam-notecard-new-file).org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
+     ("w" "Writing inbox" plain
+      "%?"
+      :target
+      (file "/storage/org/notecard/lit/other/writing.org")
+      :unnarrowed t)
+     ("q" "quote" plain
+      ,(string-join
+        '("* Quote from ${article}"
+          ":PROPERTIES:"
+          ":CATEGORY: extract"
+          ":%(eval bir-parent-property):   %a"
+          ":%(eval bir-article-property):  ${article}"
+          ":END:"
+          "%?"
+          "%i"
+          "\n")
+        "\n")
+      :target
+      (file "/storage/org/notecard/lit/other/writing.org"))
+     ("e" "extract" plain
+      ,(string-join
+        '("* %i"
+          ":PROPERTIES:"
+          ":CATEGORY: extract"
+          ":%(eval bir-parent-property):   %a"
+          ":%(eval bir-article-property):  ${article}"
+          ":END:"
+          "%?")
+        "\n")
+      :target
+      (file "/storage/org/notecard/lit/other/writing.org")
+      :unnarrowed t)
      ("n" "note" plain
       "%?"
       :target
