@@ -130,6 +130,12 @@ it can be passed in POS."
   (org-clock-in . org-clock-save)
   (org-clock-out . c1/org-set-todo-waiting))
 
+(use-package org-appear
+  :after org
+  :straight t
+  :hook
+  (org-mode . org-appear-mode))
+
 (use-package org-modern
   :straight t
   :custom
