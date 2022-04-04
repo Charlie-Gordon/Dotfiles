@@ -96,8 +96,6 @@ it can be passed in POS."
   :config
   (add-to-list 'org-modules 'org-protocol)
   (add-to-list 'org-modules 'habits)
-  (add-hook 'org-mode-hook #'(lambda nil
-                               (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
   (let* ((variable-tuple
           (cond ((x-list-fonts "ETBembo") '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
@@ -127,6 +125,7 @@ it can be passed in POS."
   (org-mode . visual-line-mode)
   (org-mode . org-modern-mode)
   (org-mode . mixed-pitch-mode)
+  (org-mode . (lambda () (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
   (org-clock-in . c1/org-set-todo-progress)
   (org-clock-in . org-clock-save)
   (org-clock-out . c1/org-set-todo-waiting))
