@@ -96,8 +96,6 @@ it can be passed in POS."
   :config
   (add-to-list 'org-modules 'org-protocol)
   (add-to-list 'org-modules 'habits)
-  (add-to-list 'org-speed-commands '("w" . widen))
-  (add-to-list 'org-speed-commands '("N" . org-narrow-to-element))
   (add-hook 'org-mode-hook #'(lambda nil
                                (add-hook 'before-save-hook #'zp/org-set-last-modified nil t)))
   (let* ((variable-tuple
