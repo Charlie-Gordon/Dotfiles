@@ -496,8 +496,9 @@ Used to determines filename in `org-roam-capture-templates'."
   (or save-place-loaded (load-save-place-alist-from-file))
   (let* ((cell (assoc buffer-file-name save-place-alist))
          (saved-place (cdr cell)))
-    (when (or (org-entry-get saved-place org-noter-property-note-location)
-              (org-entry-get saved-place org-noter-property-doc-file))
+    (when (and (or (org-entry-get saved-place org-noter-property-note-location)
+                   (org-entry-get saved-place org-noter-property-doc-file))
+               (not (org-bibtex-headline)))
       (or revert-buffer-in-progress-p
           (and (integerp (cdr cell))
                (goto-char (cdr cell))))
