@@ -462,9 +462,9 @@ Headlines are exported using `org-bibtex-headline'."
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
             :template
-            ("%{fetch-bibtex}* TODO %?%{space}%{org-entry}\n%{outline}%{content}")
             :children (("Interactive + Content"
                         :keys "s"
+            ("%{fetch-bibtex}* %?%{space}%{org-entry}\n%{outline}%{content}")
                         :space " "
                         :content
                         (lambda ()
