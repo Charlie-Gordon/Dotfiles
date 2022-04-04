@@ -340,6 +340,11 @@ Used to determines filename in `org-roam-capture-templates'."
   (use-package org-noter-citar :ensure nil)
   (use-package org-noter-eww :ensure nil))
 
+(defun c1/pdf-keynav-region-to-active-region (mode)
+  (when (eq mode 'pdf-view-mode)
+    (require 'pdf-keynav)
+    (pdf-keynav-region-to-active-region)))
+
 (use-package org-pdftools
   :straight t
   :hook (org-mode . org-pdftools-setup-link))
