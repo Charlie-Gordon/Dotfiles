@@ -468,7 +468,10 @@ Used to determines filename in `org-roam-capture-templates'."
      ("Type" nil)))
   :config
   (advice-add 'org-fc-review-resume :before #'save-place-to-alist)
-  (add-to-list 'org-fc-custom-contexts (cons 'writing `(:paths ,org-roam-directory "/storage/org/slip-box/lit/other/writing.org" :non-recursive t)))
+  (add-to-list 'org-fc-custom-contexts (cons 'writing `(:paths (,org-roam-directory "/storage/org/notecard/lit/other/writing.org")
+                                                               :indexer org-fc-awk-index
+                                                               :filterer org-fc-index-filter-due
+                                                               :non-recursive t)))
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
   ;; (org-fc-cache-mode)
