@@ -503,7 +503,7 @@ Headlines are exported using `org-bibtex-headline'."
   (add-hook 'org-mode-hook #'org-special-block-extras-mode)
   (o-deflink extract
              ""
-             [:face 'org-dispatcher-highlight
+             [:face 'org-agenda-structure
                     :follow (org-id-goto o-label)]))
 
 (use-package org-edna
