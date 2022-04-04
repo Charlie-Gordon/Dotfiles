@@ -89,7 +89,7 @@ it can be passed in POS."
    '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d)" "CNCL(c)")))
   (org-format-latex-options
    '(:foreground auto
-                 :background auto :scale 1.6
+                 :background auto :scale 2
                  :html-foreground "Black" :html-background "Transparent"
                  :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
