@@ -44,6 +44,12 @@
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2))))
 
+(use-package git-timemachine
+  :straight t)
+
+(use-package git-gutter-fringe
+  :straight t)
+  
 (use-package git-gutter
   :straight t
   :hook (prog-mode . git-gutter-mode)
