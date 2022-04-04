@@ -499,6 +499,8 @@ Used to determines filename in `org-roam-capture-templates'."
      ("Due" t :read-only)
      ("Type" nil)))
   :config
+  (add-to-list 'org-tags-exclude-from-inheritance org-fc-suspended-tag)
+  (add-to-list 'org-tags-exclude-from-inheritance org-fc-flashcard-tag)
   (advice-add 'org-fc-review-resume :before #'save-place-to-alist)
   (add-to-list 'org-fc-custom-contexts (cons 'writing `(:paths (,org-roam-directory "/storage/org/notecard/lit/other/writing.org")
                                                                :indexer org-fc-awk-index
