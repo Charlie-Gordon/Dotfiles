@@ -65,9 +65,10 @@ it can be passed in POS."
          ("C-M-a" . org-backward-paragraph)
          ("C-M-e" . org-forward-paragraph))
   :custom
-  (org-ellipsis "…")
-  (org-pretty-entities t)
   (org-hide-emphasis-markers t)
+  (org-fontify-done-headline t)
+  (org-pretty-entities t)
+  (org-ellipsis "…")
   (org-id-link-to-org-use-id t)
   (org-ctrl-k-protect-subtree t)
   (org-directory *org-dir*)
