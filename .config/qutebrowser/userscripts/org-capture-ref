@@ -52,8 +52,12 @@ while :; do
             TEMPLATE="r"
             shift
             ;;
-        --skeleton)
-            TEMPLATE="s"
+        --file)
+            TEMPLATE="f"
+            shift
+            ;;
+        --content)
+            TEMPLATE="c"
             shift
             ;;
         *)
