@@ -509,10 +509,7 @@ Used to determines filename in `org-roam-capture-templates'."
                                                                :non-recursive t)))
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
-  ;; (org-fc-cache-mode)
-  (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter))
-  (add-hook 'org-fc-after-setup-hook #'c1/maybe-open-org-noter)
-  (add-hook 'org-fc-after-setup-hook #'c1/read-aloud-org))
+  (advice-add 'org-fc-type-topic-setup :after #'c1/maybe-open-org-noter))
 
 
 (use-package org-fc-roam
