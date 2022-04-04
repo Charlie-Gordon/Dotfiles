@@ -139,7 +139,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :init
   (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
   :custom
-  (org-roam-node-display-template "${refs} ${my-title:100} ${tags:20}")
+  (org-roam-node-display-template "${title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (org-roam-extract-new-file-path "lit/other/writing.org")
   (org-roam-capture-templates
@@ -190,29 +190,6 @@ Used to determines filename in `org-roam-capture-templates'."
       :unnarrowed t)))
   :config
   (org-roam-db-autosync-mode)
-  (cl-defmethod org-roam-node-my-title ((node org-roam-node))
-    (if (string-match-p "^[[:digit:]]+" (org-roam-node-title node))
-        (with-temp-buffer
-          (insert-file-contents (org-roam-node-file node))
-          (org-roam-end-of-meta-data 'full)
-          (replace-regexp-in-region (concat "\\(?:"
-                                            "^%+" ; line beg with %
-                                            "\\|" org-property-re
-                                            "\\|" "\n"
-                                            "\\|:\\S-+:"
-                                            "\\|" org-table-line-regexp
-                                            "\\|" org-heading-regexp
-                                            "\\|" ":[[:alnum:]_@#%]+:"
-                                            "\\|" org-keyword-regexp
-                                            "\\|" "#\\+.*"
-                                            "\\|" org-element--timestamp-regexp
-                                            "\\|-\\*-[[:alpha:]]+-\\*-" ; -*- .. -*- lines
-                                            "$\\)")
-                                    "")
-          (buffer-substring-no-properties
-           (point)
-           (or (re-search-forward (sentence-end) nil t) (point-max))))
-      (org-roam-node-title node))))
 
 (use-package org-roam-bibtex
   :straight t
