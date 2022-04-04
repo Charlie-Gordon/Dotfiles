@@ -123,7 +123,7 @@ Used to determines filename in `org-roam-capture-templates'."
       0)))
 
 ;;;###autoload
-(defun org-roam-slip-box-new-file ()
+(defun org-roam-notecard-new-file ()
   "Return a new file path when creating a new note."
   (number-to-string (1+ (c1/count-org-file-in-directory org-roam-directory))))
 
@@ -137,7 +137,7 @@ Used to determines filename in `org-roam-capture-templates'."
          ;; Dailies
          ("C-c n j" . org-roam-dailies-capture-today))
   :init
-  (defvar org-roam-directory (expand-file-name "slip-box/" org-directory))
+  (defvar org-roam-directory (expand-file-name "notecard/" org-directory))
   :custom
   (org-roam-node-display-template "${title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
@@ -147,7 +147,7 @@ Used to determines filename in `org-roam-capture-templates'."
       "%?"
       :target
       (file+head
-       "%<%F-%s>-%(org-roam-slip-box-new-file).org"
+       "%<%F-%s>-%(org-roam-notecard-new-file).org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
      ("n" "note" plain
@@ -170,8 +170,8 @@ Used to determines filename in `org-roam-capture-templates'."
      
      ("ak" "article from clipboard" entry
       "%(org-web-tools--url-as-readable-org)"
-      (file "%<%F-%s>-%(org-roam-slip-box-new-file).org")
       :target
+      (file "%<%F-%s>-%(org-roam-notecard-new-file).org")
       :unnarrowed t)
 
      ("af" "article from file" plain

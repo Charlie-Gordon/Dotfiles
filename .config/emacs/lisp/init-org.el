@@ -83,7 +83,7 @@ it can be passed in POS."
   (org-use-speed-commands t)
   (org-refile-targets '(("/storage/org/gtd/inbox.org" :maxlevel . 2)
                         ("/storage/org/gtd/org-gtd-tasks.org" :maxlevel . 2)
-                        ("/storage/org/slip-box/lit/other/writing.org" :maxlevel . 2)))
+                        ("/storage/org/notecard/lit/other/writing.org" :maxlevel . 2)))
   (org-image-actual-width nil)
   (org-todo-keywords
    '((sequence "NEXT(n)" "TODO(t)" "|" "DONE(d)" "CNCL(c)")))
@@ -339,7 +339,7 @@ selected instead of creating a new buffer."
   :ensure nil
   :custom
   (org-cite-global-bibliography `(,(expand-file-name "library.bib" *bibliography-dir*)
-                                  "/storage/org/slip-box/lit/refs/bibliography.bib")))
+                                  "/storage/org/notecard/lit/refs/bibliography.bib")))
 
 (use-package org-contrib
   :straight t)
@@ -457,7 +457,7 @@ Headlines are exported using `org-bibtex-headline'."
             :jump-to-captured t
             :prepare-finalize
             (lambda ()
-              (c1/org-bibtex-append "/storage/org/slip-box/lit/other/bibliography.bib"))
+              (c1/org-bibtex-append "/storage/org/notecard/lit/other/bibliography.bib"))
             :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
