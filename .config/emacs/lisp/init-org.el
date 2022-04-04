@@ -61,7 +61,9 @@ it can be passed in POS."
          ("C-c a" . org-agenda)
          ("C-c l" . org-store-link)
          :map org-mode-map
-         ("C-'" . nil))
+         ("C-'" . nil)
+         ("C-M-a" . org-backward-paragraph)
+         ("C-M-e" . org-forward-paragraph))
   :custom
   (org-ellipsis "…")
   (org-pretty-entities t)
