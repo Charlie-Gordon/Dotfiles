@@ -3,20 +3,15 @@
 ;;; Code:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst *journals-dir* (if (file-exists-p "storage/journals/")
-                             "storage/journals/"))
+(defconst *journals-dir* "storage/journals/")
 
-(defconst *library-dir* (if (file-exists-p "/storage/library/")
-                            "/storage/library/"))
+(defconst *library-dir* "/storage/resources/library")
 
-(defconst *org-dir* (if (file-exists-p "/storage/org/")
-                        "/storage/org/"))
+(defconst *org-dir* "/storage/org/")
 
-(defconst *bibliography-dir* (if (file-exists-p "/storage/bib/")
-                                 "/storage/bib/"))
+(defconst *bibliography-dir* "/storage/bib/")
 
-(defconst *gtd-dir* (if (file-exists-p "/storage/bib/")
-                        "/storage/org/gtd/"))
+(defconst *gtd-dir* "/storage/org/gtd/")
 
 
 (provide 'init-const)
