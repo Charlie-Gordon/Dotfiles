@@ -108,6 +108,11 @@
   (persistent-scratch-setup-default)
   :diminish persistent-scratch-mode)
 
+;;; Pretty fonts
+
+(use-package mixed-pitch
+  :straight t)
+
 ;;; Quick navigation
 
 (use-package affe

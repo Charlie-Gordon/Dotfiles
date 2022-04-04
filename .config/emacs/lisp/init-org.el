@@ -104,6 +104,7 @@ it can be passed in POS."
   :hook
   (org-mode . visual-line-mode)
   (org-mode . org-modern-mode)
+  (org-mode . mixed-pitch-mode)
   (org-clock-in . c1/org-set-todo-progress)
   (org-clock-in . org-clock-save)
   (org-clock-out . c1/org-set-todo-waiting))
