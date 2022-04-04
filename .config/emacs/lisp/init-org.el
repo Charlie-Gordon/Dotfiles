@@ -344,6 +344,42 @@ selected instead of creating a new buffer."
 (use-package org-contrib
   :straight t)
 
+(use-package org-board
+  :straight t
+  :custom
+  (org-board-wget-program (executable-find "monolith"))
+  (org-board-wget-switches '("-Ievjc")))
+
+(defun org-board-monolith-call (path directory args site)
+  (make-directory (file-name-as-directory directory))
+  (let* ((output-directory-option
+          (expand-file-name
+           (file-name-with-extension
+            (file-name-nondirectory (url-filename (url-generic-parse-url (car site))))
+            ".html")
+           (file-name-as-directory directory)))
+         (output-buffer-name "org-board-monolith-call")
+         (process-arg-list (append (list "org-board-monolith-process"
+                                         output-buffer-name
+                                         path)
+                                   org-board-wget-switches
+                                   (list "-o")
+                                   (list output-directory-option)
+                                   args
+                                   site))
+         (monolith-process (apply 'start-process process-arg-list)))
+    (if org-board-wget-show-buffer
+        (with-output-to-temp-buffer output-buffer-name
+          (set-process-sentinel
+           monolith-process
+           'org-board-wget-process-sentinel-function))
+      (set-process-sentinel
+       monolith-process
+       'org-board-wget-process-sentinel-function))
+    monolith-process))
+
+(advice-add 'org-board-wget-call :override #'org-board-monolith-call)
+
 (use-package ox-bibtex
   :ensure nil
   :custom
