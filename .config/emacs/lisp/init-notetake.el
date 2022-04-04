@@ -145,14 +145,14 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-roam-capture-templates
    `(("d" "default" plain
       "%?"
-      :if-new
+      :target
       (file+head
        "%<%F-%s>-%(org-roam-slip-box-new-file).org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
       :unnarrowed t)
      ("n" "note" plain
       "%?"
-      :if-new
+      :target
       (file+head
        "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
        "#+TITLE: ${citekey}.  ${title}.\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n\n")
@@ -162,7 +162,7 @@ Used to determines filename in `org-roam-capture-templates'."
 
      ("au" "article from url" plain
       "%(bir-import \"%^{url}\")"
-      :if-new
+      :target
       (file+head
        "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
@@ -170,13 +170,13 @@ Used to determines filename in `org-roam-capture-templates'."
      
      ("ak" "article from clipboard" entry
       "%(org-web-tools--url-as-readable-org)"
-      :if-new
       (file "%<%F-%s>-%(org-roam-slip-box-new-file).org")
+      :target
       :unnarrowed t)
 
      ("af" "article from file" plain
       "%(bir-import-file \"%^{file}\")"
-      :if-new
+      :target
       (file+head
        "%(expand-file-name \"lit\" org-roam-directory)/${citekey}.org"
        "#+TITLE: ${title}\n#+CREATED: %u\n#+LAST_MODIFIED: %U\n\n")
@@ -184,7 +184,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-roam-dailies-capture-templates
    `(("d" "default" plain
       "* %?"
-      :if-new
+      :target
       (file+head "%<%Y-%m-%d>.org"
                  "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
       :unnarrowed t)))
