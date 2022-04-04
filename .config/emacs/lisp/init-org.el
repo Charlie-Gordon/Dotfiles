@@ -757,23 +757,22 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
   (interactive)
   (require 'org-roam)
   (require 'org-fc)
-  (when-let ((id (org-id-get-create)))
-    (while (org-up-heading-safe))
-    (c1/org-bibtex-append "/storage/org/slip-box/lit/other/bibliography.bib")
+  (let* ((id (org-id-get-create))
+         (file (expand-file-name (concat "lit/" id ".org") org-roam-directory)))
+    (save-excursion
+      (while (org-up-heading-safe))
+      (c1/org-bibtex-append (expand-file-name "lit/other/bibliography.bib" org-roam-directory)))
     (org-cut-subtree)
     (with-temp-buffer
       (org-mode)
       (org-paste-subtree)
       (org-roam-ref-add (concat "cite:&" id))
-      (write-region (point-min) (point-max)
-                    (concat "/storage/org/slip-box/lit/" id ".org")
-                    nil t nil t)
+      (write-region (point-min) (point-max) file nil t nil t)
       (org-fc-type-topic-init)
-      (save-buffer))
+      (save-buffer)
+      (org-roam-db-update-file file))
     (org-gtd-process-inbox)
-    (pop-to-buffer
-     (find-file-noselect
-      (concat "/storage/org/slip-box/lit/" id ".org")))))
+    (pop-to-buffer (find-file-noselect file))))
 
 ;;;; Recur
 
