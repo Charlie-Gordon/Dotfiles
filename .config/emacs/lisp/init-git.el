@@ -3,7 +3,7 @@
 ;;; Code:
 
 (use-package tramp
-  :straight t
+  :ensure nil
   :config
   (setenv "SHELL" (executable-find "bash"))
   (unless (assoc-default "yadm" tramp-methods)
