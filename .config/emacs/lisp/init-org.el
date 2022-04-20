@@ -97,7 +97,8 @@ it can be passed in POS."
   (add-to-list 'org-modules 'org-protocol)
   (add-to-list 'org-modules 'habits)
   (let* ((variable-tuple
-          (cond ((x-list-fonts "ETBembo") '(:font "ETBembo"))
+          (cond ((x-list-fonts "New Century Schoolbook") '(:font "New Century Schoolbook"))
+                ((x-list-fonts "ETBembo") '(:font "ETBembo"))
                 ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                 ((x-list-fonts "Lucida Grande") '(:font "Lucida Grande"))
                 ((x-list-fonts "Verdana") '(:font "Verdana"))
