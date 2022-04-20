@@ -30,7 +30,7 @@
 
 
 (use-package magit
-  :straight t 
+  :straight t
   :when (executable-find "git")
   :bind
   (("C-x g g" . magit-status)
@@ -42,7 +42,8 @@
   (magit-diff-refine-hunk t)
   (magit-repository-directories `(("~/git/" . 2)
                                   (,(expand-file-name "straight/" straight-base-dir) . 2)
-                                  (,(expand-file-name "site-lisp/" user-emacs-directory) . 2))))
+                                  (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
+  :init (defvar project-switch-commands nil))
 
 (use-package git-timemachine
   :straight t)
