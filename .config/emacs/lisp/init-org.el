@@ -140,8 +140,12 @@ it can be passed in POS."
 
 (use-package org-modern
   :straight t
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda)
   :custom
-  (org-modern-star nil))
+  (org-modern-star nil)
+  (org-modern-hide-stars nil))
 
 (use-package org-clock-convenience
   :straight t
