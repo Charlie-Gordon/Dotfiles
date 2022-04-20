@@ -6,7 +6,8 @@
 (use-package volume
   :straight '(volume.el :type git
                         :host github
-                        :repo "spwhitton/volume.el"
+                        :repo "dbrock/volume.el"
+                        :fork "spwhitton/volume.el"
                         :branch "series/define-obsolete-variable-alias")
   :bind ("s-c" . volume))
 
