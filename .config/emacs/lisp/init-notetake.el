@@ -312,7 +312,6 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-hide-other nil)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
-  (add-to-list 'org-speed-commands '("." . org-noter-sync-current-note))
   (advice-add 'org-noter-pdf--get-selected-text :before #'c1/pdf-keynav-region-to-active-region)
   (use-package org-noter-nov-overlay :ensure nil)
   (use-package org-noter-dynamic-block :ensure nil)
