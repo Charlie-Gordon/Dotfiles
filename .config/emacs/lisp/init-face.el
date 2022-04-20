@@ -6,7 +6,9 @@
   :straight t
   :custom
   (modus-themes-links '(bold faint))
-  (modus-themes-org-agenda '((scheduled . rainbow))))
+  (modus-themes-org-agenda '((scheduled . rainbow)))
+  (modus-themes-region '(accented))
+  (modus-themes-org-blocks '(gray-background)))
 ;;;; Iosevka font
 (set-face-attribute 'default nil :font "Iosevka SS09-14")
 (set-face-attribute 'variable-pitch nil :font "ETBembo" :height 180 :weight 'thin)
