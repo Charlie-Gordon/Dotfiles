@@ -354,15 +354,6 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (mpv-default-options '("--ytdl-format=bestvideo[height<=360]+bestaudio")))
 
-;; TTS
-
-(use-package read-aloud
-  :straight t
-  :config
-  (lax-plist-put read-aloud-engines
-                 "festival"
-                 '(cmd "festival" args ("--tts" "--pipe")))
-  (setq read-aloud-engine "festival"))
 
 (use-package bookmark+
   :straight t)
