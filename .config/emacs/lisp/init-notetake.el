@@ -431,7 +431,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   ;; (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
   (org-fc-algorithm 'roam-sm2)
-  (org-fc-topic-proportion 20)
+  (org-fc-topic-proportion 80)
   (org-fc-browser-headers
    '(("No." org-fc-browser-num>?)
      ("Title" nil)
