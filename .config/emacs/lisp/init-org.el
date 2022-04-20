@@ -329,9 +329,9 @@ efforts may be updated by this function."
   (make-directory (file-name-as-directory directory))
   (let* ((output-directory-option
           (expand-file-name
-           (file-name-with-extension
-            (file-name-nondirectory (url-filename (url-generic-parse-url (car site))))
-            ".html")
+           (concat (file-name-sans-extension
+                    (file-name-nondirectory (url-filename (url-generic-parse-url (car site)))))
+                   ".html")
            (file-name-as-directory directory)))
          (output-buffer-name "org-board-monolith-call")
          (process-arg-list (append (list "org-board-monolith-process"
