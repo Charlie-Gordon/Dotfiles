@@ -313,7 +313,8 @@ efforts may be updated by this function."
 (advice-add 'org-id-get-create :override #'my-id-get-or-generate)
 
 (use-package oc
-  :ensure nil
+  :straight '(:type built-in)
+  :when (= 29 (string-to-number emacs-version))
   :custom
   (org-cite-global-bibliography `(,(expand-file-name "library.bib" *bibliography-dir*)
                                   "/storage/org/notecard/lit/refs/bibliography.bib")))
