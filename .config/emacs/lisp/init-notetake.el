@@ -350,10 +350,8 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package org-noter-media
   :straight '(org-noter-media :type git
                               :host github
-                              :repo "auroranil/org-noter-media")
-  :custom
-  (mpv-default-options '("--ytdl-format=bestvideo[height<=360]+bestaudio")))
-
+                              :repo "auroranil/org-noter-media"
+                              :fork t))
 
 (use-package bookmark+
   :straight t)
