@@ -511,9 +511,13 @@ Headlines are exported using `org-bibtex-headline'."
   :hook (org-agenda-mode . org-super-agenda-mode))
 
 (use-package edraw-org
-  :ensure nil
+  :straight '(el-easydraw :type git
+                          :host github
+                          :repo "misohena/el-easydraw")
   :mode
-  ("\\.edraw\\.svg$" . edraw-mode))
+  ("\\.edraw\\.svg$" . edraw-mode)
+  :config
+  (edraw-org-setup-default))
 
 (use-package org-special-block-extras
   :straight t
