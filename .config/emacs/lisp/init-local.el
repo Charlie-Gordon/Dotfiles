@@ -32,10 +32,7 @@
 (use-package elfeed
   :straight t
   :custom
-  (elfeed-feeds '("https://karl-voit.at/feeds/lazyblorg-all.atom_1.0.links-only.xml"
-                  "http://www.cachestocaches.com/feed/"
-                  "https://protesilaos.com/codelog.xml"
-                  "https://sachachua.com/blog/category/emacs-news/feed/")))
+  (elfeed-db-directory (expand-file-name "elfeed/" user-emacs-directory)))
 
 (use-package org-el-cache
   :straight '(org-zk :type git
