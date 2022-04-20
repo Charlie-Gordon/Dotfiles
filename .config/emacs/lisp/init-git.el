@@ -114,7 +114,7 @@
             (define-key map (kbd "C-x d") 'yadm-dired)
             (define-key map (kbd "C-x C-f") 'yadm-find-file)
             (define-key map (kbd "C-x C-j") 'yadm-dired-jump)
-            (define-key map "s" 'yadm-stage)
+            ;; (define-key map "s" 'yadm-stage)
             map))
 
 (defun yadm-status ()
