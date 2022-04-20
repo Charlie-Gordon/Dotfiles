@@ -447,7 +447,26 @@ Used to determines filename in `org-roam-capture-templates'."
                                                                :non-recursive t)))
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
+  (add-hook 'after-init-hook #'org-fc-review-daily 100))
 
+(defun org-fc-review-daily ()
+  (interactive)
+  (if org-fc-review--session
+      (when (yes-or-no-p "Flashcards are already being reviewed. Resume? ")
+        (org-fc-review-resume))
+    (let* ((index (org-fc-index org-fc-context-all))
+           (cards (funcall org-fc-index-filter-function index)))
+      (setq cards (delete-dups
+                   (append (org-fc-index-shuffled-positions
+                            (org-fc-index-filter-due
+                             (org-fc-awk-index
+                              (list org-roam-directory "/storage/org/notecard/lit/other/") nil t)))
+                           (funcall org-fc-index-sort-function cards))))
+      (if (null cards)
+          (message "No cards due right now")
+        (setq org-fc-review--session (org-fc-make-review-session cards))
+        (run-hooks 'org-fc-before-review-hook)
+        (org-fc-review-next-card)))))
 
 (use-package org-fc-roam
   :ensure nil
