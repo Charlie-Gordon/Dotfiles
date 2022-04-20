@@ -56,7 +56,7 @@ it can be passed in POS."
 
 (use-package org
   :termux
-  :straight t
+  :straight (:type built-in)
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda)
          ("C-c l" . org-store-link)
