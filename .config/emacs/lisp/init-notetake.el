@@ -421,7 +421,11 @@ Used to determines filename in `org-roam-capture-templates'."
                      :host github
                      :repo "l3kn/org-fc"
                      :fork t
-                     :files ("awk" "*.org" "*.sh" "*.el" "tests"  "icons"))
+                     :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
+  :bind (:map org-fc-review-flip-mode-map
+              ("C-;" . #'c1/open-org-noter)
+              :map org-fc-review-edit-mode-map
+              ("C-;" . #'c1/open-org-noter))
   :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
@@ -445,7 +449,6 @@ Used to determines filename in `org-roam-capture-templates'."
                                                                :non-recursive t)))
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
-  (advice-add 'org-fc-type-topic-setup :after #'c1/maybe-open-org-noter))
 
 
 (use-package org-fc-roam
@@ -461,21 +464,11 @@ Used to determines filename in `org-roam-capture-templates'."
    (let ((org-noter-use-indirect-buffer nil))
      (org-noter-kill-session session))))
 
-(defun c1/maybe-open-org-noter (&rest _args)
-  (interactive)
-  (require 'org-noter)
-  (or save-place-loaded (load-save-place-alist-from-file))
-  (let* ((cell (assoc buffer-file-name save-place-alist))
-         (saved-place (cdr cell)))
-    (when (and (or (org-entry-get saved-place org-noter-property-note-location)
-                   (org-entry-get saved-place org-noter-property-doc-file))
-               (not (org-bibtex-headline)))
-      (or revert-buffer-in-progress-p
-          (and (integerp (cdr cell))
-               (goto-char (cdr cell))))
-      (let ((org-noter-disable-narrowing t)
-            (org-noter-use-indirect-buffer nil))
-        (org-noter 0)))))
+(defun c1/open-org-noter (&optional force)
+  (interactive "P")
+  (let ((org-noter-disable-narrowing t)
+        (org-noter-use-indirect-buffer nil))
+    (org-noter 0)))
 
 (org-export-define-derived-backend 'ascii-simple 'ascii
   :translate-alist
