@@ -133,6 +133,8 @@ it can be passed in POS."
 (use-package org-appear
   :after org
   :straight t
+  :custom
+  (org-appear-autolinks t)
   :hook
   (org-mode . org-appear-mode))
 
