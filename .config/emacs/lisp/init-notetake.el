@@ -360,6 +360,8 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Org-download
 (use-package org-download
   :straight t
+  :bind (:map org-mode-map
+              ("<f10>" . org-download-screenshot))
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "scrot -s %s"))
