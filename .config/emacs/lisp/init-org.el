@@ -430,7 +430,7 @@ Headlines are exported using `org-bibtex-headline'."
             ,@org-capture-ref-capture-target
             :clock-in nil
             :jump-to-captured t
-            :prepare-finalize
+            :after-finalize
             (lambda ()
               (c1/org-bibtex-append "/storage/org/notecard/lit/other/bibliography.bib"))
             :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
