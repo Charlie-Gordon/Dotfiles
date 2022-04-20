@@ -281,7 +281,7 @@ efforts may be updated by this function."
       (let* ((my-heading-text (or (if (= (org-outline-level) 0)
                                       (cadar (org-collect-keywords '("TITLE")))
                                     (nth 4 (org-heading-components)))
-                                  (c1/org-get-first-sentence))) ;; retrieve heading string
+                                  (org-id-uuid))) ;; retrieve heading string
              (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+%\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[25%]"
              (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+/[0-9]+\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[2/7]"
              (my-heading-text (replace-regexp-in-string "\\(\\[#[ABC]\\]\\)" "" my-heading-text)) ;; remove priority indicators like "[#A]"
