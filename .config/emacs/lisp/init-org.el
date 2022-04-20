@@ -525,10 +525,16 @@ Headlines are exported using `org-bibtex-headline'."
   :straight t
   :config
   (add-hook 'org-mode-hook #'org-special-block-extras-mode)
-  (o-deflink extract
-             ""
-             [:face 'org-agenda-structure
-                    :follow (org-id-goto o-label)]))
+
+  (org-defblock extract (extract-id)
+                (format (if (eq backend 'html)
+                            "<BODY BORDER-BOTTOM: blue thin solid; BORDER-LEFT: blue thin solid; OVERFLOW: auto; BORDER-TOP: blue thin solid; BORDER-RIGHT: blue thin solid\">%s</BODY>"
+                          "{\\color{blue} %s}"
+                          contents)))
+  (org-deflink extract
+               ""
+               [:face 'org-agenda-structure
+                      :follow (org-id-goto o-label)]))
 
 (use-package org-edna
   :straight t)
