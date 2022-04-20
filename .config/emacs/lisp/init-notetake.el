@@ -78,33 +78,6 @@
   :custom
   (djvu-continuous t))
 
-;;;; Calibre
-(use-package calibredb
-  :straight '(calibredb.el :type git :host github
-                           :repo "chenyanming/calibredb.el")
-  :when (executable-find "calibredb")
-  :config
-  (setq calibredb-program (executable-find "calibredb"))
-  (setq calibredb-root-dir *library-dir*)
-  (setq calibredb-library-alist `((,*library-dir*)))
-  (setq calibredb-db-dir (concat calibredb-root-dir "metadata.db"))
-  (setq calibredb-ref-default-bibliography (concat calibredb-root-dir "muhbib.bib"))
-  (setq calibredb-sort-by 'title)
-  (setq calibredb-sql-newline "\n")
-  (setq calibredb-sql-separator "|")
-  (setq calibredb-detailed-view nil))
-
-(defun calibredb-query (sql-query)
-  "Query calibre databse and return the result.
-Argument SQL-QUERY is the sqlite sql query string."
-  (interactive)
-  (if (file-exists-p calibredb-db-dir)
-    (shell-command-to-string
-       (format "%s -list -noheader %s -init %s"
-               sql-sqlite-program
-               (shell-quote-argument (expand-file-name calibredb-db-dir))
-               (make-temp-file "calibredb-query-string" nil nil sql-query))) nil))
-             
 ;;;; Note-taking with org
 ;;;;; Org-roam
 
