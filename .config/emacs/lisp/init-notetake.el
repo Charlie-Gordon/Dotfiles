@@ -167,7 +167,7 @@ Used to determines filename in `org-roam-capture-templates'."
                  "#+TITLE: %<%Y-%m-%d>\n#+CREATED: %u\n\n")
       :unnarrowed t)))
   :config
-  (org-roam-db-autosync-mode)
+  (org-roam-db-autosync-mode))
 
 (use-package org-roam-bibtex
   :straight t
