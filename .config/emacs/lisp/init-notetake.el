@@ -224,20 +224,45 @@ Used to determines filename in `org-roam-capture-templates'."
               :map minibuffer-local-map
               ("M-b" . citar-insert-preset)
               :map org-mode-map :package org
-              ("C-c B" . #'org-cite-insert))
+              ;; ("C-c B" . #'org-cite-insert)
+              )
   :bind-keymap ("C-c t" . citar-map)
   :init
   (define-prefix-command 'citar-map nil "Citar")
   :custom
   (citar-bibliography (append (directory-files *bibliography-dir* t ".bib")
                               (directory-files (expand-file-name "lit/other/" org-roam-directory) t ".bib")))
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
+  ;; (org-cite-insert-processor 'citar)
+  ;; (org-cite-follow-processor 'citar)
+  ;; (org-cite-activate-processor 'citar)
   (citar-at-point-function 'embark-act)
   (citar-open-note-function 'orb-citar-edit-note)
   (citar-library-paths `(,*library-dir*))
   (citar-notes-paths `(,*org-dir*))
+  (citar-major-mode-functions
+   '(((org-mode) .
+     ((local-bib-files . ignore)
+      (insert-citation . ignore)
+      (insert-edit . ignore)
+      (key-at-point . ignore)
+      (citation-at-point . ingnore)
+      (list-keys . ignore)))
+    ((latex-mode) .
+     ((local-bib-files . citar-latex-local-bib-files)
+      (insert-citation . citar-latex-insert-citation)
+      (insert-edit . citar-latex-insert-edit)
+      (key-at-point . citar-latex-key-at-point)
+      (citation-at-point . citar-latex-citation-at-point)
+      (list-keys . reftex-all-used-citation-keys)))
+    ((markdown-mode) .
+     ((insert-keys . citar-markdown-insert-keys)
+      (insert-citation . citar-markdown-insert-citation)
+      (insert-edit . citar-markdown-insert-edit)
+      (key-at-point . citar-markdown-key-at-point)
+      (citation-at-point . citar-markdown-citation-at-point)
+      (list-keys . citar-markdown-list-keys)))
+    (t .
+       ((insert-keys . citar--insert-keys-comma-separated)))))
   (citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                      (suffix . "          ${=key= id:15}    ${=type=:12}    ${formats:12}")
                      (preview . "${author editor} (${year issued date}) ${title}, ${journal publisher container-title collection-title}.")
@@ -313,10 +338,14 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
   (advice-add 'org-noter-pdf--get-selected-text :before #'c1/pdf-keynav-region-to-active-region)
+  (use-package org-noter-nov :ensure nil)
+  (use-package org-noter-djvu :ensure nil)
+  (use-package org-noter-pdf :ensure nil)
   (use-package org-noter-nov-overlay :ensure nil)
   (use-package org-noter-dynamic-block :ensure nil)
   (use-package org-noter-citar :ensure nil)
-  (use-package org-noter-eww :ensure nil))
+  ;; (use-package org-noter-eww :ensure nil)
+  )
 
 (defun c1/pdf-keynav-region-to-active-region (mode)
   (when (eq mode 'pdf-view-mode)
