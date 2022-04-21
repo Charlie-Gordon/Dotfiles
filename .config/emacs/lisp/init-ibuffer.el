@@ -23,7 +23,7 @@
 (setq-default ibuffer-show-empty-filter-groups nil)
 
 (use-package ibuffer
-  :ensure nil
+  :straight (:type built-in)
   :bind ("C-x C-b" . ibuffer)
   :config
   ;; Use human readable Size column instead of original one
