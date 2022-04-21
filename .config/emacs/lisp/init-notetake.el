@@ -603,7 +603,7 @@ INFO is a plist holding contextual information."
   :custom
   (bir-directory (expand-file-name "lit/" org-roam-directory))
   :config
-  (use-package bir-org-noter :ensure nil))
+  (advice-add 'bir-extract-region-prepare-finalize :after #'org-roam-db-update-file))
 
 
 (provide 'init-notetake)
