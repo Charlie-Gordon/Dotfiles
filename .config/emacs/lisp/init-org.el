@@ -592,8 +592,9 @@ Headlines are exported using `org-bibtex-headline'."
   :config
   (org-gtd-mode)
   (add-to-list 'org-capture-templates
+
                `("n" "NEXT action" entry
-                 (file+olp ,(file-name-with-extension (expand-file-name org-gtd-default-file-name *gtd-dir*) "org")
+                 (file+olp ,(concat (expand-file-name org-gtd-default-file-name *gtd-dir*) ".org")
                            "Actions")
                  "** NEXT %? %^g\nSCHEDULED: %t"))
   (add-to-list 'org-gtd--agenda-functions #'org-agenda-run-series)
