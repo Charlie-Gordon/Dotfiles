@@ -13,7 +13,8 @@
   :straight '(org-web-tools :type git
                             :host github
                             :repo "alphapapa/org-web-tools"
-                            :fork t))
+                            :fork t
+                            :branch "fix-linked-images"))
 
 
 (use-package browse-url

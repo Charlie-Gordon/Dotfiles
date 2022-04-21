@@ -19,7 +19,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Managing packages
 ;;;;;; straight.el (with-use-package)
-  (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+  (push (expand-file-name "lisp" user-emacs-directory) load-path)
   (require 'init-straight)
   (use-package init-use-package :ensure nil)
 ;;;;;; Local packages (on site-lisp/)
@@ -91,4 +91,3 @@
 ;; End:
 (provide 'init)
 ;;; init.el ends here
-

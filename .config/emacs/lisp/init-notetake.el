@@ -331,6 +331,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-doc-split-fraction '(0.65 0.4))
   (org-noter-auto-save-last-location t)
   (org-noter-always-create-frame t)
+  (org-noter-prefer-root-as-file-level t)
   (org-noter-disable-narrowing t)
   (org-noter-keep-notes-after-kill-session t)
   (org-noter-separate-notes-from-heading t)
@@ -460,6 +461,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   ;; (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
   (org-fc-algorithm 'roam-sm2)
+  (org-fc-review-show-remaining-cards nil)
   (org-fc-topic-proportion 80)
   (org-fc-browser-headers
    '(("No." org-fc-browser-num>?)
