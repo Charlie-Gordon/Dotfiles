@@ -568,8 +568,7 @@ Headlines are exported using `org-bibtex-headline'."
              ((org-agenda-overriding-header "All NEXT items")
               (org-agenda-prefix-format "%b %i")
               (org-agenda-compact-blocks t)
-              (org-agenda-breadcrumbs-separator "⋅"))))
-      "")
+              (org-agenda-breadcrumbs-separator "⋅")))))
      ("p" "PLanning"
       ((agenda ""
                ((org-agenda-prefix-format " %-5e %t │%(c1/org-agenda-title) ")
@@ -586,8 +585,7 @@ Headlines are exported using `org-bibtex-headline'."
                  `((daily today require-timed)
                    (800 1000 1200 1400 1600 1800 2000)
                    "" ,(make-string 53 ?\─)))
-                (org-agenda-compact-blocks t))))
-      "")))
+                (org-agenda-compact-blocks t)))))))
   (org-gtd-directory "/storage/org/gtd/")
   (org-gtd-process-item-hooks nil)
   (org-edna-use-inheritance t)
