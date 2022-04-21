@@ -512,8 +512,8 @@ Used to determines filename in `org-roam-capture-templates'."
    (let ((org-noter-use-indirect-buffer nil))
      (org-noter-kill-session session))))
 
-(defun c1/open-org-noter (&optional force)
-  (interactive "P")
+(defun c1/open-org-noter ()
+  (interactive)
   (let ((org-noter-disable-narrowing t)
         (org-noter-use-indirect-buffer nil))
     (org-noter 0)))
