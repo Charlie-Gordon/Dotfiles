@@ -54,13 +54,15 @@
   :custom
   (emms-source-file-default-directory "/storage/music/")
   (emms-history-file (expand-file-name "emms-history" emms-source-file-default-directory))
+  (emms-player-mpv-parameters '("--volume=100" "--quiet"
+                                "--really-quiet" "--no-audio-display"
+                                "--no-video"))
   (emms-history-start-playing t)
   :config
   (use-package emms-setup :ensure nil)
   (emms-all)
   (emms-default-players)
-  (use-package emms-history :ensure nil)
-  (add-to-list 'emms-player-mpv-parameters "--no-video"))
+  (use-package emms-history :ensure nil))
 
 (provide 'init-local)
 ;;; init-local.el ends here
