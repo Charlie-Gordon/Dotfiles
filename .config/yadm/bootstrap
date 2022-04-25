@@ -4,9 +4,9 @@ cd $HOME
 
 echo "Installing DreyMaR's colemak."
 
-git clone https://github.com/DreymaR/BigBagKbdTrixXKB.git &&
+git clone https://github.com/DreymaR/BigBagKbdTrixXKB.git /tmp/Bigbag/ &&
 
-cd BigBagKbdTrixXKB
+cd /tmp/Bigbag/;
 
 sed -i '' -e 's#/usr/share/X11#/usr/local/share/X11#g' install-dreymar-xmod.sh
 
