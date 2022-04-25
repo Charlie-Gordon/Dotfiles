@@ -245,7 +245,7 @@ Used to determines filename in `org-roam-capture-templates'."
       (insert-citation . ignore)
       (insert-edit . ignore)
       (key-at-point . ignore)
-      (citation-at-point . ingnore)
+      (citation-at-point . ignore)
       (list-keys . ignore)))
     ((latex-mode) .
      ((local-bib-files . citar-latex-local-bib-files)
