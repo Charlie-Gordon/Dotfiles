@@ -2,4 +2,4 @@
 
 # Have Calibre make a bibtex catalog of all books in its library.
 
-/usr/local/bin/calibredb catalog /storage/bib/library.bib --fields=title,authors,formats,pubdate --sort-by author_sort --entry-type=mixed --citation-template={authors}{pubdate}
+/usr/local/bin/calibredb catalog /storage/bib/library.bib --fields=title,authors,formats,pubdate --sort-by author_sort --entry-type=mixed --citation-template={author}-{id}-{pubdate}
