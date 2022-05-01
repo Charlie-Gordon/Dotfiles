@@ -366,7 +366,14 @@ efforts may be updated by this function."
 (use-package ox-bibtex
   :ensure nil
   :custom
-  (org-bibtex-key-property "ID"))
+  (org-bibtex-key-property "ID")
+  :config
+  (when (< (string-to-number emacs-version) 28.0)
+    (push '(:misc
+            (:description . "Use this type when nothing else fits.")
+            (:required)
+            (:optional :author :title :howpublished :month :year :note :url))
+          org-bibtex-types)))
 
 (defun c1/org-bibtex-append (filename)
   "Export each headline in the current file to a bibtex entry.
