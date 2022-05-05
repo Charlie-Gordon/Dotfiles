@@ -519,7 +519,9 @@ Headlines are exported using `org-bibtex-headline'."
   :hook (org-agenda-after-show . c1/org-maybe-go-to-saved-place))
 
 (use-package org-agenda-dych-mode
-  :ensure nil
+  :straight '(org-agenda-dych-mode :type git
+                                   :host github
+                                   :repo "c1-g/org-agenda-dych-mode")
   :custom
   (org-agenda-dych-default-start "05:00")
   (org-agenda-dych-default-work-hour "16h"))
