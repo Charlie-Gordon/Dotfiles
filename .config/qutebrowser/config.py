@@ -11,11 +11,10 @@
 #   qute://help/settings.html
 
 # Change the argument to True to still load settings configured via autoconfig.yml
-config.load_autoconfig(False)
+config.load_autoconfig(True)
 
 # ui
 config.source('theme.py')
-config.set('colors.webpage.darkmode.enabled', True)
 c.fonts.default_family = '"Iosevka Aile"'
 c.fonts.default_size = '12pt'
 c.fonts.hints = 'bold 20pt default_family'
@@ -98,6 +97,7 @@ bindings = {
     'o': 'set-cmd-text -s :open --window',
     'O': 'set-cmd-text -s :open --window',
     '#': 'hint code userscript code_select.py',
+    'td': 'config-cycle colors.webpage.darkmode.enabled true false;; restart',
 }
 for key, bind in bindings.items():
     config.bind(key, bind)
