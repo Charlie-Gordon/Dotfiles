@@ -149,7 +149,12 @@ it can be passed in POS."
   (org-modern-hide-stars nil))
 
 (use-package org-clock-convenience
-  :straight t
+  :after org-agenda
+  :straight '(org-clock-convenience :type git
+                                    :host github
+                                    :repo "dfeich/org-clock-convenience"
+                                    :fork t
+                                    :branch "lax-regexp")
   :bind (:map org-agenda-mode-map
               ("<s-up>" . org-clock-convenience-timestamp-up)
               ("<s-down>" . org-clock-convenience-timestamp-down)
