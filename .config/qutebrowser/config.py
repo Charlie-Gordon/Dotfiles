@@ -95,11 +95,9 @@ bindings = {
     'eu': 'edit-url',
     'w': 'tab-next',
     'q': 'tab-prev',
-    'o': 'set-cmd-text -s :open --window',
-    'O': 'set-cmd-text -s :open --window',
-    '#': 'hint code userscript code_select.py',
     'td': 'config-cycle colors.webpage.darkmode.enabled true false;; restart',
 }
+
 for key, bind in bindings.items():
     config.bind(key, bind)
     
