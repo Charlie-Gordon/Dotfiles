@@ -29,23 +29,6 @@
 (use-package vterm
   :straight t)
 
-(use-package elfeed
-  :straight t
-  :custom
-  (elfeed-db-directory (expand-file-name "elfeed/" user-emacs-directory)))
-
-(use-package org-el-cache
-  :straight '(org-zk :type git
-                     :host github
-                     :repo "l3kn/org-el-cache")
-  :disabled)
-
-(use-package org-zettelkasten
-  :disabled
-  :straight '(org-zk :type git
-                     :host github
-                     :repo "l3kn/org-zettelkasten"))
-
 (use-package emms
   :straight t
   :bind
