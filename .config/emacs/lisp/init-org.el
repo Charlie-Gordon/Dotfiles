@@ -515,7 +515,7 @@ Headlines are exported using `org-bibtex-headline'."
       (buffer-string))))
 
 (use-package org-agenda
-  :ensure nil
+  :straight '(:type built-in)
   :hook (org-agenda-after-show . c1/org-maybe-go-to-saved-place))
 
 (use-package org-agenda-dych-mode
