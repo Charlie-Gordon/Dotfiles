@@ -17,7 +17,7 @@ config.load_autoconfig(True)
 config.source('theme.py')
 c.fonts.default_family = '"Iosevka Aile"'
 c.fonts.default_size = '12pt'
-c.fonts.hints = 'bold 20pt default_family'
+c.fonts.hints = 'bold 18pt default_family'
 c.fonts.completion.entry = '12pt "Iosevka Aile"'
 c.fonts.debug_console = '12pt "Iosevka Aile"'
 c.fonts.prompts = 'default_size Iosevka Aile'
