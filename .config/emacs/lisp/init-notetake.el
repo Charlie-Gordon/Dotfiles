@@ -451,6 +451,7 @@ Used to determines filename in `org-roam-capture-templates'."
                      :host github
                      :repo "l3kn/org-fc"
                      :fork t
+                     :branch "org-roam"
                      :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
   :bind (:map org-fc-review-flip-mode-map
               ("C-;" . #'c1/open-org-noter)
