@@ -77,9 +77,10 @@ config.set('hints.chars', 'qwfarstxcdv')
 
 # binding
 bindings = {
-    'xD': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start.sh',
-    'xd': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start-lowres.sh',
-    'xa': 'hint links userscript ~/.config/qutebrowser/userscripts/emacs-mpv-start-audio.sh',
+    'xd': 'hint links spawn umpv --ytdl-format=bestvideo[height<=?360]+bestaudio/best {hint-url}',
+    'xD': 'hint links spawn umpv {hint-url}',
+    'xc': 'spawn umpv {url}',
+    'xC': 'hint --rapid links spawn umpv {hint-url}',
     '[[': 'navigate decrement',
     ']]': 'navigate increment',
     '{{': 'navigate prev',
