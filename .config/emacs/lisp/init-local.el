@@ -15,10 +15,7 @@
   :straight t)
 
 (use-package transmission
-  :straight '(transmission :type git
-                           :host github
-                           :repo "xFA25E/transmission"
-                           :branch "feature/rename-path"))
+  :straight t)
 
 (use-package trashed
   :straight t)
