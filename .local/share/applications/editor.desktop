@@ -1,0 +1,7 @@
+[Desktop Entry]
+Categories=System;
+Exec=emacsclient %u
+Type=Application
+Terminal=false
+MimeType=x-scheme-handler/editor;
+Name=Emacs
