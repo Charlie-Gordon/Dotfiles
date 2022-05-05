@@ -803,9 +803,10 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
 
 (use-package org-yt
   :straight '(org-yt :type git
-                     :host github
-                     :repo "TobiasZawada/org-yt"
-                     :fork t))
+                     :host nil
+                     :repo "https://github.com/TobiasZawada/org-yt.git"
+                     :fork "git@github.com:c1-g/org-yt.git"
+                     :branch "deferred"))
 
 
 
