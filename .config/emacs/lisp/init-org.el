@@ -460,13 +460,22 @@ Headlines are exported using `org-bibtex-headline'."
                         (lambda ()
                           (let ((org-board-wget-show-buffer nil))
                             (org-board-archive))))
-                       ("Interactive + Content"
-                        :keys "c"
-                        :space " "
-                        :content
-                        (lambda ()
-                          (bir-import (org-capture-ref-get-bibtex-url-from-capture-data)
-                                      (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))
+                       ("Interactive + Content" :keys "c"
+                        :children
+                        (("Interactive + Content Reflowed"
+                          :keys "r"
+                          :space " "
+                          :content
+                          (lambda ()
+                            (bir-import (org-capture-ref-get-bibtex-url-from-capture-data)
+                                        (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))
+                         ("Interactive + Full Content"
+                          :keys "f"
+                          :space " "
+                          :content
+                          (lambda ()
+                            (bir-import-full (org-capture-ref-get-bibtex-url-from-capture-data)
+                                             (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))))
                        ("Interactive + outline"
                         :keys "o"
                         :space " "

@@ -56,8 +56,12 @@ while :; do
             TEMPLATE="f"
             shift
             ;;
-        --content)
-            TEMPLATE="c"
+        --content-reflowed)
+            TEMPLATE="cr"
+            shift
+            ;;
+        --content-full)
+            TEMPLATE="cf"
             shift
             ;;
         *)
