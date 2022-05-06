@@ -457,10 +457,9 @@ Headlines are exported using `org-bibtex-headline'."
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
             :template
-            ("%{fetch-bibtex}* %?%{space}%{org-entry}\n%{outline}%{content}")
+            ("%{fetch-bibtex}* %?%{org-entry}\n%{outline}%{content}")
             :children (("Interactive + File"
                         :keys "f"
-                        :space " "
                         :before-finalize
                         (lambda ()
                           (let ((org-board-wget-show-buffer nil))
@@ -469,31 +468,26 @@ Headlines are exported using `org-bibtex-headline'."
                         :children
                         (("Interactive + Content Reflowed"
                           :keys "r"
-                          :space " "
                           :content
                           (lambda ()
                             (bir-import (org-capture-ref-get-bibtex-url-from-capture-data)
                                         (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))
                          ("Interactive + Full Content"
                           :keys "f"
-                          :space " "
                           :content
                           (lambda ()
                             (bir-import-full (org-capture-ref-get-bibtex-url-from-capture-data)
                                              (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))))
                        ("Interactive + outline"
                         :keys "o"
-                        :space " "
                         :content
                         (lambda ()
                           (c1/org-toc-from-html (or (org-capture-ref-get-buffer-from-html-file-in-query)
                                                     (url-retrieve-synchronously (org-capture-ref-get-bibtex-url-from-capture-data))))))
                        ("Interactive org-capture-ref template"
-                        :keys ,(car org-capture-ref-capture-keys)
-                        :space " ")
+                        :keys ,(car org-capture-ref-capture-keys))
                        ("Silent org-capture-ref template"
                         :keys ,(cadr org-capture-ref-capture-keys)
-                        :space ""
                         :immediate-finish t))))
   :config
   (let ((templates (doct org-capture-ref-capture-template)))
