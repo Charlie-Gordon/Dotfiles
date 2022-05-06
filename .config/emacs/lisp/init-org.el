@@ -560,7 +560,8 @@ Headlines are exported using `org-bibtex-headline'."
                       :follow (org-id-goto o-label)]))
 
 (use-package org-edna
-  :straight t)
+  :straight t
+  :diminish t)
 
 (use-package org-gtd
   :straight t
