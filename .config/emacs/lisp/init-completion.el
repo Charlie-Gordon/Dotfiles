@@ -175,7 +175,7 @@
         ([backtab] . corfu-previous))
 
   :init
-  (corfu-global-mode))
+  (global-corfu-mode))
 
 
 ;;; Ivy
