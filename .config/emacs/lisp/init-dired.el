@@ -13,7 +13,8 @@
 (use-package dired
   :ensure nil
   :bind (:map dired-mode-map
-	      ("E" . dired-eww-open-file))
+	      ("E" . dired-eww-open-file)
+              ("=" . dired-ediff))
   :custom
   (dired-use-ls-dired nil)
   (dired-recursive-copies 'always)
@@ -24,6 +25,35 @@
   :hook
   (dired-mode . dired-hide-details-mode)
   (dired-mode . hl-line-mode))
+
+(defun dired-ediff ()
+   "Run ediff-files on a pair of files marked in dired buffer"
+   (interactive)
+   (let* ((marked-files (dired-get-marked-files nil nil))
+          (other-win (get-window-with-predicate
+                      (lambda (window)
+                        (with-current-buffer (window-buffer window)
+                          (and (not (eq window (selected-window)))
+                               (eq major-mode 'dired-mode))))))
+          (other-marked-files (and other-win
+                                   (with-current-buffer (window-buffer other-win)
+                                     (dired-get-marked-files nil)))))
+     (cond ((= (length marked-files) 2)
+            (ediff-files (nth 0 marked-files)
+                         (nth 1 marked-files)))
+           ((and (= (length marked-files) 1)
+                 (= (length other-marked-files) 1))
+            (ediff-files (nth 0 marked-files)
+                         (nth 0 other-marked-files)))
+           ((= (length marked-files) 1)
+            (let ((single-file (nth 0 marked-files))) 
+              (ediff-files single-file
+                           (read-file-name
+                            (format "Diff %s with: " single-file)
+                            nil (m (if (string= single-file (dired-get-filename))
+                                       nil
+                                     (dired-get-filename))) t))))
+           (t (error "mark no more than 2 files")))))
 
 (use-package dired-hist
   :straight '(dired-hist :type git
