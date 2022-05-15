@@ -44,25 +44,6 @@
   (shr-width 70)
   (shr-cookie-policy nil))
 
-(use-package shrface
-  :straight t
-  :disabled
-  :after shr
-  :config
-  (shrface-basic)
-  (shrface-trial)
-  (shrface-default-keybindings)         ; setup default keybindings
-  (setq shrface-href-versatile t)
-  (setq shrface-bullets-bullet-list '("*" "**" "***" "****" "*****" "******")))
-
-(use-package shr-tag-pre-highlight
-  :straight t
-  :disabled
-  :after shr
-  :config
-  (add-to-list 'shr-external-rendering-functions
-               '(pre . shrface-tag-pre-highlight)))
-
 (use-package eww
   :defer t
   :after shr
