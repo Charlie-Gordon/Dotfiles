@@ -13,29 +13,6 @@
 ;;   :hook
 ;;   (after-init . selectrum-mode))
 
-(use-package mct
-  :straight t
-  :bind (:map minibuffer-local-completion-map
-              ("SPC" . nil)
-              ("?" . nil))
-  :custom
-  (mct-remove-shadowed-file-names t) ; works when `file-name-shadow-mode' is enabled
-  (mct-hide-completion-mode-line t)
-  (mct-show-completion-line-numbers nil)
-  (mct-apply-completion-stripes t)
-  (mct-completion-blocklist nil)
-  (mct-minimum-input 3)
-  (mct-live-update-delay 0.3)
-  (mct-completions-format 'one-column)
-  (mct-completion-passlist
-   '(imenu
-     Info-goto-node
-     Info-index
-     Info-menu
-     vc-retrieve-tag))
-  :config
-  (mct-minibuffer-mode 1))
-
 ;;;; Orderless
 (use-package orderless
   :straight t
