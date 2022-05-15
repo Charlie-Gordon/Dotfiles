@@ -79,6 +79,8 @@ config.set('hints.chars', 'qwfarstxcdv')
 bindings = {
     'xd': 'hint links spawn umpv --ytdl-format=bestvideo[height<=?360]+bestaudio/best {hint-url}',
     'xD': 'hint links spawn umpv {hint-url}',
+    'xa': 'spawn mpv --volume=100 --no-video --no-audio-display {url}',
+    'xA': 'hint links spawn mpv --volume=100 --no-video --no-audio-display {hint-url}',
     'xc': 'spawn umpv {url}',
     'xC': 'hint --rapid links spawn umpv {hint-url}',
     '[[': 'navigate decrement',
