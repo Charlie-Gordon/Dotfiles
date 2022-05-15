@@ -303,7 +303,7 @@ efforts may be updated by this function."
           (if my-created-property (progn
                                     ;; prefer date-stamp of CREATED property (if found):
                                     (setq my-created-datestamp (substring (org-entry-get nil "CREATED" nil) 1 11)) ;; returns "2021-12-16" or nil (if no CREATED property)
-                                    (setq new-id (concat my-created-datestamp "-" (round (time-to-seconds)) "-" new-id)))
+                                    (setq new-id (concat my-created-datestamp "-" (number-to-string (round (time-to-seconds))) "-" new-id)))
             ;; use today's date-stamp if no CREATED property is found:
             (setq new-id (concat (format-time-string "%Y-%m-%d-%s-") new-id))))
         (org-set-property "ID" new-id))))
