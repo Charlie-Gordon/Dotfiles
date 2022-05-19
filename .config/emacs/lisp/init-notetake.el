@@ -40,7 +40,7 @@
   (pdf-keynav-copy-region-blink-delay 2)
   (pdf-annot-minor-mode-map-prefix "a")
   (pdf-view-display-size 'fit-page)
-  (pdf-annot-activate-created-annotations t)
+  (pdf-annot-activate-created-annotations nil)
   (pdf-view-resize-factor 1.1)
   (pdf-keynav-transient-mark-mode t)
   :config
