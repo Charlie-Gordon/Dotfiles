@@ -49,7 +49,8 @@
     (cons (frame-parameter nil 'foreground-color)
           (color-darken-name
            (frame-parameter nil 'background-color) 5)))
-  
+  (add-to-list 'pdf-tools-enabled-modes 'pdf-virtual-global-minor-mode)
+  (add-to-list 'pdf-tools-enabled-modes 'pdf-keynav-minor-mode)
   (add-hook 'pdf-view-midnight-mode-hook 'pdf-view-midnight-colors-theme)
   
   (defun prot/pdf-tools-backdrop ()
