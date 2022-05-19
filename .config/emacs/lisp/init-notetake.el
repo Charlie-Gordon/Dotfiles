@@ -341,16 +341,15 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   ;; Add a function to ensure precise note is inserted
   (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
-    (interactive "P")
     (org-noter--with-valid-session
      (let ((org-noter-insert-note-no-questions (if toggle-no-questions
                                                    (not org-noter-insert-note-no-questions)
                                                  org-noter-insert-note-no-questions))
-           (org-pdftools-use-isearch-link t)
            (org-pdftools-use-freepointer-annot t))
        (org-noter-insert-note (org-noter--get-precise-info)))))
   (with-eval-after-load 'pdf-annot
-    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))
+  (advice-add 'org-noter-insert-precise-note :override #'org-noter-pdftools-insert-precise-note))
 
 (use-package org-noter-media
   :straight '(org-noter-media :type git
