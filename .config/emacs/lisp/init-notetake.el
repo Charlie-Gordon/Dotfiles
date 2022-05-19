@@ -513,6 +513,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-fc-roam-mode +1))
 
 (defun c1/maybe-close-org-noter (&rest _args)
+  (interactive)
   (org-noter--with-valid-session
    (let ((org-noter-use-indirect-buffer nil))
      (org-noter-kill-session session))))
