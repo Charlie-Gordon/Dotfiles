@@ -13,6 +13,21 @@
 ;;   :hook
 ;;   (after-init . selectrum-mode))
 
+(use-package vertico
+  :straight '(vertico :type git
+                      :rego "melpa/melpa"
+                      :files ("*" (:exclude ".git") "extensions/"))
+  :custom
+  (vertico-resize t)
+  :init
+  (vertico-mode 1)
+  :config
+  (use-package vertico-quick
+    :ensure nil
+    :bind (:map vertico-map
+                ("M-q" . vertico-quick-insert)
+                ("C-q" . vertico-quick-exit))))
+
 ;;;; Orderless
 (use-package orderless
   :straight t
