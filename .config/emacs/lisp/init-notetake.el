@@ -430,8 +430,11 @@ Used to determines filename in `org-roam-capture-templates'."
                      :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
   :bind (:map org-fc-review-flip-mode-map
               ("C-;" . #'c1/open-org-noter)
+              ("C-," . #'c1/read-aloud-org)
+              ("r" . #'c1/org-fc-edit-on-saved-place)
               :map org-fc-review-edit-mode-map
-              ("C-;" . #'c1/open-org-noter))
+              ("C-;" . #'c1/open-org-noter)
+              ("C-," . #'c1/read-aloud-org))
   :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
@@ -506,6 +509,15 @@ Used to determines filename in `org-roam-capture-templates'."
   (let ((org-noter-disable-narrowing t)
         (org-noter-use-indirect-buffer nil))
     (org-noter 0)))
+
+(use-package read-aloud
+  :straight t
+  :custom
+  (read-aloud-engine "festival")
+  :config
+  (lax-plist-put read-aloud-engines
+                 "festival"
+                 '(cmd "festival" args ("--tts" "--pipe"))))
 
 (org-export-define-derived-backend 'ascii-simple 'ascii
   :translate-alist
