@@ -9,6 +9,10 @@
 
 ;;; Code:
 
+(use-package webjump
+  :straight (:type built-in)
+  :bind ("s-j" . webjump))
+
 (use-package org-web-tools
   :straight '(org-web-tools :type git
                             :host github
@@ -91,6 +95,19 @@
   (eww-desktop-remove-duplicates t)
   (eww-form-checkbox-selected-symbol "[X]")
   (eww-form-checkbox-symbol "[ ]"))
+
+(defun c1/fix-webjump-url-encode (str)
+  "Like `webjump-url-encode' but doesn't replace \" \" with \"+\".
+
+Meant to override `webjump-url-encode'"
+  (mapconcat (lambda (c)
+               (let ((s (char-to-string c)))
+                 (if (string-match "[a-zA-Z_./~-]" s) s
+                   (upcase (format "%%%02x" c)))))
+             (encode-coding-string str 'utf-8)
+             ""))
+
+(advice-add 'webjump-url-encode :override #'c1/fix-webjump-url-encode)
 
 (use-package elpher
   :straight t)
