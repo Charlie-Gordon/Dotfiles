@@ -472,13 +472,16 @@ Headlines are exported using `org-bibtex-headline'."
                           :content
                           (lambda ()
                             (bir-import (org-capture-ref-get-bibtex-url-from-capture-data)
-                                        (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))
+                                        (when (org-capture-ref-get-buffer-from-html-file-in-query)
+                                          (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query))))))
                          ("Interactive + Full Content"
                           :keys "f"
                           :content
                           (lambda ()
+                            (require 'bir)
                             (bir-import-full (org-capture-ref-get-bibtex-url-from-capture-data)
-                                             (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query)))))))
+                                             (when (org-capture-ref-get-buffer-from-html-file-in-query)
+                                               (buffer-file-name (org-capture-ref-get-buffer-from-html-file-in-query))))))))
                        ("Interactive + outline"
                         :keys "o"
                         :content
