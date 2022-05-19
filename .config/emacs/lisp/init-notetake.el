@@ -293,8 +293,8 @@ Used to determines filename in `org-roam-capture-templates'."
 ;;;;; Org-noter
 (use-package org-noter
   :straight '(org-noter :type git
-                        :host github
-                        :repo "c1-g/org-noter-plus-djvu"
+                        :host nil
+                        :repo "git@github.com:c1-g/org-noter-plus-djvu.git"
                         :branch "link-as-doc"
                         :files ("other/*.el" "*.el" "modules/*.el"))
   :bind (:map org-noter-doc-mode-map
