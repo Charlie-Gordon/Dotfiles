@@ -355,7 +355,9 @@ Used to determines filename in `org-roam-capture-templates'."
   :straight '(org-noter-media :type git
                               :host github
                               :repo "auroranil/org-noter-media"
-                              :fork t))
+                              :fork t)
+  :custom
+  (mpv-default-options '("--gapless-audio=no" "--ytdl-format=bestvideo[height<=?480]+bestaudio/best")))
 
 (use-package bookmark+
   :straight t)
