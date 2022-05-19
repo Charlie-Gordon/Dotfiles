@@ -146,6 +146,7 @@ it can be passed in POS."
   (org-agenda-finalize . org-modern-agenda)
   :custom
   (org-modern-star nil)
+  (org-modern-table-vertical 1)
   (org-modern-hide-stars nil))
 
 (use-package org-clock-convenience
