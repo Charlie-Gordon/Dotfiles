@@ -46,5 +46,8 @@
   (emms-default-players)
   (use-package emms-history :ensure nil))
 
+(use-package ebib
+  :straight t)
+
 (provide 'init-local)
 ;;; init-local.el ends here
