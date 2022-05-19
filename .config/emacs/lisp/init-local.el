@@ -31,6 +31,8 @@
   :bind
   ("s-m e" . emms)
   ("s-m b" . emms-smart-browse)
+  (:map emms-browser-mode-map
+        ("a" . emms-add-directory-tree))
   :custom
   (emms-source-file-default-directory "/storage/music/")
   (emms-history-file (expand-file-name "emms-history" emms-source-file-default-directory))
