@@ -467,15 +467,19 @@ Used to determines filename in `org-roam-capture-templates'."
                                                                :filterer org-fc-index-filter-due
                                                                :non-recursive t)))
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
-  (add-hook 'org-fc-review-edit-mode-hook #'save-place-find-file-hook)
   (advice-add 'org-fc-review-next-card :after #'org-fc-write-setup)
   (add-hook 'after-init-hook #'org-fc-review-daily 80))
 
+(defun c1/org-fc-edit-on-saved-place ()
+  (interactive)
+  (org-fc-review-edit)
+  (save-place-find-file-hook))
 
-(defun org-fc-write-setup (&rest _args)
-  (when (member "writing" (org-get-tags))
+
+(defun org-fc-write-setup (&optional resuming)
+  (when (and (not resuming) (member "writing" (org-get-tags)))
     (save-excursion
-      (org-fc-review-edit))
+      (c1/org-fc-edit-on-saved-place))
     (unless (org-before-first-heading-p)
       (org-fc-narrow)
       (org-fc-hide-drawers))
