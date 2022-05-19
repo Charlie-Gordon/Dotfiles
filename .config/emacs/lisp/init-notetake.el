@@ -540,51 +540,6 @@ INFO is a plist holding contextual information."
     (with-current-buffer buf
       (read-aloud-buf))))
 
-(defun org-fc-algo-sm2-cloze-review-interval (position)
-  (when (and (org-fc-entry-cloze-p) (org-entry-get nil bir-ref-parent-property))
-    (let ((interval (+ 12 (cl-random 30.0))))
-      (list position (org-fc-algo-sm2-ease-initial) 0
-            interval
-            (org-fc-timestamp-in interval)))))
-
-(defun org-fc-browser-list-db ()
-  "docstring"
-  (let ((outstanding (plist-get org-fc-browser-context :outstanding))
-        (pending (plist-get org-fc-browser-context :pending))
-        cards)
-    (cond (outstanding
-           (if (and org-fc-review--session (oref org-fc-review--session cards))
-               (setq cards (oref org-fc-review--session cards))
-             (setq cards (org-fc-index org-fc-browser-context))
-             (setq cards (funcall org-fc-index-sort-function cards))
-             (setq org-fc-review--session
-                (org-fc-make-review-session cards org-fc-browser-context))
-             (setf (oref org-fc-review--session cards) cards)))
-          (pending
-           (org-fc-browser-index-pending))
-          (t
-           (setq cards (org-fc-index org-fc-browser-context))
-           (setq cards (org-fc-index-positions cards))
-           (if cards
-               (cl-loop for card in cards
-                        append `((,(plist-get card :id)
-                                  [,(number-to-string (plist-get card :num))
-                                   ,(if (string-empty-p (plist-get card :title))
-                                        (plist-get card :filetitle)
-                                      (plist-get card :title))
-                                   ,(if (plist-get card :prior)
-                                        (number-to-string (plist-get card :prior))
-                                      "-")
-                                   ,(format "%.2f" (plist-get card :interval))
-                                   ,(if (stringp (plist-get card :due))
-                                        (plist-get card :due)
-                                      (format-time-string "%FT%TZ" (plist-get card :due) "UTC0"))
-                                   ,(symbol-name (plist-get card :type))
-                                   ,(plist-get card :position)
-                                   ,(plist-get card :tags)])))
-             (message "No cards due right now")
-             nil)))))
-
 (use-package bir
   :straight '(bir :type git
                   :host gitlab
