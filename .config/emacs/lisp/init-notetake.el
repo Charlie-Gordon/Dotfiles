@@ -425,9 +425,9 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package org-fc
   :straight '(org-fc :type git
-                     :host github
-                     :repo "l3kn/org-fc"
-                     :fork t
+                     :host nil
+                     :repo "https://github.com/l3kn/org-fc.git"
+                     :fork "git@github.com:c1-g/org-fc.git"
                      :branch "org-roam"
                      :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
   :bind (:map org-fc-review-flip-mode-map
