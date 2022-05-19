@@ -338,6 +338,8 @@ Used to determines filename in `org-roam-capture-templates'."
   :straight t
   :custom
   (org-noter-pdftools-markup-pointer-color "#00bfff")
+  (org-noter-pdftools-use-unique-org-id nil)
+  (org-noter-pdftools-org-id-prefix #'c1/org-noter-pdftools-org-id-prefix)
   :config
   ;; Add a function to ensure precise note is inserted
   (defun org-noter-pdftools-insert-precise-note (&optional toggle-no-questions)
@@ -350,6 +352,11 @@ Used to determines filename in `org-roam-capture-templates'."
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))
   (advice-add 'org-noter-insert-precise-note :override #'org-noter-pdftools-insert-precise-note))
+
+(defun c1/org-noter-pdftools-org-id-prefix ()
+  (org-noter--with-valid-session
+   (my-generate-sanitized-alnum-dash-string
+    (file-name-base (org-noter--session-property-text session)))))
 
 (use-package org-noter-media
   :straight '(org-noter-media :type git
