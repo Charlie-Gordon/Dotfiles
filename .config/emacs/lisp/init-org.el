@@ -612,7 +612,6 @@ Headlines are exported using `org-bibtex-headline'."
   (org-gtd-process-item-hooks nil)
   (org-edna-use-inheritance t)
   :config
-  (org-gtd-mode)
   (add-to-list 'org-capture-templates
 
                `("n" "NEXT action" entry
@@ -636,7 +635,8 @@ Headlines are exported using `org-bibtex-headline'."
   (interactive)
   (with-org-gtd-context
       (org-agenda nil "p")
-      (org-agenda-dych-mode 1)))
+      (org-gtd-mode +1)
+    (org-agenda-dych-mode +1)))
 
 (add-hook 'after-init-hook #'org-gtd-plan 90)
 
