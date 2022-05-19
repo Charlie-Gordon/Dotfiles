@@ -1,5 +1,0 @@
-
-* ${title}
-:PROPERTIES:
-:DOCUMENT_SOURCE: %^{file} %^{url}
-:END:
