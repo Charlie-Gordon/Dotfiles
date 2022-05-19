@@ -91,8 +91,7 @@
                                   ([?\C-k] . [S-end C-x])
                                   ([?\C-w] . [?\C-x])
                                   ;; Yank(Paste)
-                                  ([?\C-y] . [?\C-v])
-                                  ([?\C-s] . [?\C-f]))
+                                  ([?\C-y] . [?\C-v]))
      exwm-input-global-keys
      `(;; 's-r': Reset (to line-mode).
        ([?\s-r] . exwm-reset)
