@@ -134,8 +134,6 @@ it can be passed in POS."
 (use-package org-appear
   :after org
   :straight t
-  :custom
-  (org-appear-autolinks t)
   :hook
   (org-mode . org-appear-mode))
 
@@ -412,11 +410,6 @@ Headlines are exported using `org-bibtex-headline'."
 (use-package ol-bookmark
   :straight t)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (C . t)))
-
 (use-package request-deferred
   :straight t)
 
@@ -453,7 +446,9 @@ Headlines are exported using `org-bibtex-headline'."
             :jump-to-captured t
             :after-finalize
             (lambda ()
-              (c1/org-bibtex-append "/storage/org/notecard/lit/other/bibliography.bib"))
+              (save-excursion
+                (org-back-to-heading)
+                (c1/org-bibtex-append "/storage/org/notecard/lit/other/bibliography.bib")))
             :fetch-bibtex (lambda () (org-capture-ref-process-capture)) ; this must run first
             :link-type (lambda () (org-capture-ref-get-bibtex-field :type))
             :org-entry (lambda () (org-capture-ref-get-org-entry))
@@ -518,8 +513,8 @@ Headlines are exported using `org-bibtex-headline'."
 
 (use-package org-agenda-dych-mode
   :straight '(org-agenda-dych-mode :type git
-                                   :host github
-                                   :repo "c1-g/org-agenda-dych-mode")
+                                   :host nil
+                                   :repo "git@notabug.org:c1-g/org-agenda-dych-mode.git")
   :custom
   (org-agenda-dych-default-start "05:00")
   (org-agenda-dych-default-work-hour "16h"))
@@ -804,8 +799,7 @@ the inbox.  Refile to `org-gtd-actionable-file-basename'."
   :straight '(org-yt :type git
                      :host nil
                      :repo "https://github.com/TobiasZawada/org-yt.git"
-                     :fork "git@github.com:c1-g/org-yt.git"
-                     :branch "deferred"))
+                     :fork "git@github.com:c1-g/org-yt.git"))
 
 
 

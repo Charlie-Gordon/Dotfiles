@@ -32,12 +32,12 @@
 (use-package orderless
   :straight t
   :custom
+  (vertico--highlight-function #'orderless-highlight-matches)
   (selectrum-refine-candidates-function #'orderless-filter)
-  (selectrum-highlight-candidates-function #'orderless-highlight-matches)
   (completion-styles
-   '(orderless basic substring initials flex partial-completion))
+   '(orderless basic initials shorthand))
   (completion-category-overrides
-   '((file (styles . (basic partial-completion orderless))))))
+   '((file (styles . (partial-completion basic orderless))))))
 
 ;;;; Marginalia
 (use-package marginalia

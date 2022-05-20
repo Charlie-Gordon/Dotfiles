@@ -73,7 +73,7 @@
 ;;;;; Lisp
   (use-package init-lisp :ensure nil)
 ;;;;; Miscellaneous
-  (use-package init-mail :ensure nil)
+  (use-package init-mail :ensure nil :disabled)
   (use-package init-uniquify :ensure nil)
   (use-package init-markdown :ensure nil)
   (use-package init-misc :ensure nil)
@@ -83,7 +83,7 @@
   (use-package init-ibuffer :ensure nil)
   (use-package init-editing-utils :ensure nil :termux)
   (use-package init-local :ensure nil)
-  (use-package init-eva :ensure nil))
+  (use-package init-eva :ensure nil :disabled))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Local Variables:

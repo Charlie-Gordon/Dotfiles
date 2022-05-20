@@ -48,20 +48,7 @@
     :config
     (setq
      ;; Prefix keys to ignore
-     exwm-input-prefix-keys '(?\C-x
-                              ?\C-u
-                              ?\C-h
-                              ?\C-g
-                              ?\C-'
-                              ?\C-,
-                              ?\M-x
-                              ?\M-`
-                              ?\M-&
-                              ?\M-:
-                              ?\s-o
-                              ?\s-c
-                              ?\s-v
-                              ?\s-m)
+     exwm-input-prefix-keys '(?\C-x ?\C-u ?\C-h ?\C-g ?\C-' ?\C-, ?\M-x ?\M-` ?\M-& ?\M-: ?\s-o ?\s-c ?\s-v ?\s-j ?\s-m)
      ;; Line-editing keybindings for X windows
      exwm-input-simulation-keys '(;; Backward-char
                                   ([?\C-b] . [left])

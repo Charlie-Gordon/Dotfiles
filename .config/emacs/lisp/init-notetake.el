@@ -311,7 +311,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-noter-disable-narrowing t)
   (org-noter-keep-notes-after-kill-session t)
   (org-noter-separate-notes-from-heading t)
-  (org-noter-hide-other nil)
+  (org-noter-hide-other t)
   (org-noter-notes-search-path (list (expand-file-name "lit" org-roam-directory)))
   :config
   (advice-add 'org-noter-pdf--get-selected-text :before #'c1/pdf-keynav-region-to-active-region)
@@ -320,9 +320,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (use-package org-noter-pdf :ensure nil)
   (use-package org-noter-nov-overlay :ensure nil)
   (use-package org-noter-dynamic-block :ensure nil)
-  (use-package org-noter-citar :ensure nil)
-  ;; (use-package org-noter-eww :ensure nil)
-  )
+  (use-package org-noter-citar :ensure nil))
 
 (defun c1/pdf-keynav-region-to-active-region (mode)
   (when (eq mode 'pdf-view-mode)
@@ -367,7 +365,9 @@ Used to determines filename in `org-roam-capture-templates'."
   (mpv-default-options '("--gapless-audio=no" "--ytdl-format=bestvideo[height<=?480]+bestaudio/best")))
 
 (use-package bookmark+
-  :straight t)
+  :straight t
+  :config
+  (use-package bookmark+-lit :ensure nil))
 
 
 ;;;;; Org-download
@@ -451,6 +451,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-fc-algorithm 'roam-sm2)
   (org-fc-review-show-remaining-cards nil)
   (org-fc-topic-proportion 80)
+  (org-fc-review-history-file "/storage/data/review.tsv")
   (org-fc-browser-headers
    '(("No." org-fc-browser-num>?)
      ("Title" nil)
@@ -469,6 +470,38 @@ Used to determines filename in `org-roam-capture-templates'."
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (advice-add 'org-fc-review-next-card :after #'org-fc-write-setup)
   (add-hook 'after-init-hook #'org-fc-review-daily 80))
+
+(defun my/msecs-to-timestamp (msecs)
+  "Convert MSECS to string in the format HH:MM:SS.MS."
+  (concat (format-seconds "%02h:%02m:%02s" (/ msecs 1000))
+          "." (format "%03d" (mod msecs 1000))))
+
+(defun my/org-insert-youtube-video-with-transcript (url)
+  (interactive "MURL: ")
+  (let* ((id (if (string-match "\\(.*v=\\)\\([^&]+\\)" url) (match-string 2 url) url))
+         (temp-file (make-temp-name "org-youtube-"))
+         (temp-file-name (concat temp-file ".en.srv1"))
+         data)
+    (when (and (call-process "youtube-dl" nil nil nil
+                             "--write-sub" "--write-auto-sub" "--no-warnings" "--sub-lang" "en" "--skip-download" "--sub-format" "srv1"
+                             "-o" temp-file
+                             (format "https://youtube.com/watch?v=%s" id))
+               (file-exists-p temp-file-name))
+      (insert
+       "\n"
+       (mapconcat (lambda (o)
+                    (format "[[video:%s&t=%ss#%s][%s]] %s\n"
+                            url
+                            (dom-attr o 'start)
+                            (my/msecs-to-timestamp (* 1000 (string-to-number (dom-attr o 'start))))
+                            (my/msecs-to-timestamp (* 1000 (string-to-number (dom-attr o 'start))))
+                            (thread-last (dom-text o)
+                                         (replace-regexp-in-string "[ \n]+" " ")
+                                         (replace-regexp-in-string "&#39;" "'")
+                                         (replace-regexp-in-string "&quot;" "\""))))
+                  (dom-by-tag (xml-parse-file temp-file-name) 'text)
+                  ""))
+      (delete-file temp-file-name))))
 
 (defun c1/org-fc-edit-on-saved-place ()
   (interactive)
@@ -527,11 +560,14 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package read-aloud
   :straight t
   :custom
-  (read-aloud-engine "festival")
+  (read-aloud-engine "espeak")
   :config
   (lax-plist-put read-aloud-engines
                  "festival"
-                 '(cmd "festival" args ("--tts" "--pipe"))))
+                 '(cmd "festival" args ("--tts" "--pipe")))
+  (lax-plist-put read-aloud-engines
+                 "espeak"
+                 '(cmd "espeak" args ("-s 350" "--stdin"))))
 
 (org-export-define-derived-backend 'ascii-simple 'ascii
   :translate-alist
