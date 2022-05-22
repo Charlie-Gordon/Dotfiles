@@ -10,6 +10,7 @@
 ;;;; EPUB(with nov.el)
 (use-package nov
   :straight '(nov :type git
+                  :host nil
                   :repo "https://depp.brause.cc/nov.el.git"
                   :fork "https://notabug.org/c1-g/nov.el.git")
   :bind (:map nov-mode-map
