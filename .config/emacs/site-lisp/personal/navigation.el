@@ -52,10 +52,11 @@
 		   (concat "(use-package " package-name)))
 
 ;;;###autoload
-(defun affe-search-org()  
-    (interactive)
-    (let ((affe-grep-command "rg -t org --null --line-buffered --color=never --max-columns=1000 --no-heading --line-number -v ^$ ."))
-      (affe-grep *org-dir*)))
+(defun affe-search-org ()
+  (interactive)
+  (find-file (expand-file-name
+              (get-text-property 0 'consult--grep-file (affe-grep *org-dir*))
+              *org-dir*)))
 
 (provide 'navigation)
 ;;; navigation.el ends here
