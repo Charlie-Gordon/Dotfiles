@@ -117,6 +117,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-roam-node-display-template "${title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (org-roam-extract-new-file-path "lit/other/writing.org")
+  (org-roam-db-location (expand-file-name "org-roam.db" "/storage/data/org/"))
   (org-roam-capture-templates
    `(("d" "default" plain
       "%?"
