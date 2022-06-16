@@ -586,7 +586,7 @@ Headlines are exported using `org-bibtex-headline'."
                       :follow (org-id-goto o-label)])
 
   (org-deflink idc
-               "Like id: link, but with search option as description; [[id+c:ID][SEARCH OPTIONS]]."
+               "Like id: link, but with search option; [[id+c:ID\[SEARCH OPTION\]][DESCRIPTION]]."
                [:let (option (and (string-match (rx (group (+ (not (any "[" "]")))) (?  "[" (group (+ nonl)) "]")) o-label)
                                   (match-string 2 o-label))
                              id (match-string 1 o-label))
