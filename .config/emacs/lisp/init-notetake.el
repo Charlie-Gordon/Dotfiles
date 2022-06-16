@@ -484,6 +484,8 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (defun my/org-insert-youtube-video-with-transcript (url)
   (interactive "MURL: ")
+  (when (and (string-empty-p url) (string-match-p "youtu.?be" (org-entry-get nil "URL")))
+    (setq url (org-entry-get nil "URL")))
   (let* ((id (if (string-match "\\(.*v=\\)\\([^&]+\\)" url) (match-string 2 url) url))
          (temp-file (make-temp-name "org-youtube-"))
          (temp-file-name (concat temp-file ".en.srv1"))
