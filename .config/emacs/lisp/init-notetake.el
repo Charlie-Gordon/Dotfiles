@@ -307,7 +307,7 @@ Used to determines filename in `org-roam-capture-templates'."
               ("I" . org-noter-insert-dynamic-block)
               ("M-I" . org-noter-insert-precise-dynamic-block))
   :custom
-  (org-noter-property-doc-file "ROAM_REFS")
+  (org-noter-property-doc-file "SOURCE")
   (org-noter-property-note-location "DOCUMENT_PAGE")
   (org-noter-doc-split-fraction '(0.65 0.4))
   (org-noter-auto-save-last-location t)
