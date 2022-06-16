@@ -67,7 +67,7 @@ it can be passed in POS."
   :custom
   (org-hide-emphasis-markers t)
   (org-fontify-done-headline t)
-  (org-pretty-entities t)
+  (org-pretty-entities nil)
   (org-ellipsis "…")
   (org-id-link-to-org-use-id t)
   (org-ctrl-k-protect-subtree t)
