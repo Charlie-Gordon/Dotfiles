@@ -26,7 +26,11 @@
 
 (use-package elfeed
   :straight t
-  :bind (("s-e" . elfeed))
+  :bind (("s-e" . elfeed)
+         :map elfeed-show-mode-map
+         ("C" . elfeed-capture-entry)
+         :map elfeed-search-mode-map
+         ("C" . elfeed-capture-entry))
   :custom
   (elfeed-search-trailing-width 60)
   (elfeed-db-directory (locate-user-emacs-file "elfeed"))
@@ -68,6 +72,26 @@
 
   (define-key elfeed-show-mode-map (kbd "SPC") 'elfeed-scroll-up-command)
   (define-key elfeed-show-mode-map (kbd "S-SPC") 'elfeed-scroll-down-command))
+
+(defun elfeed-capture-entry ()
+  "Capture selected entries into inbox."
+  (interactive)
+  (elfeed-search-tag-all 'opened)
+  (previous-logical-line)
+  (let ((entries (or (elfeed-search-selected) (-list elfeed-show-entry))))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (cl-flet ((raise-frame nil nil))
+                  (org-protocol-capture (list :template "z"
+                                              :url it
+                                              :title (format "%s: %s"
+                                                             (elfeed-feed-title (elfeed-entry-feed entry))
+                                                             (elfeed-entry-title entry))
+                                              :elfeed-data entry))))
+    (when (eq major-mode 'elfeed-search-mode)
+      (mapc #'elfeed-search-update-entry entries))
+    (unless (use-region-p) (forward-line))))
 
 (use-package elfeed-tube
   :straight (:host github :repo "karthink/elfeed-tube")
