@@ -98,8 +98,9 @@ it can be passed in POS."
   (add-to-list 'org-modules 'habits)
   (when window-system
     (let* ((variable-tuple
-            (cond ((x-list-fonts "New Century Schoolbook") '(:font "New Century Schoolbook"))
+            (cond ((x-list-fonts "Fanwood Text") '(:font "Fanwood Text"))
                   ((x-list-fonts "ETBembo") '(:font "ETBembo"))
+                  ((x-list-fonts "New Century Schoolbook") '(:font "New Century Schoolbook"))
                   ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
                   ((x-list-fonts "Lucida Grande") '(:font "Lucida Grande"))
                   ((x-list-fonts "Verdana") '(:font "Verdana"))
