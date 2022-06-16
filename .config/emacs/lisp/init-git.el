@@ -64,13 +64,6 @@
   (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
 
-(use-package magit-todos
-  :straight t
-  :disabled
-  :hook
-  (magit-mode . magit-todos-mode))
-
-
 (use-package git-commit
   :straight t
   :hook
@@ -120,9 +113,7 @@
 (defun yadm-status ()
   (interactive)
   (with-current-buffer (magit-status "/yadm::")
-    (yadm-minor-mode 1)
-    (when (magit-todos-mode)
-      (magit-todos-mode -1))))
+    (yadm-minor-mode 1)))
 
 
 (provide 'init-git)
