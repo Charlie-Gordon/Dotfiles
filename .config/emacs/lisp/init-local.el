@@ -15,6 +15,9 @@
   :straight t)
 
 (use-package transmission
+  :bind (:map transmission-mode-map
+              ("r" . transmission-move)
+              ("R" . transmission-remove))
   :straight t)
 
 (use-package trashed
