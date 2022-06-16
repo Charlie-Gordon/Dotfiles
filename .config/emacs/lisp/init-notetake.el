@@ -541,7 +541,7 @@ Used to determines filename in `org-roam-capture-templates'."
                    (append (org-fc-index-shuffled-positions
                             (org-fc-index-filter-due
                              (org-fc-awk-index
-                              (list org-roam-directory "/storage/org/notecard/lit/other/") nil t)))
+                              (list org-roam-directory "/storage/org/notecard/other/") nil t)))
                            (funcall org-fc-index-sort-function cards))))
       (if (null cards)
           (message "No cards due right now")
