@@ -116,7 +116,7 @@ Used to determines filename in `org-roam-capture-templates'."
   :custom
   (org-roam-node-display-template "${title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
-  (org-roam-extract-new-file-path "lit/other/writing.org")
+  (org-roam-extract-new-file-path "other/writing.org")
   (org-roam-db-location (expand-file-name "org-roam.db" "/storage/data/org/"))
   (org-roam-capture-templates
    `(("d" "default" plain
@@ -129,7 +129,7 @@ Used to determines filename in `org-roam-capture-templates'."
      ("w" "Writing inbox" plain
       "%?"
       :target
-      (file "/storage/org/notecard/lit/other/writing.org")
+      (file "/storage/org/notecard/other/writing.org")
       :unnarrowed t)
      ("n" "note" plain
       "%?"
@@ -233,7 +233,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (define-prefix-command 'citar-map nil "Citar")
   :custom
   (citar-bibliography (append (directory-files *bibliography-dir* t ".bib")
-                              (directory-files (expand-file-name "lit/other/" org-roam-directory) t ".bib")))
+                              (directory-files (expand-file-name "other/" org-roam-directory) t ".bib")))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
@@ -402,7 +402,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (bibtex-autokey-titlewords-stretch 0)
   (bibtex-autokey-titlewords 0)
   (bibtex-completion-bibliography (append (directory-files *bibliography-dir* t ".bib")
-                                          (directory-files (expand-file-name "lit/other/" org-roam-directory) t ".bib")))
+                                          (directory-files (expand-file-name "other/" org-roam-directory) t ".bib")))
   (bibtex-completion-notes-path (expand-file-name "lit/" org-roam-directory))
   (bibtex-completion-pdf-field "file")
   (bibtex-completion-pdf-extension '(".pdf" ".djvu" ".epub"))
