@@ -585,9 +585,32 @@ Headlines are exported using `org-bibtex-headline'."
                [:face 'org-dispatcher-highlight
                       :follow (org-id-goto o-label)])
 
+  (org-deflink idc
+               "Like id: link, but with search option as description; [[id+c:ID][SEARCH OPTIONS]]."
+               [:let (option (and (string-match (rx (group (+ (not (any "[" "]")))) (?  "[" (group (+ nonl)) "]")) o-label)
+                                  (match-string 2 o-label))
+                             id (match-string 1 o-label))
+                     :face 'org-dispatcher-highlight
+                     :follow (c1/org-idc-open id option current-prefix-arg)]))
+
+(defun c1/org-idc-open (id option prefix)
+  (org-mark-ring-push)
+  (let* ((location (org-id-find id))
+         (file (car location))
+         (point (cdr location)))
+    (unless location
+      (error "Cannot find entry with ID \"%s\"" id))
+    (org-link-open-as-file
+     (if option
+         (concat file "::" option)
+       file)
+     prefix)
+    (unless option
+      (goto-char point))))
+
 (use-package org-edna
   :straight t
-  :diminish t)
+  :diminish org-edna-mode)
 
 (use-package org-gtd
   :straight t
