@@ -267,7 +267,10 @@ Used to determines filename in `org-roam-capture-templates'."
   :bind ("<f9>" . c1/org-transclusion-toggle)
   :custom
   (org-transclusion-add-all-on-activate nil)
-  (org-transclusion-exclude-elements '(drawer)))
+  (org-transclusion-exclude-elements '(drawer))
+  :config
+  
+  (add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode))
 
 (defun c1/org-transclusion-exclude-element-id (data)
   (org-element-map data '(node-property)
