@@ -75,11 +75,8 @@
 
 (use-package avy
   :straight t
-  :preface
-  (global-set-key (kbd "C-z") nil)
-  :bind
-  ("C-z c" . avy-goto-char-timer)
-  ("C-z l" . avy-goto-line)
+  :bind*
+  ("M-j" . avy-goto-char-timer)
   :custom
   (avy-timeout-seconds "0.4"))
 
