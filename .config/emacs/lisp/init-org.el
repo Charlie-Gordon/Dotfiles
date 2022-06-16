@@ -570,6 +570,8 @@ Headlines are exported using `org-bibtex-headline'."
 
 (use-package org-special-block-extras
   :straight t
+  :custom
+  (org-special-block-extras-mode-map (make-sparse-keymap))
   :config
   (add-hook 'org-mode-hook #'org-special-block-extras-mode)
 
