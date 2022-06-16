@@ -23,5 +23,5 @@ xhost +SI:localuser:$USER &
 xhost +SI:localuser:root &
 xset r rate 300 50 &
 redshift &
-gitwatch.sh -s 120 -g /storage/org/.git /storage/org &
+gitwatch -s 120 -g /storage/org/.git /storage/org &
 exec emacs --maximized
