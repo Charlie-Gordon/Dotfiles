@@ -122,6 +122,10 @@
   ;; Configure Orderless
   (setq affe-regexp-function #'orderless-pattern-compiler
         affe-highlight-function #'orderless-highlight-matches)
+  (defun affe-orderless-regexp-compiler (input _type _ignorecase)
+    (setq input (orderless-pattern-compiler input))
+    (cons input (lambda (str) (orderless--highlight input str))))
+  (setq affe-regexp-compiler #'affe-orderless-regexp-compiler)
   ;; Manual preview key for `affe-grep'
   (consult-customize affe-grep :preview-key (kbd "M-.")))
 
