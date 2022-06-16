@@ -131,6 +131,31 @@ it can be passed in POS."
   (org-clock-in . org-clock-save)
   (org-clock-out . c1/org-set-todo-waiting))
 
+(defun my/text-scale-adjust-latex-previews ()
+  "Adjust the size of latex preview fragments when changing the
+buffer's text scale."
+  (pcase major-mode
+    ('latex-mode
+     (dolist (ov (overlays-in (point-min) (point-max)))
+       (if (eq (overlay-get ov 'category)
+               'preview-overlay)
+           (my/text-scale--resize-fragment ov))))
+    ('org-mode
+     (dolist (ov (overlays-in (point-min) (point-max)))
+       (if (eq (overlay-get ov 'org-overlay-type)
+               'org-latex-overlay)
+           (my/text-scale--resize-fragment ov))))))
+
+(defun my/text-scale--resize-fragment (ov)
+  (overlay-put
+   ov 'display
+   (cons 'image
+         (plist-put
+          (cdr (overlay-get ov 'display))
+          :scale (+ 1.0 (* 0.25 text-scale-mode-amount))))))
+
+(add-hook 'text-scale-mode-hook #'my/text-scale-adjust-latex-previews)
+
 (use-package org-appear
   :after org
   :straight t
