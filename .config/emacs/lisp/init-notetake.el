@@ -467,8 +467,8 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (add-to-list 'org-tags-exclude-from-inheritance org-fc-suspended-tag)
   (add-to-list 'org-tags-exclude-from-inheritance org-fc-flashcard-tag)
-  (advice-add 'org-fc-review-resume :before #'save-place-to-alist)
-  (add-to-list 'org-fc-custom-contexts (cons 'writing `(:paths (,org-roam-directory "/storage/org/notecard/lit/other/writing.org")
+  (advice-add 'org-fc-review-resume :before #'c1/org-fc-save-place)
+  (add-to-list 'org-fc-custom-contexts (cons 'writing `(:paths (,org-roam-directory "/storage/org/notecard/other/writing.org")
                                                                :indexer org-fc-awk-index
                                                                :filterer org-fc-index-filter-due
                                                                :non-recursive t)))
@@ -511,7 +511,14 @@ Used to determines filename in `org-roam-capture-templates'."
 (defun c1/org-fc-edit-on-saved-place ()
   (interactive)
   (org-fc-review-edit)
-  (save-place-find-file-hook))
+  (if (org-entry-get nil "FC_READ_POINT" t t)
+      (goto-char (string-to-number (org-entry-get nil "FC_READ_POINT" t t)))
+    (save-place-find-file-hook)))
+
+(defun c1/org-fc-save-place ()
+  (org-entry-put nil "FC_READ_POINT" (number-to-string (point)))
+  (save-buffer)
+  (save-place-to-alist))
 
 
 (defun org-fc-write-setup (&optional resuming)
