@@ -79,6 +79,7 @@
   (use-package init-misc :ensure nil)
   (use-package init-notetake :ensure nil)
   (use-package init-window :ensure nil)
+  (use-package init-elfeed :ensure nil)
   (use-package init-eaf :ensure nil :disabled)
   (use-package init-ibuffer :ensure nil)
   (use-package init-editing-utils :ensure nil :termux)
