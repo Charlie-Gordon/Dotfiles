@@ -582,8 +582,8 @@ Headlines are exported using `org-bibtex-headline'."
                           contents)))
   (org-deflink extract
                ""
-               [:face 'org-agenda-structure
-                      :follow (org-id-goto o-label)]))
+               [:face 'org-dispatcher-highlight
+                      :follow (org-id-goto o-label)])
 
 (use-package org-edna
   :straight t
