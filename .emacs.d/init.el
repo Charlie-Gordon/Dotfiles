@@ -249,5 +249,3 @@ Used to determines filename in `org-roam-capture-templates'."
   (if (org-entry-get nil "FC_READ_POINT" t t)
       (goto-char (string-to-number (org-entry-get nil "FC_READ_POINT" t t)))
     (save-place-find-file-hook)))
-
-(setq org-fc-directories )
