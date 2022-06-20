@@ -226,7 +226,10 @@ Used to determines filename in `org-roam-capture-templates'."
                      :branch "org-roam"
                      :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
   :bind (:map org-fc-review-flip-mode-map
-              ("r" . #'c1/org-fc-edit-on-saved-place))
+              ("r" . #'c1/org-fc-edit-on-saved-place)
+              ("n" . #'org-fc-review-skip-card)
+              :map org-fc-review-edit-mode-map
+              ("n" . #'org-fc-review-skip-card))
   :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
