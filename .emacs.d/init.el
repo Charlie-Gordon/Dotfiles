@@ -245,6 +245,9 @@ Used to determines filename in `org-roam-capture-templates'."
                                                                :non-recursive t)))
   (add-hook 'after-init-hook 'org-fc-review-all))
 
+(straight-use-package
+  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+
 (defun c1/org-fc-save-place ()
   (org-entry-put nil "FC_READ_POINT" (number-to-string (point)))
   (save-buffer)
