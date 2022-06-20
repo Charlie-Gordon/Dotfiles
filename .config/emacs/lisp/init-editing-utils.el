@@ -129,7 +129,7 @@
 (use-package navigation
   :ensure nil
   :after consult affe
-  :bind-keymap* ("C-' n" . navigation-map))
+  :bind-keymap* ("s-n" . navigation-map))
 
 (use-package ctrlf
   :straight t
