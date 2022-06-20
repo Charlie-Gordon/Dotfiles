@@ -445,8 +445,10 @@ Used to determines filename in `org-roam-capture-templates'."
   :bind (:map org-fc-review-flip-mode-map
               ("C-;" . #'c1/open-org-noter)
               ("C-," . #'c1/read-aloud-org)
+              ("n" . #'org-fc-review-skip-card)
               ("r" . #'c1/org-fc-edit-on-saved-place)
               :map org-fc-review-edit-mode-map
+              ("n" . #'org-fc-review-skip-card)
               ("C-;" . #'c1/open-org-noter)
               ("C-," . #'c1/read-aloud-org))
   :init (use-package tablist-filter :ensure nil)
