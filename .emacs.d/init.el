@@ -79,7 +79,6 @@
                  ("begin" "$1" "$" "$$" "\\(" "\\[")))
   :config
   (add-to-list 'org-modules 'org-protocol)
-  (add-to-list 'org-modules 'habits)
   (org-load-modules-maybe t)
   :hook
   (org-mode . visual-line-mode)
@@ -143,6 +142,7 @@ Used to determines filename in `org-roam-capture-templates'."
 
 (use-package org-roam
   :straight t
+  :after org
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
@@ -211,11 +211,17 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (org-roam-db-autosync-mode))
 
+(use-package tablist
+  :straight t)
+
+(use-package f
+  :straight t)
+
 (use-package org-fc
   :straight '(org-fc :type git
-                     :host nil
-                     :repo "https://github.com/l3kn/org-fc.git"
-                     :fork "git@github.com:c1-g/org-fc.git"
+                     :host github
+                     :repo "l3kn/org-fc"
+                     :fork t
                      :branch "org-roam"
                      :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
   :bind (:map org-fc-review-flip-mode-map
@@ -236,7 +242,7 @@ Used to determines filename in `org-roam-capture-templates'."
                                                                :indexer org-fc-awk-index
                                                                :filterer org-fc-index-filter-due
                                                                :non-recursive t)))
-  (add-hook 'after-init-hook #'org-fc-review-daily 80))
+  (add-hook 'after-init-hook 'org-fc-review-all))
 
 (defun c1/org-fc-save-place ()
   (org-entry-put nil "FC_READ_POINT" (number-to-string (point)))
@@ -249,3 +255,11 @@ Used to determines filename in `org-roam-capture-templates'."
   (if (org-entry-get nil "FC_READ_POINT" t t)
       (goto-char (string-to-number (org-entry-get nil "FC_READ_POINT" t t)))
     (save-place-find-file-hook)))
+
+(use-package org-fc-roam
+  :ensure nil
+  :after org-fc
+  :diminish
+  :config
+  (org-fc-roam-db-autosync-enable)
+  (org-fc-roam-mode 1))
