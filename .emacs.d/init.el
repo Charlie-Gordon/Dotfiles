@@ -2,6 +2,7 @@
 ;;; Interface tweaks
 ;;;; Remove lame startup screen
 (setq inhibit-startup-message t)
+(setq initial-scratch-message t)
 ;;;; UTF-8 encoding
 (setq locale-coding-system 'utf-8)
 (set-language-environment "UTF-8")
