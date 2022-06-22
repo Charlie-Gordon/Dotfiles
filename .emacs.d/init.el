@@ -21,6 +21,13 @@
 ;;;; Lazy yes or no
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(save-place-mode 1)
+
+(define-derived-mode external-mode fundamental-mode "External"
+  (call-process "xdg-open" nil 0 nil (buffer-file-name)))
+
+(add-to-list 'auto-mode-alist '("\\.\\(?:html\\|pdf\\|djvu\\|xps\\|cbz\\|fb2\\|pdf\\|txt\\|rft\\|chm\\|epub\\|doc\\|mobi\\)\\'" . external-mode))
+
 ;;; Straight
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -271,10 +278,12 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-fc-roam-db-autosync-enable)
   (org-fc-roam-mode 1))
 
-(save-place-mode 1)
-
-
-(define-derived-mode external-mode fundamental-mode "External"
-  (call-process "xdg-open" nil 0 nil (buffer-file-name)))
-
-(add-to-list 'auto-mode-alist '("\\.\\(?:html\\|pdf\\|djvu\\|xps\\|cbz\\|fb2\\|pdf\\|txt\\|rft\\|chm\\|epub\\|doc\\|mobi\\)\\'" . external-mode))
+(use-package bir
+  :after org-roam
+  :straight '(bir :type git
+                  :host gitlab
+                  :repo "c1-g/bir")
+  :custom
+  (bir-directory (expand-file-name "lit/" org-roam-directory))
+  :config
+  (advice-add 'bir-extract-region-prepare-finalize :after #'org-roam-db-update-file))
