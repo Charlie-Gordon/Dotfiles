@@ -21,6 +21,8 @@
 ;;;; Lazy yes or no
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(setq warning-minimum-level :emergency)
+
 (save-place-mode 1)
 
 (define-derived-mode external-mode fundamental-mode "External"
