@@ -258,6 +258,11 @@ Used to determines filename in `org-roam-capture-templates'."
 (straight-use-package
   '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
 
+(use-package writeroom-mode
+  :straight t
+  :hook
+  (org-fc-after-setup . writeroom-mode))
+
 (defun c1/org-fc-save-place ()
   (org-entry-put nil "FC_READ_POINT" (number-to-string (point)))
   (save-buffer)
