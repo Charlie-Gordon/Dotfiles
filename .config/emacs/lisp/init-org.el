@@ -570,20 +570,23 @@ Headlines are exported using `org-bibtex-headline'."
 
 (use-package org-special-block-extras
   :straight t
-  :custom
-  (org-special-block-extras-mode-map (make-sparse-keymap))
   :config
+  (setq org-special-block-extras-mode-map (make-sparse-keymap))
   (add-hook 'org-mode-hook #'org-special-block-extras-mode)
 
   (org-defblock extract (extract-id)
-                (format (if (eq backend 'html)
-                            "<BODY BORDER-BOTTOM: blue thin solid; BORDER-LEFT: blue thin solid; OVERFLOW: auto; BORDER-TOP: blue thin solid; BORDER-RIGHT: blue thin solid\">%s</BODY>"
-                          "{\\color{blue} %s}"
-                          contents)))
+                (format (if (eq o-backend 'html)
+                            "<font style=\"background-color: #7be1e1\">%s</font>"
+                          "{\\color{blue} %s}")
+                        contents))
   (org-deflink extract
                ""
                [:face 'org-dispatcher-highlight
-                      :follow (org-id-goto o-label)])
+                      :follow (org-id-goto o-label)]
+               (format (if (eq o-backend 'html)
+                           "<font style=\"background-color: #7be1e1\">%s</font>"
+                         "{\\color{blue} %s}")
+                       o-description))
 
   (org-deflink idc
                "Like id: link, but with search option; [[id+c:ID\[SEARCH OPTION\]][DESCRIPTION]]."
