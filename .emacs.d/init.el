@@ -26,7 +26,7 @@
 (save-place-mode 1)
 
 (define-derived-mode external-mode fundamental-mode "External"
-  (call-process "xdg-open" nil 0 nil (buffer-file-name)))
+  (call-process "xdg-open" nil 0 nil (shell-quote-argument (buffer-file-name))))
 
 (add-to-list 'auto-mode-alist '("\\.\\(?:html\\|pdf\\|djvu\\|xps\\|cbz\\|fb2\\|pdf\\|txt\\|rft\\|chm\\|epub\\|doc\\|mobi\\)\\'" . external-mode))
 
