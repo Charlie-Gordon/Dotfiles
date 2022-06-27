@@ -25,6 +25,25 @@
 
 (save-place-mode 1)
 
+(defvar-local hide-cursor--original nil)
+
+(define-minor-mode hide-cursor-mode
+  "Hide or show the cursor.
+
+When the cursor is hidden `scroll-lock-mode' is enabled, so that
+the buffer works like a pager."
+  :global nil
+  :lighter "H"
+  (if hide-cursor-mode
+      (progn
+        (scroll-lock-mode 1)
+        (setq-local hide-cursor--original
+                    cursor-type)
+        (setq-local cursor-type nil))
+    (scroll-lock-mode -1)
+    (setq-local cursor-type (or hide-cursor--original
+                                t))))
+
 (define-derived-mode external-mode fundamental-mode "External"
   (call-process "xdg-open" nil 0 nil (shell-quote-argument (buffer-file-name))))
 
@@ -363,7 +382,8 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package writeroom-mode
   :straight t
   :hook
-  (org-fc-after-setup . writeroom-mode))
+  (org-fc-after-setup . writeroom-mode)
+  (org-fc-after-setup . hide-cursor-mode))
 
 (defun c1/org-fc-save-place ()
   (org-entry-put nil "FC_READ_POINT" (number-to-string (point)))
