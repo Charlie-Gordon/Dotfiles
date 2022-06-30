@@ -479,6 +479,11 @@ Used to determines filename in `org-roam-capture-templates'."
   (advice-add 'org-fc-review-next-card :after #'org-fc-write-setup)
   (add-hook 'after-init-hook #'org-fc-review-daily 80))
 
+(use-package writeroom-mode
+  :straight t
+  :hook
+  (org-fc-after-setup . writeroom-mode))
+
 (defun my/msecs-to-timestamp (msecs)
   "Convert MSECS to string in the format HH:MM:SS.MS."
   (concat (format-seconds "%02h:%02m:%02s" (/ msecs 1000))
