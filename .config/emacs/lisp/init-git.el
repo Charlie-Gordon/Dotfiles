@@ -45,9 +45,6 @@
                                   (,(expand-file-name "site-lisp/" user-emacs-directory) . 2)))
   :init (defvar project-switch-commands nil))
 
-(use-package git-timemachine
-  :straight t)
-
 (use-package git-gutter-fringe
   :straight t)
   
