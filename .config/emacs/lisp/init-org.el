@@ -469,6 +469,9 @@ Headlines are exported using `org-bibtex-headline'."
             ,@org-capture-ref-capture-target
             :clock-in nil
             :jump-to-captured t
+            :prepare-finalize
+            (lambda () (save-excursion
+                         (c1/org-insert-youtube-video-with-transcript (org-capture-ref-get-bibtex-url-from-capture-data))))
             :after-finalize
             (lambda ()
               (save-excursion
@@ -520,6 +523,117 @@ Headlines are exported using `org-bibtex-headline'."
                  (car template)
                  (cdr template)
                  'replace))))
+
+(defun c1/msecs-to-timestamp (msecs)
+  "Convert MSECS to string in the format HH:MM:SS.MS."
+  (concat (format-seconds "%02h:%02m:%02s" (/ msecs 1000))
+          "." (format "%03d" (mod msecs 1000))))
+
+(defun c1/org-insert-youtube-video-with-transcript (&optional url)
+  (interactive "MURL: ")
+  (when (or (null url) (string-empty-p url))
+    (setq url (org-entry-get nil "URL")))
+  (if (string-match-p "youtu.?be" url)
+      (let* ((id (if (string-match "\\(.*v=\\)\\([^&]+\\)" url) (match-string 2 url) url))
+             (temp-file (make-temp-file "org-youtube-"))
+             temp-file-name
+             xmlcaps
+             parsed-caps)
+        (with-temp-buffer
+          (when (call-process "youtube-dl" nil "test" nil
+                              "--write-sub" "--write-auto-sub" "--no-warnings" "--skip-download" "--sub-lang" "en.*" "--sub-format" "srv1"
+                              "-o" temp-file
+                              (format "https://youtube.com/watch?v=%s" id))
+            (setq temp-file-name (car (directory-files-recursively (file-name-directory temp-file) (concat (file-name-base temp-file) ".*en.*srv1"))))
+            (insert-file-contents temp-file-name)
+            (goto-char (point-min))
+            (dolist (reps '(("&amp;#39;" . "'")
+                            ("&amp;quot;" . "\"")
+                            ("\n" . " ")
+                            (" " . "")))
+              (save-excursion
+                (while (search-forward (car reps) nil t)
+                  (replace-match (cdr reps) nil t))))
+            (setq xmlcaps (libxml-parse-xml-region (point-min) (point-max)))
+            (setq parsed-caps (cl-loop for text-element in (cddr xmlcaps)
+                                       for (_ _ text) in (cddr xmlcaps)
+                                       do (setf (nth 2 text-element)
+                                                (cl-reduce
+                                                 (lambda (accum reps)
+                                                   (replace-regexp-in-string (car reps) (cdr reps) accum))
+                                                 `(("\\bi\\b" . "I")
+                                                   (,(rx (group (syntax open-parenthesis))
+                                                         (one-or-more (or space punct)))
+                                                    . "\\1")
+                                                   (,(rx (one-or-more (or space punct))
+                                                         (group (syntax close-parenthesis)))
+                                                    . "\\1"))
+                                                 :initial-value text))
+                                       finally return xmlcaps))))
+        (if (and (listp parsed-caps)
+                 (eq (car-safe parsed-caps) 'transcript))
+            (let ((caption-ordered
+                   (cl-loop for (type (start _) text) in (cddr parsed-caps)
+                            with chapters = (car-safe (cdr parsed-caps))
+                            with pstart = 0
+                            for chapter = (car-safe chapters)
+                            for oldtime = 0 then time
+                            for time = (string-to-number (cdr start))
+                            for chap-begin-p =
+                            (and chapter
+                                 (>= (floor time) (string-to-number (car chapter))))
+
+                            if (and
+                                (or chap-begin-p
+                                    (< (mod (floor time) 30)
+                                       (mod (floor oldtime) 30)))
+                                (> (abs (- time pstart)) 3))
+                            collect (list pstart time para) into result and
+                            do (setq para nil pstart time)
+
+                            if chap-begin-p
+                            do (setq chapters (cdr-safe chapters))
+
+                            collect (cons time (replace-regexp-in-string "\n" " " text))
+                            into para
+                            finally return (nconc result (list (list pstart time para)))))
+                  (inhibit-read-only t))
+              (goto-char (point-max))
+              (insert "\n" "** Transcript" "\n\n")
+              (cl-loop for (start end para) in caption-ordered
+                       with chapters = (car-safe (cdr parsed-caps))
+                       with vspace = (propertize " " 'face 'variable-pitch)
+                       for chapter = (car-safe chapters)
+                       with beg = (point) do
+                       (progn
+                         (when (and chapter (>= start (string-to-number (car chapter))))
+                           (insert (propertize (cdr chapter))
+                                   (propertize "\n\n"))
+                           (setq chapters (cdr chapters)))
+                         (insert
+                          "#+begin_quote "
+                          (propertize "\n" 'hard t)
+                          (format "[[[video:%s%%t=%ss#%s-%s][%s-%s]]]: "
+                                  url
+                                  start
+                                  (c1/msecs-to-timestamp (* 1000 start))
+                                  (c1/msecs-to-timestamp (* 1000 end))
+                                  start
+                                  end)
+                          (propertize "\n" 'hard t)
+                          (string-join
+                           (mapcar (lambda (tx-cons)
+                                     (cdr tx-cons))
+                                   para)
+                           vspace)
+                          (propertize "\n" 'hard t)
+                          "#+end_quote"
+                          (propertize "\n\n" 'hard t)))
+                       finally (when-let* ((w shr-width)
+                                           (fill-column w)
+                                           (use-hard-newlines t))
+                                 (fill-region beg (point) nil t))))))
+    (user-error "%s is not youtube url!" url)))
 
 (defun c1/org-toc-from-html (html-buffer)
   (let ((out-buf (generate-new-buffer " *occur-toc*")))

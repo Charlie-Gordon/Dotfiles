@@ -484,40 +484,6 @@ Used to determines filename in `org-roam-capture-templates'."
   :hook
   (org-fc-after-setup . writeroom-mode))
 
-(defun my/msecs-to-timestamp (msecs)
-  "Convert MSECS to string in the format HH:MM:SS.MS."
-  (concat (format-seconds "%02h:%02m:%02s" (/ msecs 1000))
-          "." (format "%03d" (mod msecs 1000))))
-
-(defun my/org-insert-youtube-video-with-transcript (url)
-  (interactive "MURL: ")
-  (when (and (string-empty-p url) (string-match-p "youtu.?be" (org-entry-get nil "URL")))
-    (setq url (org-entry-get nil "URL")))
-  (let* ((id (if (string-match "\\(.*v=\\)\\([^&]+\\)" url) (match-string 2 url) url))
-         (temp-file (make-temp-name "org-youtube-"))
-         (temp-file-name (concat temp-file ".en.srv1"))
-         data)
-    (when (and (call-process "youtube-dl" nil nil nil
-                             "--write-sub" "--write-auto-sub" "--no-warnings" "--sub-lang" "en" "--skip-download" "--sub-format" "srv1"
-                             "-o" temp-file
-                             (format "https://youtube.com/watch?v=%s" id))
-               (file-exists-p temp-file-name))
-      (insert
-       "\n"
-       (mapconcat (lambda (o)
-                    (format "[[video:%s&t=%ss#%s][%s]] %s\n"
-                            url
-                            (dom-attr o 'start)
-                            (my/msecs-to-timestamp (* 1000 (string-to-number (dom-attr o 'start))))
-                            (my/msecs-to-timestamp (* 1000 (string-to-number (dom-attr o 'start))))
-                            (thread-last (dom-text o)
-                                         (replace-regexp-in-string "[ \n]+" " ")
-                                         (replace-regexp-in-string "&#39;" "'")
-                                         (replace-regexp-in-string "&quot;" "\""))))
-                  (dom-by-tag (xml-parse-file temp-file-name) 'text)
-                  ""))
-      (delete-file temp-file-name))))
-
 (defun c1/org-fc-edit-on-saved-place ()
   (interactive)
   (org-fc-review-edit)
