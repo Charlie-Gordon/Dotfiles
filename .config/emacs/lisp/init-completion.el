@@ -147,6 +147,9 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 
+(use-package embark-consult
+  :straight t)
+
 ;;;; Company
 ;; (use-package company
 ;;   :straight t
