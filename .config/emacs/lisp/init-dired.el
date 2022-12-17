@@ -78,15 +78,15 @@
   (diredfl-global-mode))
 
 (use-package dired-x
-  :ensure nil
+  :straight (:type built-in)
   :custom
   (dired-clean-up-buffers-too t)
   (dired-clean-confirm-killing-deleted-buffers t)
   (dired-x-hands-off-my-keys t)
   (dired-guess-shell-alist-user '(("" "xdg-open")))
   :config
-  (unless (assoc-default "mp4" dired-guess-shell-alist-default)
-    (add-to-list 'dired-guess-shell-alist-default '("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\'" "mpv"))))
+  (unless (assoc-default "mp4" dired-guess-shell-alist-user)
+    (add-to-list 'dired-guess-shell-alist-user '("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|ogv\\)\\(?:\\.part\\)?\\'" "mpv"))))
 
 
 (provide 'init-dired)
