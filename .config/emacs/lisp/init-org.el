@@ -359,16 +359,24 @@ efforts may be updated by this function."
 (use-package org-board
   :straight t
   :custom
+  (org-board-link-type 'attachment)
+  (org-board-log-wget-invocation nil)
   (org-board-wget-program (executable-find "monolith"))
-  (org-board-wget-switches '("-Ievjc")))
+  (org-board-wget-switches '("-IevF")))
 
-(defun org-board-monolith-call (path directory args site)
+(defun my/org-board-monolith-call (path directory args site)
+  "Like `org-board-wget-call' but call monolith instead."
   (make-directory (file-name-as-directory directory))
-  (let* ((output-directory-option
+  (let* ((filename (url-filename (url-generic-parse-url (car site))))
+         (domain (file-name-nondirectory (url-domain (url-generic-parse-url (car site)))))
+         (name (if (string-empty-p filename)
+                   domain
+                 (if (string-match "/$" filename)
+                     (file-name-base (directory-file-name filename))
+                   filename)))
+         (output-directory-option
           (expand-file-name
-           (concat (file-name-sans-extension
-                    (file-name-nondirectory (url-filename (url-generic-parse-url (car site)))))
-                   ".html")
+           (concat (file-name-sans-extension (file-name-nondirectory name)) ".html")
            (file-name-as-directory directory)))
          (output-buffer-name "org-board-monolith-call")
          (process-arg-list (append (list "org-board-monolith-process"
@@ -390,7 +398,7 @@ efforts may be updated by this function."
        'org-board-wget-process-sentinel-function))
     monolith-process))
 
-(advice-add 'org-board-wget-call :override #'org-board-monolith-call)
+(advice-add 'org-board-wget-call :override #'my/org-board-monolith-call)
 
 (use-package ox-bibtex
   :ensure nil
