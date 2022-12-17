@@ -1,9 +1,9 @@
-[submodule ".emacs.d/site-lisp/emacs-application-framework"]
-	path = .config/emacs/site-lisp/emacs-application-framework
-	url = https://github.com/emacs-eaf/emacs-application-framework
-[submodule ".config/emacs/site-lisp/el-easydraw"]
-	path = .config/emacs/site-lisp/el-easydraw
-	url = https://github.com/misohena/el-easydraw
 [submodule "/home/i/.config/emacs/site-lisp/pbui"]
 	path = .config/emacs/site-lisp/pbui
 	url = https://github.com/mmontone/pbui
+[submodule ".config/mpv/scripts/mpv_sponsorblock"]
+	path = .config/mpv/scripts/mpv_sponsorblock
+	url = https://github.com/po5/mpv_sponsorblock
+[submodule ".config/mpv/scripts/mpv_sponsorblock_minimal"]
+	path = .config/mpv/scripts/mpv_sponsorblock_minimal
+	url = https://codeberg.org/jouni/mpv_sponsorblock_minimal
