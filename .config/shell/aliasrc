@@ -49,5 +49,5 @@ alias \
 	# weath="less -S ${XDG_DATA_HOME:-$HOME/.local/share}/weatherreport" \
 
         alias \
-            pdfcompress="gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -sOutputFile=$1.compressed.pdf $1" \
+            pdfcompress="gs -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -sOutputFile=compressed.pdf $1" \
             sm18="env WINEPREFIX=/home/i/.local/share/wineprefixes/sm18/ wine ~/.local/share/wineprefixes/sm18/drive_c/SuperMemo/sm18.exe"
