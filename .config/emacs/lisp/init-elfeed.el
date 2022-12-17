@@ -28,8 +28,10 @@
   :straight t
   :bind (("s-e" . elfeed)
          :map elfeed-show-mode-map
+         ("w" . c1/elfeed-db-save)
          ("C" . elfeed-capture-entry)
          :map elfeed-search-mode-map
+         ("w" . c1/elfeed-db-save)
          ("C" . elfeed-capture-entry))
   :custom
   (elfeed-search-trailing-width 60)
@@ -72,6 +74,11 @@
 
   (define-key elfeed-show-mode-map (kbd "SPC") 'elfeed-scroll-up-command)
   (define-key elfeed-show-mode-map (kbd "S-SPC") 'elfeed-scroll-down-command))
+
+(defun c1/elfeed-db-save ()
+  "Command to write elfeed databases."
+  (interactive)
+  (elfeed-db-save))
 
 (defun elfeed-capture-entry ()
   "Capture selected entries into inbox."
