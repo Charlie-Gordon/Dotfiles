@@ -800,8 +800,6 @@ Headlines are exported using `org-bibtex-headline'."
       (org-gtd-mode +1)
     (org-agenda-dych-mode +1)))
 
-(add-hook 'after-init-hook #'org-gtd-plan 90)
-
 (defun c1/mark-as-project ()
   (interactive)
   (org-set-property "COOKIE_DATA" "todo recursive"))
