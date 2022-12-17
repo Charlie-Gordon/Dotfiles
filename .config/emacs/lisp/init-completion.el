@@ -172,15 +172,5 @@
   :init
   (global-corfu-mode))
 
-
-;;; Ivy
-(use-package swiper
-  :straight t
-  :config
-  (add-to-list 'load-path (locate-user-emacs-file "straight/repos/swiper/")))
-
-(use-package counsel :ensure nil)
-
-
 (provide 'init-completion)
 ;;; init-completion.el ends here
