@@ -50,10 +50,10 @@
     (add-hook 'after-init-hook #'global-eldoc-mode))
 ;;;;;; Emacsclient
   (add-hook 'after-init-hook
-            #'(lambda ()
-                (require 'server)
-                (unless (server-running-p)
-                  (server-start))))
+	    #'(lambda ()
+		(require 'server)
+		(unless (server-running-p)
+		  (server-start))))
 ;;;;;; Load customized variables
   (when (file-exists-p custom-file)
     (load custom-file))
