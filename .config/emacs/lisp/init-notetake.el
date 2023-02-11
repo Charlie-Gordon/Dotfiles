@@ -172,8 +172,18 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (org-roam-db-autosync-mode))
 
+(use-package citar-org-roam
+  :straight t
+  :after citar org-roam
+  :no-require
+  :custom
+  (citar-org-roam-subdir "lit")
+  :config (citar-org-roam-mode)
+  :diminish)
+
 (use-package org-roam-bibtex
   :straight t
+  :after citar citar-org-roam
   :bind (:map org-roam-bibtex-mode-map
               (("C-c m f" . orb-find-non-ref-file))
               :map org-mode-map
