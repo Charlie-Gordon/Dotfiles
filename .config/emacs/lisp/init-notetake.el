@@ -512,6 +512,19 @@ Used to determines filename in `org-roam-capture-templates'."
                                                                :non-recursive t)))
   (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter)
   (advice-add 'org-fc-review-next-card :after #'org-fc-write-setup)
+  (defun c1/org-fc-edit-on-saved-place ()
+    (interactive)
+    (org-fc-review-edit)
+    (if (org-entry-get nil "FC_READ_POINT" t t)
+        (goto-char (string-to-number (org-entry-get nil "FC_READ_POINT" t t)))
+      (save-place-find-file-hook)))
+
+  (defun c1/org-fc-save-place ()
+    (org-fc-review-with-current-item card
+      (let ((loc (cdr (org-id-find-id-in-file (plist-get card :id) buffer-file-name))))
+        (org-entry-put loc "FC_READ_POINT" (number-to-string (point)))
+        (save-buffer)
+        (save-place-to-alist))))
   (add-hook 'after-init-hook #'org-fc-review-daily 80))
 
 (use-package bir
@@ -527,17 +540,6 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package writeroom-mode
   :straight t)
 
-(defun c1/org-fc-edit-on-saved-place ()
-  (interactive)
-  (org-fc-review-edit)
-  (if (org-entry-get nil "FC_READ_POINT" t t)
-      (goto-char (string-to-number (org-entry-get nil "FC_READ_POINT" t t)))
-    (save-place-find-file-hook)))
-
-(defun c1/org-fc-save-place ()
-  (org-entry-put nil "FC_READ_POINT" (number-to-string (point)))
-  (save-buffer)
-  (save-place-to-alist))
 
 
 (defun org-fc-write-setup (&optional resuming)
