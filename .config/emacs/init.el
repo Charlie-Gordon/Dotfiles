@@ -36,7 +36,7 @@
 ;;;;; TeX
   (use-package init-tex :ensure nil)
 ;;;;; Org-mode configuration
-  (use-package init-org :ensure nil :termux)
+  (use-package init-org :ensure nil )
 ;;;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;; Individual configuration
@@ -67,7 +67,7 @@
 ;;;;;; ERC
   (use-package init-erc :ensure nil)
 ;;;;; Completions
-  (use-package init-completion :ensure nil :termux)
+  (use-package init-completion :ensure nil )
 ;;;;; Git
   (use-package init-git :ensure nil)
 ;;;;; Lisp
@@ -82,7 +82,7 @@
   (use-package init-elfeed :ensure nil)
   (use-package init-eaf :ensure nil :disabled)
   (use-package init-ibuffer :ensure nil)
-  (use-package init-editing-utils :ensure nil :termux)
+  (use-package init-editing-utils :ensure nil )
   (use-package init-local :ensure nil)
   (use-package init-eva :ensure nil :disabled))
 
