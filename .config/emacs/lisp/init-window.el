@@ -21,20 +21,25 @@
   :config
   (ace-window-display-mode t))
 
+(use-package eyebrowse
+  :straight t
+  :config
+  (eyebrowse-mode t))
+
 ;; Configure ‘display-buffer’ behaviour for some special buffers
 (setq display-buffer-alist
       `(;; Messages, errors, processes, Calendar in the bottom side window
-        (,(rx bos (or "*Apropos"                ; Apropos buffers
-                      "*Man"                    ; Man buffers
-                      "*Process List*"          ; Processes
-                      "*Proced"                 ; Proced processes list
-                      "*compilation"            ; Compilation buffers
-                      "*Flycheck errors*"       ; Flycheck error list
-                      "*Calendar"               ; Calendar window
-                      "*env-info"               ; Environment information
-                      "*Cargo"                  ; Cargo process buffers
-                      "*Word"                   ; WordNut buffers
-                      "*Reconcile*"             ; Reconcile in ledger-mode
+        (,(rx bos (or "*Apropos"        ; Apropos buffers
+                      "*Man"            ; Man buffers
+                      "*Process List*"  ; Processes
+                      "*Proced"         ; Proced processes list
+                      "*compilation"    ; Compilation buffers
+                      "*Flycheck errors*" ; Flycheck error list
+                      "*Calendar"         ; Calendar window
+                      "*env-info"         ; Environment information
+                      "*Cargo"            ; Cargo process buffers
+                      "*Word"             ; WordNut buffers
+                      "*Reconcile*"       ; Reconcile in ledger-mode
                       (and (1+ nonl) " output*"))) ; AUCTeX command output
          (display-buffer-reuse-window display-buffer-in-side-window)
          (side . bottom)
@@ -49,13 +54,13 @@
          (display-buffer-reuse-window display-buffer-in-side-window)
          (side . bottom)
          (reusable-frames . visible)
-         (window-height . 0.50))
+         (window-height . 0.5))
         (,(rx bos "*Messages" (* anything))
          (display-buffer-in-side-window)
          (window-height . 0.16)
          (side . top)
          (slot . 1))
-        (,(rx bos "*" (or "Backtrace" "Warnings" "Compile-Log") "*") 
+        (,(rx bos "*" (or "Backtrace" "Warnings" "Compile-Log") "*")
          (display-buffer-in-side-window)
          (window-height . 0.16)
          (side . top)
@@ -82,7 +87,7 @@
         ;; bottom buffer (NOT side window)
         ("\\*\\vc-\\(incoming\\|outgoing\\).*"
          (display-buffer-at-bottom))
-        (,(rx bos "*" (or "Output" "Register Preview") (* anything)) 
+        (,(rx bos "*" (or "Output" "Register Preview") (* anything))
          (display-buffer-at-bottom))
         (,(rx bos "*" (or (and anything "shell")
                           (and anything "term")))
