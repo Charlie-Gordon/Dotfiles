@@ -479,7 +479,7 @@ Headlines are exported using `org-bibtex-headline'."
             :jump-to-captured t
             :prepare-finalize
             (lambda () (save-excursion
-                         (c1/org-insert-youtube-video-with-transcript (org-capture-ref-get-bibtex-url-from-capture-data))))
+                         (c1/attach-elfeed-tube-entry (org-capture-ref-get-bibtex-url-from-capture-data))))
             :after-finalize
             (lambda ()
               (save-excursion
