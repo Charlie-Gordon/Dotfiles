@@ -260,7 +260,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (citar-at-point-function 'embark-act)
   (citar-open-note-function 'orb-citar-edit-note)
   (citar-library-paths `(,*library-dir*))
-  (citar-notes-paths `(,*org-dir*))
+  (citar-notes-paths `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   (citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                      (suffix . "          ${=key= id:15}    ${=type=:12}    ${formats:12}")
                      (preview . "${author editor} (${year issued date}) ${title}, ${journal publisher container-title collection-title}.")
