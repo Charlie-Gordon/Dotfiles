@@ -189,14 +189,24 @@ Used to determines filename in `org-roam-capture-templates'."
               :map org-mode-map
               (("C-c m t" . orb-insert-non-ref)
                ("C-c m a" . orb-note-actions)))
-  
+
   :custom
   (orb-autokey-format "%a%y")
   (orb-file-field-extensions '("pdf" "epub" "djvu" "htm" "html"))
+  (orb-roam-ref-format 'org-cite)
+  (citar-notes-source 'orb-citar-source)
   :config
   (add-to-list 'orb-preformat-keywords "url")
   (add-to-list 'orb-preformat-keywords "file")
   (org-roam-bibtex-mode)
+  (citar-register-notes-source
+   'orb-citar-source (list :name "Org-Roam Notes"
+                           :category 'org-roam-node
+                           :items #'citar-org-roam--get-candidates
+                           :hasitems #'citar-org-roam-has-notes
+                           :open #'citar-org-roam-open-note
+                           :create #'orb-citar-edit-note
+                           :annotate #'citar-org-roam--annotate))
   :diminish)
 
 
