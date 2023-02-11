@@ -129,7 +129,8 @@
 (add-hook 'elfeed-new-entry-hook #'elfeed-declickbait-entry)
 
 (use-package elfeed-tube
-  :straight (:host github :repo "karthink/elfeed-tube")
+  :straight (:host github :repo "karthink/elfeed-tube"
+                   :files ("*.el"))
   :after elfeed
   :demand t
   :bind (:map elfeed-show-mode-map
@@ -138,11 +139,72 @@
               :map elfeed-search-mode-map
               ("F" . elfeed-tube-fetch)
               ([remap save-buffer] . elfeed-tube-save))
+  :custom
+  (elfeed-tube-auto-save-p t)
   :config
   ;; (setq elfeed-tube-auto-save-p nil) ;; t is auto-save (not default)
   ;; (setq elfeed-tube-auto-fetch-p t) ;;  t is auto-fetch (default)
   (elfeed-tube-setup)
-  (use-package elfeed-tube-mpv :ensure nil))
+  (use-package elfeed-tube-mpv :ensure nil)
+
+
+  (aio-defun c1/attach-elfeed-tube-entry (url)
+             (interactive "MURL: ")
+             (require 'elfeed-tube-utils)
+             (when (or (null url) (string-empty-p url))
+               (setq url (org-entry-get nil "URL")))
+
+             (string-match (concat elfeed-tube-youtube-regexp
+                                   (rx (zero-or-one "watch?v=")
+                                       (group (1+ (not (or "&" "?"))))))
+                           url)
+             (if-let ((video-id (match-string 1 url))
+                      (attach-dir (org-attach-dir 'get-create))
+                      (origin-buf (current-buffer)))
+                 (progn
+                   (message "Creating a video summary...")
+                   (cl-letf* ((elfeed-show-unique-buffers t)
+                              (elfeed-show-entry-switch #'display-buffer)
+                              (elfeed-tube-save-indicator nil)
+                              (elfeed-tube-auto-save-p nil)
+                              (api-data (aio-await
+                                         (elfeed-tube--aio-fetch
+                                          (concat (aio-await (elfeed-tube--get-invidious-url))
+                                                  elfeed-tube--api-videos-path
+                                                  video-id
+                                                  "?fields="
+                                                  ;; "videoThumbnails,descriptionHtml,lengthSeconds,"
+                                                  "title,author,authorUrl,published,videoId")
+                                          #'elfeed-tube--nrotate-invidious-servers)))
+                              (feed-id (concat "https://www.youtube.com/feeds/videos.xml?channel_id="
+                                               (nth 1 (split-string (plist-get api-data :authorUrl)
+                                                                    "/" t))))
+                              (author `((:name ,(plist-get api-data :author)
+                                               :uri ,feed-id)))
+                              (entry (elfeed-tube--entry-create feed-id api-data))
+                              ((symbol-function 'elfeed-entry-feed)
+                               (lambda (_)
+                                 (elfeed-feed--create
+                                  :id feed-id
+                                  :url feed-id
+                                  :title (plist-get api-data :author)
+                                  :author author))))
+                     (aio-await (elfeed-tube--fetch-1 entry t))
+                     (let ((buff (get-buffer-create (elfeed-show--buffer-name entry)))
+                           (basename (concat (format-time-string "%FT%T%z") "-"
+                                             (elfeed-entry-title entry) ".txt"))
+                           (count))
+                       (with-current-buffer buff
+                         (elfeed-show-mode)
+                         (setq elfeed-show-entry entry)
+                         (elfeed-show-refresh)
+                         (write-region (point-min) (setq count (point-max))
+                                       (expand-file-name basename attach-dir)))
+                       (with-current-buffer origin-buf
+                         (run-hook-with-args 'org-attach-after-change-hook attach-dir)
+                         (org-attach-tag)
+                         (message "Attached \"%s\" (%s char.) to %s" basename (file-size-human-readable count) (org-get-heading t t t t))))))
+               (message "Not a youtube video URL, aborting."))))
 
 (use-package elfeed-org
   :straight t
