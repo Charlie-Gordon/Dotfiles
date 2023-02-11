@@ -66,6 +66,9 @@
   :hook
   (git-commit-mode . goto-address-mode))
 
+(use-package git-timemachine
+  :ensure nil)
+
 (defun yadm--files ()
   (let ((default-directory "~/"))
     (cl-delete-if-not
