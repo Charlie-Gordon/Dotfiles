@@ -348,7 +348,21 @@ Used to determines filename in `org-roam-capture-templates'."
   (use-package org-noter-pdf :ensure nil)
   (use-package org-noter-nov-overlay :ensure nil)
   (use-package org-noter-dynamic-block :ensure nil)
-  (use-package org-noter-citar :ensure nil))
+  (use-package org-noter-citar :ensure nil)
+  (defun c1/maybe-close-org-noter (&rest _args)
+    (interactive)
+    (org-noter--with-valid-session
+     (let ((org-noter-use-indirect-buffer nil))
+       (org-noter-kill-session session))))
+  (defun c1/open-org-noter ()
+    (interactive)
+    (let ((org-noter-disable-narrowing t)
+          (org-noter-use-indirect-buffer nil)
+          (org-noter-always-create-frame nil))
+      (setq-local org-noter--inhibit-location-change-handler t)
+      (org-noter)))
+
+  (advice-add 'org-fc-review-next-card :before #'c1/maybe-close-org-noter))
 
 (defun c1/pdf-keynav-region-to-active-region (mode)
   (when (eq mode 'pdf-view-mode)
@@ -555,18 +569,6 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (org-fc-roam-db-autosync-enable)
   (org-fc-roam-mode +1))
-
-(defun c1/maybe-close-org-noter (&rest _args)
-  (interactive)
-  (org-noter--with-valid-session
-   (let ((org-noter-use-indirect-buffer nil))
-     (org-noter-kill-session session))))
-
-(defun c1/open-org-noter ()
-  (interactive)
-  (let ((org-noter-disable-narrowing t)
-        (org-noter-use-indirect-buffer nil))
-    (org-noter 0)))
 
 (use-package read-aloud
   :straight t
