@@ -319,19 +319,24 @@ Used to determines filename in `org-roam-capture-templates'."
   :straight '(org-noter :type git
                         :host nil
                         :repo "git@github.com:c1-g/org-noter-plus-djvu.git"
-                        :branch "link-as-doc"
                         :files ("other/*.el" "*.el" "modules/*.el"))
   :bind (:map org-noter-doc-mode-map
               ("I" . org-noter-insert-dynamic-block)
               ("M-I" . org-noter-insert-precise-dynamic-block))
   :custom
-  (org-noter-property-doc-file "SOURCE")
+  (org-noter-property-doc-file "ROAM_REFS")
   (org-noter-property-note-location "DOCUMENT_PAGE")
+  (org-noter-property-location-lock "DOCUMENT_LOCK")
+  (org-noter-arrow-background-color "cyan")
+  (org-noter-arrow-foreground-color "black")
   (org-noter-doc-split-fraction '(0.65 0.4))
   (org-noter-auto-save-last-location t)
-  (org-noter-always-create-frame t)
+  (org-noter-highlight-selected-text t)
+  (org-noter-always-create-frame nil)
+  (org-noter-kill-frame-at-session-end nil)
   (org-noter-prefer-root-as-file-level t)
   (org-noter-disable-narrowing t)
+  (org-noter-use-indirect-buffer nil)
   (org-noter-keep-notes-after-kill-session t)
   (org-noter-separate-notes-from-heading t)
   (org-noter-hide-other t)
