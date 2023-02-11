@@ -264,9 +264,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (citar-templates '((main . "${author editor:30}     ${date year issued:4}     ${title:48}")
                      (suffix . "          ${=key= id:15}    ${=type=:12}    ${formats:12}")
                      (preview . "${author editor} (${year issued date}) ${title}, ${journal publisher container-title collection-title}.")
-                     (note . "Notes on ${author editor}, ${title}")))
-  :config
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple))
+                     (note . "Notes on ${author editor}, ${title}"))))
 
 
 ;;;;; Media note
