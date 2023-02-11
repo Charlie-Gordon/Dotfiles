@@ -525,9 +525,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (advice-add 'bir-extract-region-prepare-finalize :after #'org-roam-db-update-file))
 
 (use-package writeroom-mode
-  :straight t
-  :hook
-  (org-fc-after-setup . writeroom-mode))
+  :straight t)
 
 (defun c1/org-fc-edit-on-saved-place ()
   (interactive)
