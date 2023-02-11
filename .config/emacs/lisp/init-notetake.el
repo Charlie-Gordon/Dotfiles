@@ -57,7 +57,7 @@
   (defun prot/pdf-tools-backdrop ()
     (face-remap-add-relative
      'default
-     `(:background ,(modus-themes-color 'bg-alt))))
+     `(:background ,(modus-themes-get-color-value 'bg-dim))))
   (defun prot/pdf-tools-midnight-mode-toggle ()
     (when (derived-mode-p 'pdf-view-mode)
       (if (eq (car custom-enabled-themes) 'modus-vivendi)
