@@ -391,12 +391,11 @@ Used to determines filename in `org-roam-capture-templates'."
        (org-noter-insert-note (org-noter--get-precise-info)))))
   (with-eval-after-load 'pdf-annot
     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note))
-  (advice-add 'org-noter-insert-precise-note :override #'org-noter-pdftools-insert-precise-note))
-
-(defun c1/org-noter-pdftools-org-id-prefix ()
-  (org-noter--with-valid-session
-   (my-generate-sanitized-alnum-dash-string
-    (file-name-base (org-noter--session-property-text session)))))
+  (advice-add 'org-noter-insert-precise-note :override #'org-noter-pdftools-insert-precise-note)
+  (defun c1/org-noter-pdftools-org-id-prefix ()
+    (org-noter--with-valid-session
+     (my-generate-sanitized-alnum-dash-string
+      (file-name-base (org-noter--session-property-text session))))))
 
 (use-package org-noter-media
   :straight '(org-noter-media :type git
