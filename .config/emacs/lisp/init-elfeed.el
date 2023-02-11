@@ -100,6 +100,34 @@
       (mapc #'elfeed-search-update-entry entries))
     (unless (use-region-p) (forward-line))))
 
+(defun elfeed-declickbait-entry (entry)
+  (let ((title (elfeed-entry-title entry)))
+    (setf (elfeed-meta entry :title)
+          (elfeed-title-transform title))))
+
+(defun elfeed-title-transform (title)
+  "Declickbait string TITLE."
+  (let* ((trim "\\(?:\\(?:\\.\\.\\.\\|[!?]\\)+\\)")
+         (arr (split-string title nil t trim))
+         (s-table (copy-syntax-table)))
+    (modify-syntax-entry ?\' "w" s-table)
+    (with-syntax-table s-table
+      (mapconcat (lambda (word)
+                   (cond
+                    ((member word '("AND" "OR" "IF" "ON" "IT" "TO"
+                                    "A" "OF" "VS" "IN" "FOR" "WAS"
+                                    "IS" "BE"))
+                     (downcase word))
+                    ((member word '("WE" "DAY" "HOW" "WHY" "NOW" "OLD"
+                                    "NEW" "MY" "TOO" "GOT" "GET" "THE"
+                                    "ONE" "DO" "YOU"))
+                     (capitalize word))
+                    ((> (length word) 3) (capitalize word))
+                    (t word)))
+                 arr " "))))
+
+(add-hook 'elfeed-new-entry-hook #'elfeed-declickbait-entry)
+
 (use-package elfeed-tube
   :straight (:host github :repo "karthink/elfeed-tube")
   :after elfeed
