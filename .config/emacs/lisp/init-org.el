@@ -348,7 +348,7 @@ efforts may be updated by this function."
 
 (use-package oc
   :straight '(:type built-in)
-  :when (= 29 (string-to-number emacs-version))
+  :when (>= (string-to-number emacs-version) 29)
   :custom
   (org-cite-global-bibliography `(,(expand-file-name "library.bib" *bibliography-dir*)
                                   "/storage/org/notecard/lit/refs/bibliography.bib")))
