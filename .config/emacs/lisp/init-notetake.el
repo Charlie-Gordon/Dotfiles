@@ -514,6 +514,16 @@ Used to determines filename in `org-roam-capture-templates'."
   (advice-add 'org-fc-review-next-card :after #'org-fc-write-setup)
   (add-hook 'after-init-hook #'org-fc-review-daily 80))
 
+(use-package bir
+  :straight '(bir :type git
+                  :host gitlab
+                  :repo "c1-g/bir")
+  :after org-fc
+  :custom
+  (bir-directory (expand-file-name "lit/" org-roam-directory))
+  :config
+  (advice-add 'bir-extract-region-prepare-finalize :after #'org-roam-db-update-file))
+
 (use-package writeroom-mode
   :straight t
   :hook
@@ -612,15 +622,6 @@ INFO is a plist holding contextual information."
                   nil t t t nil (lambda () (text-mode)))))
     (with-current-buffer buf
       (read-aloud-buf))))
-
-(use-package bir
-  :straight '(bir :type git
-                  :host gitlab
-                  :repo "c1-g/bir")
-  :custom
-  (bir-directory (expand-file-name "lit/" org-roam-directory))
-  :config
-  (advice-add 'bir-extract-region-prepare-finalize :after #'org-roam-db-update-file))
 
 
 (provide 'init-notetake)
