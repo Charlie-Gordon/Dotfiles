@@ -456,6 +456,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (bibtex-completion-additional-search-fields '(file formats)))
 
 ;;;; Trying out SRS (space-repetition system)
+
 (use-package org-anki
   :straight promise request '(org-anki
                               :type git
@@ -487,10 +488,8 @@ Used to determines filename in `org-roam-capture-templates'."
               ("n" . #'org-fc-review-skip-card)
               ("C-;" . #'c1/open-org-noter)
               ("C-," . #'c1/read-aloud-org))
-  :init (use-package tablist-filter :ensure nil)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
-  ;; (org-fc-browser-list-entries-function #'org-fc-browser-list-db)
   (org-fc-algorithm 'roam-sm2)
   (org-fc-review-show-remaining-cards t)
   (org-fc-roam-postpone-skip-following-number-of-cards 100)
