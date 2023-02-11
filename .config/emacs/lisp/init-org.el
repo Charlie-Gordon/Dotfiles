@@ -527,10 +527,8 @@ Headlines are exported using `org-bibtex-headline'."
   :config
   (let ((templates (doct org-capture-ref-capture-template)))
     (dolist (template templates)
-      (asoc-put! org-capture-templates
-                 (car template)
-                 (cdr template)
-                 'replace))))
+      (setf (alist-get (car template) org-capture-templates)
+            (cdr template)))))
 
 (defun c1/msecs-to-timestamp (msecs)
   "Convert MSECS to string in the format HH:MM:SS.MS."
