@@ -340,9 +340,6 @@ Used to determines filename in `org-roam-capture-templates'."
   :config
   (org-roam-db-autosync-mode))
 
-(use-package tablist
-  :straight t)
-
 (use-package f
   :straight t)
 
@@ -388,15 +385,6 @@ Used to determines filename in `org-roam-capture-templates'."
         (save-buffer)
         (save-place-to-alist))))
   (add-hook 'after-init-hook 'org-fc-review-all))
-
-(straight-use-package
-  '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
-
-(use-package writeroom-mode
-  :straight t
-  :hook
-  (org-fc-after-setup . writeroom-mode)
-  (org-fc-after-setup . hide-cursor-mode))
 
 (use-package org-fc-roam
   :ensure nil
