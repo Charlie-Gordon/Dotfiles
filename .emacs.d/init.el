@@ -347,16 +347,13 @@ Used to determines filename in `org-roam-capture-templates'."
                      :host github
                      :repo "l3kn/org-fc"
                      :fork t
-                     :branch "org-roam"
                      :files ("awk" "*.org" "*.sh" "*.el" "tests" "icons"))
   :bind (:map org-fc-review-flip-mode-map
               ("r" . #'c1/org-fc-edit-on-saved-place)
               ("n" . #'org-fc-review-skip-card)
               :map org-fc-review-edit-mode-map
               ("n" . #'org-fc-review-skip-card))
-  :init (use-package tablist-filter :ensure nil)
   :hook
-  (org-fc-after-setup . hide-cursor-mode)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   (org-fc-algorithm 'roam-sm2)
@@ -385,7 +382,9 @@ Used to determines filename in `org-roam-capture-templates'."
         (org-entry-put loc "FC_READ_POINT" (number-to-string (point)))
         (save-buffer)
         (save-place-to-alist))))
-  (add-hook 'after-init-hook 'org-fc-review-all))
+
+  (add-hook 'after-init-hook 'org-fc-review-all)
+  (add-hook 'org-fc-after-setup-hook 'hide-cursor-mode))
 
 (use-package org-fc-roam
   :ensure nil
