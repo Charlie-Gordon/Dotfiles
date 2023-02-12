@@ -342,6 +342,9 @@ Used to determines filename in `org-roam-capture-templates'."
 (use-package f
   :straight t)
 
+(use-package tablist
+  :straight t)
+
 (use-package org-fc
   :straight '(org-fc :type git
                      :host github
