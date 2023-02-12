@@ -353,7 +353,6 @@ Used to determines filename in `org-roam-capture-templates'."
               ("n" . #'org-fc-review-skip-card)
               :map org-fc-review-edit-mode-map
               ("n" . #'org-fc-review-skip-card))
-  :hook
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   (org-fc-algorithm 'roam-sm2)
