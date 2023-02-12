@@ -165,7 +165,8 @@ the buffer works like a pager."
          (str (replace-regexp-in-string "\\(^[-]*\\|[-]*$\\)" "" str)))
     str))
 
-(defun my-id-get-or-generate (&optional force)
+
+(defun c1/org-id-get-or-generate (&optional force)
   "Returns the ID property if set or generates and returns a new one if not set.
  The generated ID is stripped off potential progress indicator cookies and
  sanitized to get a slug. Furthermore, it is prepended with an ISO date-stamp
@@ -174,44 +175,42 @@ the buffer works like a pager."
   (when force
     (org-entry-put (point) "ID" nil))
   (when (not (org-id-get))
-    (progn
-      (let* ((my-heading-text (or (if (= (org-outline-level) 0)
-                                      (cadar (org-collect-keywords '("TITLE")))
-                                    (nth 4 (org-heading-components)))
-                                  (org-id-uuid))) ;; retrieve heading string
-             (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+%\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[25%]"
-             (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+/[0-9]+\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[2/7]"
-             (my-heading-text (replace-regexp-in-string "\\(\\[#[ABC]\\]\\)" "" my-heading-text)) ;; remove priority indicators like "[#A]"
-             (my-heading-text (replace-regexp-in-string "\\[\\[\\(.+?\\)\\]\\[" "" my-heading-text t)) ;; removes links, keeps their description and ending brackets
-             ;;                      (my-heading-text (replace-regexp-in-string "[<\\[][12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)[>\\]]" "" my-heading-text t));; removes day of week and time from date- and time-stamps (doesn't work somehow)
-             (my-heading-text (replace-regexp-in-string "<[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)>" "" my-heading-text t)) ;; removes day of week and time from active date- and time-stamps
-             (my-heading-text (replace-regexp-in-string "\\[[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)\\]" "" my-heading-text t)) ;; removes day of week and time from inactive date- and time-stamps
-             (new-id (my-generate-sanitized-alnum-dash-string my-heading-text)) ;; get slug from heading text
-             (my-created-property (assoc "CREATED" (org-entry-properties))) ;; nil or content of CREATED time-stamp
-             )
-        (when (not (string-match "[12][0-9][0-9][0-9]-[01][0-9]-[0123][0-9]-.+" new-id))
-          ;; only if no ISO date-stamp is found at the beginning of the new id:
-          (if my-created-property (progn
-                                    ;; prefer date-stamp of CREATED property (if found):
-                                    (setq my-created-datestamp (substring (org-entry-get nil "CREATED" nil) 1 11)) ;; returns "2021-12-16" or nil (if no CREATED property)
-                                    (setq new-id (concat my-created-datestamp "-" (number-to-string (round (time-to-seconds))) "-" new-id)))
-            ;; use today's date-stamp if no CREATED property is found:
-            (setq new-id (concat (format-time-string "%Y-%m-%d-%s-") new-id))))
-        (org-set-property "ID" new-id))))
+    (org-set-property "ID" (c1/org-id-new)))
   (kill-new (concat "id:" (org-id-get))) ;; put ID in kill-ring
   (org-id-get) ;; retrieve the current ID in any case as return value
   )
 
-(defun c1/org-get-first-sentence ()
-  (require 'org-roam)
-  (save-excursion
-    (org-roam-end-of-meta-data 'full)
-    (while (looking-at org-keyword-regexp)
-      (goto-char (match-end 0))
-      (forward-line))
-    (string-trim (buffer-substring (point) (progn (forward-sentence) (point))))))
+(defun c1/org-id-new (&optional prefix)
+  (let* ((prefix (if (eq prefix 'none)
+                     ""
+                   (concat (or prefix org-id-prefix) ":")))
 
-(advice-add 'org-id-get-create :override #'my-id-get-or-generate)
+         (my-heading-text (or (if (= (org-outline-level) 0)
+                                  (cadar (org-collect-keywords '("TITLE")))
+                                (nth 4 (org-heading-components)))
+                              (org-id-uuid))) ;; retrieve heading string
+         (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+%\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[25%]"
+         (my-heading-text (replace-regexp-in-string "\\(\\[[0-9]+/[0-9]+\\]\\)" "" my-heading-text)) ;; remove progress indicators like "[2/7]"
+         (my-heading-text (replace-regexp-in-string "\\(\\[#[ABC]\\]\\)" "" my-heading-text)) ;; remove priority indicators like "[#A]"
+         (my-heading-text (replace-regexp-in-string "\\[\\[\\(.+?\\)\\]\\[" "" my-heading-text t)) ;; removes links, keeps their description and ending brackets
+         ;;                      (my-heading-text (replace-regexp-in-string "[<\\[][12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)[>\\]]" "" my-heading-text t));; removes day of week and time from date- and time-stamps (doesn't work somehow)
+         (my-heading-text (replace-regexp-in-string "<[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)>" "" my-heading-text t)) ;; removes day of week and time from active date- and time-stamps
+         (my-heading-text (replace-regexp-in-string "\\[[12][0-9]\\{3\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\( .*?\\)\\]" "" my-heading-text t)) ;; removes day of week and time from inactive date- and time-stamps
+         (new-id (my-generate-sanitized-alnum-dash-string my-heading-text)) ;; get slug from heading text
+         (my-created-property (assoc "CREATED" (org-entry-properties))) ;; nil or content of CREATED time-stamp
+         )
+    (when (not (string-match "[12][0-9][0-9][0-9]-[01][0-9]-[0123][0-9]-.+" new-id))
+      ;; only if no ISO date-stamp is found at the beginning of the new id:
+      (if my-created-property (progn
+                                ;; prefer date-stamp of CREATED property (if found):
+                                (setq my-created-datestamp (substring (org-entry-get nil "CREATED" nil) 1 11)) ;; returns "2021-12-16" or nil (if no CREATED property)
+                                (setq new-id (concat my-created-datestamp "-" (number-to-string (round (time-to-seconds))) "-" new-id)))
+        ;; use today's date-stamp if no CREATED property is found:
+        (if (equal prefix ":") (setq prefix ""))
+        (concat prefix (format-time-string "%Y-%m-%d-%s-") new-id)))))
+
+(advice-add 'org-id-get-create :override #'c1/org-id-get-or-generate)
+(advice-add 'org-id-new :override #'c1/org-id-new)
 
 (defun zp/org-find-time-file-property (property &optional anywhere)
   "Return the position of the time file PROPERTY if it exists.
