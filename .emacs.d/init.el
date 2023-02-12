@@ -356,6 +356,8 @@ Used to determines filename in `org-roam-capture-templates'."
               :map org-fc-review-edit-mode-map
               ("n" . #'org-fc-review-skip-card))
   :init (use-package tablist-filter :ensure nil)
+  :hook
+  (org-fc-after-setup . hide-cursor-mode)
   :custom
   (org-fc-directories `(,org-roam-directory ,(expand-file-name "lit/" org-roam-directory)))
   (org-fc-algorithm 'roam-sm2)
