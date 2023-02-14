@@ -354,6 +354,11 @@ Used to determines filename in `org-roam-capture-templates'."
   :bind (:map org-fc-review-flip-mode-map
               ("r" . #'c1/org-fc-edit-on-saved-place)
               ("n" . #'org-fc-review-skip-card)
+              ("o" . #'c1/termux-open)
+              :map org-fc-review-rate-mode-map
+              ("r" . #'c1/org-fc-edit-on-saved-place)
+              ("n" . #'org-fc-review-skip-card)
+              ("o" . #'c1/termux-open)
               :map org-fc-review-edit-mode-map
               ("n" . #'org-fc-review-skip-card))
   :custom
@@ -384,6 +389,9 @@ Used to determines filename in `org-roam-capture-templates'."
         (org-entry-put loc "FC_READ_POINT" (number-to-string (point)))
         (save-buffer)
         (save-place-to-alist))))
+
+  (defun c1/termux-open ()
+    (call-process "xdg-open" nil 0 nil (buffer-file-name)))
 
   (add-hook 'after-init-hook 'org-fc-review-all)
   (add-hook 'org-fc-after-setup-hook 'hide-cursor-mode))
