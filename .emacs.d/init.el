@@ -384,11 +384,11 @@ Used to determines filename in `org-roam-capture-templates'."
       (save-place-find-file-hook)))
 
   (defun c1/org-fc-save-place ()
-    (org-fc-review-with-current-item card
-      (let ((loc (cdr (org-id-find-id-in-file (plist-get card :id) buffer-file-name))))
-        (org-entry-put loc "FC_READ_POINT" (number-to-string (point)))
-        (save-buffer)
-        (save-place-to-alist))))
+    (let* ((card (car (oref org-fc-review--session cards)))
+           (loc (cdr (org-id-find-id-in-file (plist-get card :id) buffer-file-name))))
+      (org-entry-put loc "FC_READ_POINT" (number-to-string (point)))
+      (save-buffer)
+      (save-place-to-alist)))
 
   (defun c1/termux-open ()
     (call-process "xdg-open" nil 0 nil (buffer-file-name)))
