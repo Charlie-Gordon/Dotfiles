@@ -398,6 +398,7 @@ Used to determines filename in `org-roam-capture-templates'."
 
   (defun c1/termux-open ()
     (interactive)
+    (require 'org-attach)
     (let* ((roam-refs (and (org-roam-node-at-point)
                            (org-roam-node-refs (org-roam-node-at-point))))
            (calibre-files (when roam-refs
