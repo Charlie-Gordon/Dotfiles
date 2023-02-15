@@ -410,13 +410,14 @@ Used to determines filename in `org-roam-capture-templates'."
                               (directory-files-recursively
                                (org-attach-dir)
                                koreader-supported-ext)))
-           (files (flatten-list (append calibre-files attach-files))))
+           (files (flatten-list (append calibre-files attach-files)))
+           (file (if (= 1 (length files))
+                     (car files)
+                   (completing-read "Which file?: " files))))
       (if (null files)
           (user-error "No files for this.")
-        (call-process "xdg-open" nil 0 nil
-                      (if (= 1 (length files))
-                          (car files)
-                        (completing-read "Which file?: " files))))))
+        (message "Opening %s" file)
+        (call-process "xdg-open" nil 0 nil file))))
 
   (add-hook 'after-init-hook 'org-fc-review-all)
   (add-hook 'org-fc-after-setup-hook 'hide-cursor-mode))
