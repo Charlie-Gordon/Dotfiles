@@ -400,7 +400,7 @@ Used to determines filename in `org-roam-capture-templates'."
     (interactive)
     (require 'org-attach)
     (let* ((roam-ref (org-entry-get nil "ROAM_REFS" t t))
-           (calibre-files (when roam-refs
+           (calibre-files (when roam-ref
                             (directory-files-recursively
                              *library-dir*
                              (format "(%s)%s"
