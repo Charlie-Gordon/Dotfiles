@@ -44,10 +44,16 @@ the buffer works like a pager."
     (setq-local cursor-type (or hide-cursor--original
                                 t))))
 
+(defconst *library-dir* "/sdcard/Download/")
+
+(defconst *org-dir* "/sdcard/Download/")
+
 (define-derived-mode external-mode fundamental-mode "External"
   (call-process "xdg-open" nil 0 nil (shell-quote-argument (buffer-file-name))))
 
-(add-to-list 'auto-mode-alist '("\\.\\(?:html\\|pdf\\|djvu\\|xps\\|cbz\\|fb2\\|pdf\\|txt\\|rft\\|chm\\|epub\\|doc\\|mobi\\)\\'" . external-mode))
+(defvar koreader-supported-ext "\\.\\(?:html\\|pdf\\|djvu\\|xps\\|cbz\\|fb2\\|pdf\\|txt\\|rft\\|chm\\|epub\\|doc\\|mobi\\)\\'")
+
+(add-to-list 'auto-mode-alist `(,koreader-supported-ext . external-mode))
 
 ;;; Straight
 (defvar bootstrap-version)
@@ -85,11 +91,11 @@ the buffer works like a pager."
   (org-ellipsis "…")
   (org-id-link-to-org-use-id t)
   (org-ctrl-k-protect-subtree t)
-  (org-directory "/sdcard/Download/")
+  (org-directory *org-dir*)
   (org-clock-persist t)
   (org-special-ctrl-a/e t)
   (org-clock-auto-clock-resolution 'always)
-  (org-attach-id-dir "/sdcard/Download/data/")
+  (org-attach-id-dir (expand-file-name "data" *org-dir*))
   (org-id-link-to-org-use-id t)
   (org-habit-graph-column 60)
   (org-export-coding-system 'utf-8)
@@ -284,7 +290,7 @@ Used to determines filename in `org-roam-capture-templates'."
   (org-roam-node-display-template "${title:100} ${tags:20}")
   (org-roam-dailies-directory (expand-file-name "daily" org-directory))
   (org-roam-extract-new-file-path "other/writing.org")
-  (org-roam-db-location (expand-file-name "org-roam.db" "/sdcard/Download/"))
+  (org-roam-db-location (expand-file-name "org-roam.db" *org-dir*))
   (org-roam-capture-templates
    `(("d" "default" plain
       "%?"
@@ -391,7 +397,26 @@ Used to determines filename in `org-roam-capture-templates'."
       (save-place-to-alist)))
 
   (defun c1/termux-open ()
-    (call-process "xdg-open" nil 0 nil (buffer-file-name)))
+    (interactive)
+    (let* ((roam-refs (and (org-roam-node-at-point)
+                           (org-roam-node-refs (org-roam-node-at-point))))
+           (calibre-files (when roam-refs
+                            (directory-files-recursively
+                             *library-dir*
+                             (format "(%s)%s"
+                                     (nth 1 (split-string (car roam-refs) "-"))
+                                     koreader-supported-ext))))
+           (attach-files (and (org-attach-dir)
+                              (directory-files-recursively
+                               (org-attach-dir)
+                               koreader-supported-ext)))
+           (files (flatten-list (append calibre-files attach-files))))
+      (if (null files)
+          (user-error "No files for this.")
+        (call-process "xdg-open" nil 0 nil
+                      (if (= 1 (length files))
+                          (car files)
+                        (completing-read "Which file?: " files))))))
 
   (add-hook 'after-init-hook 'org-fc-review-all)
   (add-hook 'org-fc-after-setup-hook 'hide-cursor-mode))
