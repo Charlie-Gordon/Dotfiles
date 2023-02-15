@@ -399,13 +399,12 @@ Used to determines filename in `org-roam-capture-templates'."
   (defun c1/termux-open ()
     (interactive)
     (require 'org-attach)
-    (let* ((roam-refs (and (org-roam-node-at-point)
-                           (org-roam-node-refs (org-roam-node-at-point))))
+    (let* ((roam-ref (org-entry-get nil "ROAM_REFS" t t))
            (calibre-files (when roam-refs
                             (directory-files-recursively
                              *library-dir*
                              (format "(%s)%s"
-                                     (nth 1 (split-string (car roam-refs) "-"))
+                                     (nth 1 (split-string roam-ref "-"))
                                      koreader-supported-ext))))
            (attach-files (and (org-attach-dir)
                               (directory-files-recursively
