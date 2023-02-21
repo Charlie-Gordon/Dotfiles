@@ -51,7 +51,7 @@ the buffer works like a pager."
 (define-derived-mode external-mode fundamental-mode "External"
   (call-process "xdg-open" nil 0 nil (shell-quote-argument (buffer-file-name))))
 
-(defvar koreader-supported-ext "\\.\\(?:html\\|pdf\\|djvu\\|xps\\|cbz\\|fb2\\|pdf\\|txt\\|rft\\|chm\\|epub\\|doc\\|mobi\\)\\'")
+(defvar koreader-supported-ext "\\.\\(?:html\\|pdf\\|djvu\\|xps\\|cbz\\|fb2\\|pdf\\|txt\\|rft\\|chm\\|epub\\|doc\\|mobi\\)$")
 
 (add-to-list 'auto-mode-alist `(,koreader-supported-ext . external-mode))
 
@@ -411,13 +411,14 @@ Used to determines filename in `org-roam-capture-templates'."
                                (org-attach-dir)
                                koreader-supported-ext)))
            (files (flatten-list (append calibre-files attach-files)))
-           (file (if (= 1 (length files))
-                     (car files)
-                   (completing-read "Which file?: " files))))
-      (if (null files)
-          (user-error "No files for this.")
-        (message "Opening %s" file)
-        (call-process "xdg-open" nil 0 nil file))))
+           (file (cond ((null files)
+                        (user-error "No files for this."))
+                       ((= 1 (length files))
+                        (car files))
+                       (t
+                        (completing-read "Which files?: " files)))))
+      (message "Opening %s" file)
+      (call-process "xdg-open" nil 0 nil file)))
 
   (add-hook 'after-init-hook 'org-fc-review-all)
   (add-hook 'org-fc-after-setup-hook 'hide-cursor-mode))
